@@ -1,0 +1,24 @@
+.home {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+  }
+  
+  .botao-grande {
+    background-color: black;
+    color: white;
+    font-size: 24px;
+    padding: 20px 40px;
+    border: 2px solid white;
+    border-radius: 5px;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+  
+  .botao-grande:hover {
+    background-color: #333;
+    border-color: #ccc;
+  }
+  
