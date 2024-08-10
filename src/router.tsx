@@ -1,16 +1,16 @@
-import React, { FC } from 'react';
-import { Routes, Route } from "react-router-dom";
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
 import Home from './pages/home/home';
+import AgendarConsulta from './pages/agendarConsulta/AgendarConsulta';
 
-const Router: FC = () => {
+const AppRouter = () => {
   return (
     <Routes>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/home" element={<Home />} />
-      </Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/home" element={<Home />} />
+      <Route path="/agendar-consulta" element={<AgendarConsulta />} />
     </Routes>
   );
-}
+};
 
-export default Router;
+export default AppRouter;
