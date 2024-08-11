@@ -5,6 +5,10 @@ import { aplicarMascaraDocumento, formatarTelefone, removerCaracteresNaoNumerico
 import './paciente.css';
 import { useNavigate } from 'react-router-dom';
 
+const formatarDataNascimento = (dataNascimento: string): string => {
+    return new Date(dataNascimento).toISOString().split('T')[0];
+};
+
 const Paciente: FC = () => {
     const [nome, setNome] = useState<string>('');
     const [pcd, setPcd] = useState<boolean>(false);
@@ -17,18 +21,7 @@ const Paciente: FC = () => {
 
     const salvarPaciente = async () => {
         // Validação dos campos obrigatórios
-        if (!nome || !cpf || !telefone || !email || !dataNascimento) {
-            alert("Por favor, preencha todos os campos obrigatórios.");
-            return;
-        }
-
-        // Verifica se o campo "Qual tipo de deficiência você possui?" foi preenchido quando o checkbox está marcado
-        if (pcd && !pcdDescricao) {
-            alert("Por favor, preencha o campo 'Qual tipo de deficiência você possui?'.");
-            return;
-        }
-
-        const data = {
+            const data = {
             nome,
             pcd,
             cpf: removerCaracteresNaoNumericos(cpf),
@@ -39,7 +32,7 @@ const Paciente: FC = () => {
         };
 
         try {
-            const response = await apiPost("/pacientes/", data);
+            const response = await apiPost("/pacientes/criarPaciente", data);
             if (response.status === STATUS_CODE.CREATED) {
                 alert("Concluído com sucesso!");
                 navigate('/');
@@ -51,6 +44,17 @@ const Paciente: FC = () => {
         }
 
         console.log(">>>>", data);
+
+        if (!nome || !cpf || !telefone || !email || !dataNascimento) {
+            alert("Por favor, preencha todos os campos obrigatórios.");
+            return;
+        }
+
+        // Verifica se o campo "Qual tipo de deficiência você possui?" foi preenchido quando o checkbox está marcado
+        if (pcd && !pcdDescricao) {
+            alert("Por favor, preencha o campo 'Qual tipo de deficiência você possui?'.");
+            return;
+        }
     };
 
     return (
@@ -75,7 +79,7 @@ const Paciente: FC = () => {
                         fullWidth
                         label="Data de Nascimento"
                         InputLabelProps={{
-                            shrink: true, // Isso mantém o label acima do campo.
+                            shrink: true, 
                         }}
                         type="date"
                         value={dataNascimento}
