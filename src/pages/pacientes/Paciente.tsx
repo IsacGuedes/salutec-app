@@ -5,10 +5,6 @@ import { aplicarMascaraDocumento, formatarTelefone, removerCaracteresNaoNumerico
 import './paciente.css';
 import { useNavigate } from 'react-router-dom';
 
-const formatarDataNascimento = (dataNascimento: string): string => {
-    return new Date(dataNascimento).toISOString().split('T')[0];
-};
-
 const Paciente: FC = () => {
     const [nome, setNome] = useState<string>('');
     const [pcd, setPcd] = useState<boolean>(false);
