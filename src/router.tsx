@@ -2,7 +2,8 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Home from './pages/home/home';
 import AgendarConsulta from './pages/agendarConsulta/AgendarConsulta';
-import Paciente from './pages/pacientes/Paciente';
+import EnvioEmail from './pages/envioEmail/envioEmail';
+import Paciente from './pages/pacientes/paciente';
 
 const AppRouter = () => {
   return (
@@ -10,7 +11,8 @@ const AppRouter = () => {
       <Route path="/" element={<Home />} />
       <Route path="/home" element={<Home />} />
       <Route path="/agendar-consulta" element={<AgendarConsulta />} />
-      <Route path="/Paciente" element={<Paciente/>}/>
+      <Route path='/envioEmail' element={<EnvioEmail/>}/>
+      <Route path='/pacientes' element={<Paciente/>}/>
     </Routes>
   );
 };

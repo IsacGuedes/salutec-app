@@ -16,12 +16,8 @@ const Paciente: FC = () => {
     const navigate = useNavigate();
 
     const salvarPaciente = async () => {
-        if (!nome || !cpf || !telefone || !email || !dataNascimento) {
-            alert("Por favor, preencha todos os campos.");
-            return;
-        }
-
-        const data = {
+        // Validação dos campos obrigatórios
+            const data = {
             nome,
             pcd,
             cpf: removerCaracteresNaoNumericos(cpf),
@@ -32,7 +28,7 @@ const Paciente: FC = () => {
         };
 
         try {
-            const response = await apiPost("/pacientes/", data);
+            const response = await apiPost("/pacientes/criarPaciente", data);
             if (response.status === STATUS_CODE.CREATED) {
                 alert("Concluído com sucesso!");
                 navigate('/');
@@ -44,81 +40,101 @@ const Paciente: FC = () => {
         }
 
         console.log(">>>>", data);
+
+        if (!nome || !cpf || !telefone || !email || !dataNascimento) {
+            alert("Por favor, preencha todos os campos obrigatórios.");
+            return;
+        }
+
+        // Verifica se o campo "Qual tipo de deficiência você possui?" foi preenchido quando o checkbox está marcado
+        if (pcd && !pcdDescricao) {
+            alert("Por favor, preencha o campo 'Qual tipo de deficiência você possui?'.");
+            return;
+        }
     };
 
     return (
         <div className="paciente">
-            <Typography variant="h6">
-                Lembre-se de levar consigo um documento de identificação com foto no dia da consulta.
-            </Typography>
-            
-            <div className="div-login-linha">
-                <TextField
-                    fullWidth
-                    label="Nome completo"
-                    type="text"
-                    value={nome}
-                    onChange={(event) => setNome(event.target.value)}
-                />
+            <div className="lembrete">
+                <Typography variant="h6">
+                    Lembre-se de levar consigo um documento de identificação com foto no dia da consulta.
+                </Typography>
             </div>
-            <div className="div-login-linha">
-                <TextField
-                    fullWidth
-                    label="Data de Nascimento"
-                    type="date"
-                    value={dataNascimento}
-                    onChange={(event) => setDataNascimento(event.target.value)}
-                />
-            </div>
-            <div className="div-login-linha">
-                <TextField
-                    fullWidth
-                    label="CPF"
-                    value={cpf}
-                    onChange={(event) => setCPF(aplicarMascaraDocumento(event.target.value))}
-                />
-            </div>
-            <div className="div-login-linha">
-                <TextField
-                    fullWidth
-                    label="Telefone/Celular"
-                    value={telefone}
-                    onChange={(event) => setTelefone(formatarTelefone(event.target.value))}
-                />
-            </div>
-            <div className="div-login-linha">
-                <TextField
-                    fullWidth
-                    label="Email"
-                    type="text"
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
-                />
-            </div>
-            <div className="div-login-linha">
-                <FormControlLabel
-                    control={
-                        <Checkbox
-                            checked={pcd}
-                            onChange={(event) => setPcd(event.target.checked)}
-                        />
-                    }
-                    label="Possui Deficiência?"
-                />
-            </div>
-            <div className="div-login-linha">
-                <TextField
-                    fullWidth
-                    label="Qual tipo de deficiência você possui?"
-                    type="text"
-                    value={pcdDescricao}
-                    onChange={(event) => setPcdDescricao(event.target.value)}
-                />
-            </div>
-            <div className="div-login-linha">
-                <Button variant="contained" onClick={salvarPaciente}>
-                    Fazer solicitação
-                </Button>
+            <div className="div-formulario">
+                <div className="div-linha">
+                    <TextField
+                        fullWidth
+                        label="Nome completo"
+                        type="text"
+                        value={nome}
+                        onChange={(event) => setNome(event.target.value)}
+                    />
+                </div>
+                <div className="div-linha">
+                    <TextField
+                        fullWidth
+                        label="Data de Nascimento"
+                        InputLabelProps={{
+                            shrink: true, 
+                        }}
+                        type="date"
+                        value={dataNascimento}
+                        placeholder="dd/mm/aaaa"
+                        onChange={(event) => setDataNascimento(event.target.value)}
+                    />
+                </div>
+                <div className="div-linha">
+                    <TextField
+                        fullWidth
+                        label="CPF"
+                        value={cpf}
+                        onChange={(event) => setCPF(aplicarMascaraDocumento(event.target.value))}
+                    />
+                </div>
+                <div className="div-linha">
+                    <TextField
+                        fullWidth
+                        label="Telefone/Celular"
+                        value={telefone}
+                        onChange={(event) => setTelefone(formatarTelefone(event.target.value))}
+                    />
+                </div>
+                <div className="div-linha">
+                    <TextField
+                        fullWidth
+                        label="Email"
+                        type="text"
+                        value={email}
+                        onChange={(event) => setEmail(event.target.value)}
+                    />
+                </div>
+                <div className="div-linha">
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={pcd}
+                                onChange={(event) => setPcd(event.target.checked)}
+                            />
+                        }
+                        label="Possui Deficiência?"
+                    />
+                </div>
+                <div className="div-linha">
+                    <TextField
+                        fullWidth
+                        label="Qual tipo de deficiência você possui?"
+                        type="text"
+                        value={pcdDescricao}
+                        onChange={(event) => setPcdDescricao(event.target.value)}
+                        disabled={!pcd}  // Desabilita o campo se o checkbox estiver desmarcado
+                        required={pcd}   // Torna o campo obrigatório se o checkbox estiver marcado
+                    />
+                </div>
+                <div className="div-linha full-width">
+                    <Button variant="contained" onClick={salvarPaciente}>
+                        Fazer solicitação
+                    </Button>
+                </div>
             </div>
         </div>
     );
