@@ -11,8 +11,8 @@ const AppRouter = () => {
       <Route path="/" element={<Home />} />
       <Route path="/home" element={<Home />} />
       <Route path="/agendar-consulta" element={<AgendarConsulta />} />
-      <Route path='/envioEmail' element={<EnvioEmail/>}/>
-      <Route path='/pacientes' element={<Paciente/>}/>
+      <Route path='/confirmacao-consulta' element={<EnvioEmail/>}/>
+      <Route path='/paciente' element={<Paciente/>}/>
     </Routes>
   );
 };

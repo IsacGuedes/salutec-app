@@ -1,18 +1,26 @@
-import React, { FC, useState } from 'react';
-import './envioEmail.css';
-import { Typography } from '@mui/material';
+import React, { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './envioEmail.css';
 
-const envioEmail: FC = () => {
-    return (
-        <div className='fundo'>
-        <div className="modal-conf">
-            <Typography variant="h6">
-            Se você forneceu um endereço de e-mail durante a solicitação, receberá um e-mail para confirmar ou cancelar o
-            pedido. Caso contrário, aguarde o contato do responsável pelo Posto de Saúde.
-            </Typography>
-        </div>
-        </div>
-        )};
+const EnvioEmail: FC = () => {
+  const navigate = useNavigate();
 
-export default envioEmail;
+  const handleButtonClick = () => {
+    navigate('/home');
+  };
+
+  return (
+    <div className="container">
+      <h1 className="titulo">SOLICITAÇÃO ENVIADA COM SUCESSO!</h1>
+      <p className="mensagem">
+        Se você forneceu um endereço de e-mail durante a solicitação, receberá um e-mail para confirmar ou cancelar o pedido.
+        Caso contrário, aguarde o contato do responsável pelo Posto de Saúde.
+      </p>
+      <button className="botao" onClick={handleButtonClick}>
+        VOLTAR PARA HOME
+      </button>
+    </div>
+  );
+};
+
+export default EnvioEmail;
