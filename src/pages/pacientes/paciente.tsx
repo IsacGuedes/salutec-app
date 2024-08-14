@@ -7,10 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Paciente: FC = () => {
     const [nome, setNome] = useState<string>('');
-    const [pcd, setPcd] = useState<boolean>(false);
-    const [pcdDescricao, setPcdDescricao] = useState<string>('');
-    const [cpf, setCPF] = useState<string>('');
-    const [email, setEmail] = useState<string>('');
+    const [documento, setDocumento] = useState<string>('');
     const [dataNascimento, setDataNascimento] = useState<string>('');
     const [telefone, setTelefone] = useState<string>('');
     const navigate = useNavigate();
@@ -19,13 +16,10 @@ const Paciente: FC = () => {
         // Validação dos campos obrigatórios
             const data = {
             nome,
-            pcd,
-            cpf: removerCaracteresNaoNumericos(cpf),
+            documento: removerCaracteresNaoNumericos(documento),
             telefone: removerCaracteresNaoNumericos(telefone),
-            email,
             dataNascimento,
-            pcdDescricao,
-        };
+            };
 
         try {
             const response = await apiPost("/pacientes/criarPaciente", data);
@@ -41,14 +35,8 @@ const Paciente: FC = () => {
 
         console.log(">>>>", data);
 
-        if (!nome || !cpf || !telefone || !email || !dataNascimento) {
+        if (!nome || !documento || !telefone || !dataNascimento) {
             alert("Por favor, preencha todos os campos obrigatórios.");
-            return;
-        }
-
-        // Verifica se o campo "Qual tipo de deficiência você possui?" foi preenchido quando o checkbox está marcado
-        if (pcd && !pcdDescricao) {
-            alert("Por favor, preencha o campo 'Qual tipo de deficiência você possui?'.");
             return;
         }
     };
@@ -86,9 +74,9 @@ const Paciente: FC = () => {
                 <div className="div-linha">
                     <TextField
                         fullWidth
-                        label="CPF"
-                        value={cpf}
-                        onChange={(event) => setCPF(aplicarMascaraDocumento(event.target.value))}
+                        label="CPF/CNS"
+                        value={documento}
+                        onChange={(event) => setDocumento(aplicarMascaraDocumento(event.target.value))}
                     />
                 </div>
                 <div className="div-linha">
@@ -97,37 +85,6 @@ const Paciente: FC = () => {
                         label="Telefone/Celular"
                         value={telefone}
                         onChange={(event) => setTelefone(formatarTelefone(event.target.value))}
-                    />
-                </div>
-                <div className="div-linha">
-                    <TextField
-                        fullWidth
-                        label="Email"
-                        type="text"
-                        value={email}
-                        onChange={(event) => setEmail(event.target.value)}
-                    />
-                </div>
-                <div className="div-linha">
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                checked={pcd}
-                                onChange={(event) => setPcd(event.target.checked)}
-                            />
-                        }
-                        label="Possui Deficiência?"
-                    />
-                </div>
-                <div className="div-linha">
-                    <TextField
-                        fullWidth
-                        label="Qual tipo de deficiência você possui?"
-                        type="text"
-                        value={pcdDescricao}
-                        onChange={(event) => setPcdDescricao(event.target.value)}
-                        disabled={!pcd}  // Desabilita o campo se o checkbox estiver desmarcado
-                        required={pcd}   // Torna o campo obrigatório se o checkbox estiver marcado
                     />
                 </div>
                 <div className="div-linha full-width">
