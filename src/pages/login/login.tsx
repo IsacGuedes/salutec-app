@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Button, TextField, Typography, Container, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import './login.css';
 
-const Login: React.FC = () => {
+const Login: FC = () => {
   const [usuario, setUsuario] = useState<string>('');
   const [senha, setSenha] = useState<string>('');
   const navigate = useNavigate();
