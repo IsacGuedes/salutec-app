@@ -1,0 +1,25 @@
+.icone-menu {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    color: #000;
+  }
+  
+  .painel-lateral {
+    width: 250px;
+    background-color: #f5f5f5;
+  }
+  
+  item-lista {
+    padding: 16px;
+  }
+  
+  texto-item-lista {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  item-lista:hover {
+    background-color: #e0e0e0;
+  }
+  
