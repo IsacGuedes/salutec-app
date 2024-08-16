@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import './modal-mensagem.css';
+import './styles.css';
 import { useNavigate } from 'react-router-dom';
 import Router from '../../router';
 

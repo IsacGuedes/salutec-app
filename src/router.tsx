@@ -1,10 +1,11 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Home from './pages/home/home';
-import AgendarConsulta from './pages/agendarConsulta/AgendarConsulta';
-import EnvioEmail from './pages/envioEmail/envioEmail';
-import Paciente from './pages/pacientes/paciente';
-import Login from './pages/login/login';
+import Home from './pages/home';
+import AgendarConsulta from './pages/agendarConsulta';
+import EnvioEmail from './pages/envioEmail';
+import Paciente from './pages/paciente';
+import Login from './pages/login';
+import Dashboard from './pages/dashboard';
 
 const AppRouter = () => {
   return (
@@ -15,6 +16,7 @@ const AppRouter = () => {
       <Route path='/confirmacao-consulta' element={<EnvioEmail/>}/>
       <Route path='/paciente' element={<Paciente/>}/>
       <Route path='/login-area-profissional' element={<Login/>}/>
+      <Route path='/dashboard' element={<Dashboard/>}/>
     </Routes>
   );
 };

@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './envioEmail.css';
+import './styles.css';
 
 const EnvioEmail: FC = () => {
   const navigate = useNavigate();

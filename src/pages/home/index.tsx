@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import './home.css';
-import ModalMensagem from '../../components/modal-mensagem/modal-mensagem';
+import './styles.css';
+import ModalAgendamento from '../../components/modal-mensagem';
 
 const Home: React.FC = () => {
   const [modalAberto, setModalAberto] = useState(false);
@@ -19,7 +19,7 @@ const Home: React.FC = () => {
         AGENDAR CONSULTA
       </button>
       
-      <ModalMensagem aberto={modalAberto} aoFechar={fecharModal} />
+      <ModalAgendamento aberto={modalAberto} aoFechar={fecharModal} />
     </div>
   );
 }

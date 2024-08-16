@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Inria+Sans:wght@400;700&display=swap');
+
+body {
+    font-family: 'Inria Sans', sans-serif;
+}
+
+.container-dashboard {
+    margin-top: 20px;
+    padding-left: 240px;
+}
+
+@media (max-width: 600px) {
+    .container-dashboard {
+        padding-left: 0;
+        margin-top: 64px;
+    }
+}
+
+h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.MuiTableCell-root, .MuiButton-contained {
+    font-family: 'Inria Sans', sans-serif;
+}
+
+.MuiTableCell-root {
+    padding: 16px;
+    font-size: 14px;
+}
+
+.MuiButton-containedSuccess {
+    background-color: #4caf50;
+    color: #fff;
+}
+
+.MuiButton-containedSuccess:hover {
+    background-color: #388e3c;
+}

@@ -2,7 +2,7 @@ import React, { FC, useState } from 'react';
 import { TextField, Button, Typography, Checkbox, FormControlLabel } from '@mui/material';
 import { apiPost, STATUS_CODE } from '../../api/RestClient';
 import { aplicarMascaraDocumento, formatarTelefone, removerCaracteresNaoNumericos } from '../../components/formatos';
-import './paciente.css';
+import './styles.css';
 import { useNavigate } from 'react-router-dom';
 
 const Paciente: FC = () => {
@@ -13,7 +13,6 @@ const Paciente: FC = () => {
     const navigate = useNavigate();
 
     const salvarPaciente = async () => {
-        // Validação dos campos obrigatórios
             const data = {
             nome,
             documento: removerCaracteresNaoNumericos(documento),
