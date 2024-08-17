@@ -1,9 +1,10 @@
 import React, { useState, useEffect, FC } from 'react';
-import { Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
-import Sidebar from '../../components/sidebar';
+import { Layout, Table, Button } from 'antd';
 import { Agendamento } from '../../types/agendamento';
+import DashboardSidebar from '../../components/sidebar';
 import './styles.css';
 
+const { Content } = Layout;
 
 const Dashboard: FC = () => {
   const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
@@ -22,53 +23,50 @@ const Dashboard: FC = () => {
     fetchAgendamentos();
   }, []);
 
+  const columns = [
+    { title: 'Consulta', dataIndex: 'id', key: 'id' },
+    { title: 'Nome', dataIndex: 'nome', key: 'nome' },
+    { title: 'CPF', dataIndex: 'cpf', key: 'cpf' },
+    { title: 'Contato', dataIndex: 'contato', key: 'contato' },
+    { title: 'Data da Consulta', dataIndex: 'data', key: 'data' },
+    { title: 'Tipo de Consulta', dataIndex: 'tipo', key: 'tipo' },
+    {
+      title: 'Status',
+      key: 'status',
+      render: (text: string, record: Agendamento) => (
+        <Button
+          type="primary"
+          className={`botao-status ${
+            record.status === 'Confirmado'
+              ? 'botao-sucesso'
+              : record.status === 'A Confirmar'
+              ? 'botao-aviso'
+              : record.status === 'Cancelado'
+              ? 'botao-erro'
+              : ''
+          }`}
+        >
+          {record.status}
+        </Button>
+      ),
+    },
+  ];
+
   return (
-    <div style={{ display: 'flex' }}>
-      <Sidebar />
-      <Container className="container-dashboard">
-        <h2>Todos Agendamentos</h2>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Consulta</TableCell>
-                <TableCell>Nome</TableCell>
-                <TableCell>CPF</TableCell>
-                <TableCell>Contato</TableCell>
-                <TableCell>Data da Consulta</TableCell>
-                <TableCell>Tipo de Consulta</TableCell>
-                <TableCell>Status</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {agendamentos.map((agendamento) => (
-                <TableRow key={agendamento.id}>
-                  <TableCell>{agendamento.id}</TableCell>
-                  <TableCell>{agendamento.nome}</TableCell>
-                  <TableCell>{agendamento.cpf}</TableCell>
-                  <TableCell>{agendamento.contato}</TableCell>
-                  <TableCell>{agendamento.data}</TableCell>
-                  <TableCell>{agendamento.tipo}</TableCell>
-                  <TableCell>
-                    <Button 
-                      variant="contained" 
-                      color={
-                        agendamento.status === 'Confirmado' ? 'success' :
-                        agendamento.status === 'A Confirmar' ? 'warning' :
-                        agendamento.status === 'Cancelado' ? 'error' :
-                        'primary'
-                      }
-                    >
-                      {agendamento.status}
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Container>
-    </div>
+    <Layout style={{ minHeight: '100vh' }}>
+      <DashboardSidebar />
+      <Layout className="layout-dashboard">
+        <Content className="conteudo-dashboard">
+          <h2>Todos Agendamentos</h2>
+          <Table
+            dataSource={agendamentos}
+            columns={columns}
+            rowKey={(record) => record.id.toString()}
+            pagination={false}
+          />
+        </Content>
+      </Layout>
+    </Layout>
   );
 };
 
