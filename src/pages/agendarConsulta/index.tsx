@@ -3,6 +3,7 @@ import Calendario from '../../components/calendario';
 import { Button, TextField } from '@mui/material';
 import './styles.css';
 import { useNavigate } from 'react-router-dom';
+import './image.png';
 
 const AgendarConsulta: FC = () => {
   const [tipoConsulta, setTipoConsulta] = useState('');
@@ -19,7 +20,7 @@ const AgendarConsulta: FC = () => {
   }
 
   return (
-    <div className='container'>
+    <div className='container-principal'>
       <div className="container-div">
         <div className="dropdown-medico">
           <div className="titulo-tipo-consulta">
@@ -46,11 +47,11 @@ const AgendarConsulta: FC = () => {
       </TextField>
           </div>
           <div className="container-resumo-consulta">
-          <h1 className='titulo-consulta'>Resumo da consulta</h1>
           <p>Data:</p>
           <p>Consulta: {tipoConsulta}</p>
           <p>Horário: {horarioConsulta}</p>
           <p>Local:</p>
+          <img src="./image.png" alt="" />
         </div>
         </div>
         <div className="dropdown-medico">
@@ -75,27 +76,25 @@ const AgendarConsulta: FC = () => {
         <option value="10:10">10:10</option>
       </TextField>
         </div>
-          <Button onClick={handleVoltarClick} variant="contained" color="primary">
-            Voltar
-          </Button>
-          <Button 
-            onClick={() => {
-              if(tipoConsulta === "" || horarioConsulta === ""){
-                //validar data selecionada também
-                alert("É necessário preencher todos os dados!")
-              }else if (horarioConsulta === "") {
-                window.alert("Por favor, selecione um horário!");
-              }else if (horarioConsulta === "") {
-                window.alert("Por favor, selecione um horário!");
-              } else{
-                handleContinuarClick();
+          <div className="div-botao">
+            <Button onClick={handleVoltarClick} variant="contained" color="primary">
+              Voltar
+            </Button>
+            <Button
+              onClick={() => {
+                if(tipoConsulta === "" || horarioConsulta === ""){
+                  //validar data selecionada também
+                  alert("É necessário preencher todos os dados!")
+                } else{
+                  handleContinuarClick();
+                }
               }
-            }
-            } 
-            variant="contained" 
-            color="primary">
-            Continuar
-          </Button>
+              }
+              variant="contained"
+              color="primary">
+              Continuar
+            </Button>
+          </div>
         </div>
       </div>
     </div>
