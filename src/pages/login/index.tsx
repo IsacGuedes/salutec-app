@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
+import { Form, Input, Button, Checkbox } from 'antd';
+import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import './styles.css';
 
 const Login: React.FC = () => {
-  const [matricula, setMatricula] = useState<string>('');
-  const [senha, setSenha] = useState<string>('');
-  const [error, setError] = useState<string>('');
+  const [matricula, setMatricula] = useState('');
+  const [senha, setSenha] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -25,32 +27,51 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="caixa-login">
-      <h2>Login</h2>
-      <form className="formulario-login" onSubmit={handleLogin}>
-        <div>
-          <label htmlFor="matricula">Matrícula</label>
-          <input
-            type="text"
-            id="matricula"
+    <div className="container-login">
+      <Form
+        name="formulario_login"
+        className="formulario-login"
+        initialValues={{ remember: true }}
+        onFinish={handleLogin} // Conecta o handleLogin ao envio do formulário
+      >
+        <Form.Item
+          name="usuario"
+          rules={[{ required: true, message: 'Por favor, insira sua matrícula!' }]}
+        >
+          <Input
+            prefix={<UserOutlined />}
+            placeholder="Matrícula"
             value={matricula}
             onChange={(e) => setMatricula(e.target.value)}
-            required
           />
-        </div>
-        <div>
-          <label htmlFor="senha">Senha</label>
-          <input
+        </Form.Item>
+        <Form.Item
+          name="senha"
+          rules={[{ required: true, message: 'Por favor, insira sua senha!' }]}
+        >
+          <Input
+            prefix={<LockOutlined />}
             type="password"
-            id="senha"
+            placeholder="Senha"
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
-            required
           />
-        </div>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <button className="botao-login" type="submit">Login</button>
-      </form>
+        </Form.Item>
+        {error && <div className="error-message">{error}</div>}
+        <Form.Item>
+          <Form.Item name="lembrar" valuePropName="checked" noStyle>
+            <Checkbox>Lembrar-me</Checkbox>
+          </Form.Item>
+          <a className="esqueceu-senha" href="">
+            Esqueceu sua senha?
+          </a>
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit" className="botao-login">
+            Entrar
+          </Button>
+        </Form.Item>
+      </Form>
     </div>
   );
 };
