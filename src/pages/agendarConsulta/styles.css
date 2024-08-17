@@ -1,21 +1,17 @@
-.container {
-  padding: 10px;
-  display: flex;
-  width: 75%;
-  justify-content: center;
-  align-items: center;
-}
-
 .option-dropdown {
   margin-top: 0;
-  width: 70%;
-  margin-left: 20%;
-  align-items: center;
+  width: 100%;
+  margin-bottom: 5%;
 }
 
 .titulo-consulta {
+  display: flex;
   font-size: 24px;
   font-weight: bold;
+  justify-content: center;
+}
+p{
+  align-items: flex-start;
 }
 
 option {
@@ -31,9 +27,23 @@ option {
 .container-div {
   display: inline-flex;
   flex-direction: row;
-  justify-content: center;
   justify-content: space-between;
-  width: 60%;
+  width: 50%;
   margin-left: 5%;
   margin-right: 5%;
+}
+
+.dropdown-medico{
+  display: flex;
+  flex-direction: column;
+}
+
+.container-resumo-consulta{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.container-resumo-consulta p{
+  margin: 0.3em;
 }
