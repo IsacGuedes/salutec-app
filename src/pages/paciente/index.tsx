@@ -13,13 +13,19 @@ const Paciente: FC = () => {
     const navigate = useNavigate();
 
     const salvarPaciente = async () => {
-            const data = {
+        // Validação dos campos obrigatórios
+        if (!nome || !documento || !telefone || !dataNascimento) {
+            alert("Por favor, preencha todos os campos obrigatórios.");
+            return;
+        }
+    
+        const data = {
             nome,
             documento: removerCaracteresNaoNumericos(documento),
-            telefone: removerCaracteresNaoNumericos(telefone),
+            telefone: formatarTelefone(removerCaracteresNaoNumericos(telefone), true), // Formata para envio
             dataNascimento,
-            };
-
+        };
+    
         try {
             const response = await apiPost("/pacientes/criarPaciente", data);
             if (response.status === STATUS_CODE.CREATED) {
@@ -31,13 +37,8 @@ const Paciente: FC = () => {
         } catch (error) {
             alert("Erro ao conectar com o servidor.");
         }
-
-        console.log(">>>>", data);
-
-        if (!nome || !documento || !telefone || !dataNascimento) {
-            alert("Por favor, preencha todos os campos obrigatórios.");
-            return;
-        }
+    
+        console.log(">>>>", data);    
     };
 
     return (
@@ -94,6 +95,7 @@ const Paciente: FC = () => {
             </div>
         </div>
     );
+
 };
 
 export default Paciente;

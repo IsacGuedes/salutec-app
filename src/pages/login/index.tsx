@@ -1,63 +1,57 @@
-import React, { FC, useState } from 'react';
-import { Button, TextField, Typography, Container, Box } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import axios from 'axios';
 import './styles.css';
 
-const Login: FC = () => {
-  const [usuario, setUsuario] = useState<string>('');
+const Login: React.FC = () => {
+  const [matricula, setMatricula] = useState<string>('');
   const [senha, setSenha] = useState<string>('');
-  const navigate = useNavigate();
+  const [error, setError] = useState<string>('');
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Usuário:', usuario);
-    console.log('Senha:', senha);
-
-    navigate('/dashboard');
+    
+    try {
+      const response = await axios.post('http://localhost:8090/api/enfermeiros/login', null, {
+        params: { matricula, senha },
+      });
+      
+      if (response.status === 200) {
+        alert('Login bem-sucedido');
+        // Redirecionar ou armazenar o token de autenticação, se necessário
+      }
+    } catch (error) {
+      setError('Matrícula ou senha incorretos.');
+    }
   };
 
   return (
-    <Container maxWidth="xs">
-      <Box className="caixa-login">
-        <Typography 
-            variant="h4" 
-            gutterBottom 
-            sx={{ fontFamily: 'Inria Sans, sans-serif', color: 'black'}}
-            >
-          Área do Profissional
-        </Typography>
-        <form onSubmit={handleLogin} className="formulario-login">
-          <TextField
-            label="Usuário"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            value={usuario}
-            onChange={(e) => setUsuario(e.target.value)}
+    <div className="caixa-login">
+      <h2>Login</h2>
+      <form className="formulario-login" onSubmit={handleLogin}>
+        <div>
+          <label htmlFor="matricula">Matrícula</label>
+          <input
+            type="text"
+            id="matricula"
+            value={matricula}
+            onChange={(e) => setMatricula(e.target.value)}
             required
           />
-          <TextField
-            label="Senha"
+        </div>
+        <div>
+          <label htmlFor="senha">Senha</label>
+          <input
             type="password"
-            variant="outlined"
-            fullWidth
-            margin="normal"
+            id="senha"
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
             required
           />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            className="botao-login"
-            sx={{backgroundColor: 'black', '&:hover': {backgroundColor: 'black'}, fontFamily: 'Inria Sans, sans-serif', color: 'white'}}
-          >
-            Entrar
-          </Button>
-        </form>
-      </Box>
-    </Container>
+        </div>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <button className="botao-login" type="submit">Login</button>
+      </form>
+    </div>
   );
 };
 

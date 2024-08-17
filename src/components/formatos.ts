@@ -19,13 +19,29 @@ export const aplicarMascaraDocumento = (documento: string): string => {
     return documento; // Retorna o documento original se não atender aos casos acima
 };
 
-export const formatarTelefone = (telefone: string): string => {
-    return telefone
-        .replace(/\D/g, '')
-        .replace(/(\d{2})(\d)/, '($1) $2')
-        .replace(/(\d{4})(\d)/, '$1-$2')
-        .replace(/(\d{4})-(\d)(\d{4})/, '$1$2-$3')
-        .replace(/(-\d{4})\d+?$/, '$1');
+export const formatarTelefone = (telefone: string, paraEnvio: boolean = false): string => {
+    const apenasDigitos = telefone.replace(/\D/g, '').slice(0, 11);
+
+    if (paraEnvio) {
+        // Adiciona o prefixo +55 para números brasileiros no envio
+        return apenasDigitos.length === 10 || apenasDigitos.length === 11
+            ? `+55${apenasDigitos}`
+            : telefone;
+    } else {
+        if (apenasDigitos.length === 11) {
+            // Formata telefone celular (11 dígitos)
+            return apenasDigitos
+                .replace(/(\d{2})(\d)/, '($1) $2')
+                .replace(/(\d{5})(\d{4})$/, '$1-$2');
+        } else if (apenasDigitos.length === 10) {
+            // Formata telefone fixo (10 dígitos)
+            return apenasDigitos
+                .replace(/(\d{2})(\d)/, '($1) $2')
+                .replace(/(\d{4})(\d{4})$/, '$1-$2');
+        }
+    }
+
+    return telefone; // Retorna o telefone original caso não se aplique nenhuma formatação
 };
 
 export const removerCaracteresNaoNumericos = (valor: string): string => {

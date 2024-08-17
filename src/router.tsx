@@ -15,7 +15,7 @@ const AppRouter = () => {
       <Route path="/agendar-consulta" element={<AgendarConsulta />} />
       <Route path='/confirmacao-consulta' element={<EnvioEmail/>}/>
       <Route path='/paciente' element={<Paciente/>}/>
-      <Route path='/login-area-profissional' element={<Login/>}/>
+      <Route path='/login' element={<Login/>}/>
       <Route path='/dashboard' element={<Dashboard/>}/>
     </Routes>
   );
