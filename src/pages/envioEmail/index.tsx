@@ -10,7 +10,7 @@ const EnvioEmail: FC = () => {
   };
 
   return (
-    <div className="container">
+    <div className="container-email">
       <h1 className="titulo">SOLICITAÇÃO ENVIADA COM SUCESSO!</h1>
       <p className="mensagem">
         Se você forneceu um endereço de e-mail durante a solicitação, receberá um e-mail para confirmar ou cancelar o pedido.
