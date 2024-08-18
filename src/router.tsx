@@ -6,6 +6,7 @@ import EnvioEmail from './pages/envioEmail';
 import Paciente from './pages/paciente';
 import Login from './pages/login';
 import Dashboard from './pages/dashboard';
+import DisponibilidadeForm from './pages/personalizaAgenda';
 
 const AppRouter = () => {
   return (
@@ -17,6 +18,7 @@ const AppRouter = () => {
       <Route path='/confirmacao-consulta' element={<EnvioEmail/>}/>
       <Route path='/login' element={<Login/>}/>
       <Route path='/dashboard' element={<Dashboard/>}/>
+      <Route path='/personaliza' element={<DisponibilidadeForm/>}/>
     </Routes>
   );
 };

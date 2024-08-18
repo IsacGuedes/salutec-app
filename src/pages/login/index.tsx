@@ -5,12 +5,12 @@ import axios from 'axios';
 import './styles.css';
 
 const Login: React.FC = () => {
-  const [matricula, setMatricula] = useState('');
-  const [senha, setSenha] = useState('');
+  const [matricula, setMatricula] = useState<string>('');
+  const [senha, setSenha] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleLogin = async (values: { matricula: string; senha: string }) => {
+    const { matricula, senha } = values;
     
     try {
       const response = await axios.post('http://localhost:8090/api/enfermeiros/login', null, {
@@ -35,14 +35,14 @@ const Login: React.FC = () => {
         onFinish={handleLogin} // Conecta o handleLogin ao envio do formulário
       >
         <Form.Item
-          name="usuario"
+          name="matricula"
           rules={[{ required: true, message: 'Por favor, insira sua matrícula!' }]}
         >
           <Input
             prefix={<UserOutlined />}
             placeholder="Matrícula"
             value={matricula}
-            onChange={(e) => setMatricula(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMatricula(e.target.value)}
           />
         </Form.Item>
         <Form.Item
@@ -54,7 +54,7 @@ const Login: React.FC = () => {
             type="password"
             placeholder="Senha"
             value={senha}
-            onChange={(e) => setSenha(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSenha(e.target.value)}
           />
         </Form.Item>
         {error && <div className="error-message">{error}</div>}
@@ -62,7 +62,7 @@ const Login: React.FC = () => {
           <Form.Item name="lembrar" valuePropName="checked" noStyle>
             <Checkbox>Lembrar-me</Checkbox>
           </Form.Item>
-          <a className="esqueceu-senha" href="">
+          <a className="esqueceu-senha" href="#">
             Esqueceu sua senha?
           </a>
         </Form.Item>
