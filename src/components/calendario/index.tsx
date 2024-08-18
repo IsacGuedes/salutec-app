@@ -34,13 +34,9 @@ export default function BasicDateCalendar() {
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DateCalendar
           className='calendar-container'
-          onChange={handleDateChange} // Adiciona o manipulador de mudança
+          onChange={handleDateChange}
         />
       </LocalizationProvider>
-      {/* Exibe a data selecionada */}
-      <div className="selected-date">
-        Data Selecionada: {date}
-      </div>
-    </div>
+          </div>
   );
 }

@@ -3,11 +3,19 @@
   height: 100%;
 }
 
-.option-dropdown {
+.option-dropdown-tipoConsulta {
   margin-top: 0;
   width: 100%;
   margin-bottom: 5%;
 }
+
+.option-dropdown-horaConsulta {
+  margin-top: 0;
+  width: 100%;
+  margin-bottom: 5%;
+  margin-right: 10%;
+}
+
 
 .titulo-consulta {
   display: flex;
@@ -30,23 +38,32 @@ option {
 }
 
 .container-div {
-  padding-top: 3%;
+  padding-top: 1%;
   padding-left: 5%;
   padding-right: 5%;
+  padding-bottom: 1.5%;
   display: inline-flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
   width: 60%;
-  margin-top: 2%;
+  margin-top: 1.5%;
   margin-left: 4%;
   margin-right: 4%;
-  margin-bottom: 4%;
+  margin-bottom: 2%;
   background-color: white;
 }
 
 .dropdown-medico{
   display: flex;
   flex-direction: column;
+  padding: 1%;
+}
+
+.dropdown-data-hora{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 60%;
 }
 
 .container-resumo-consulta{
@@ -54,7 +71,7 @@ option {
   flex-direction: column;
   align-items: flex-start;
   padding: 20px 20px;
-  margin-top: 20%;
+  margin-top: 24%;
   width: 242px;
   height: 165px;
   border: 0.3px solid #00000075;;
@@ -69,4 +86,20 @@ option {
 .div-botao{
   display: flex;
   justify-content: space-between;
+  width: 100%;
+  margin-top: 32%;
+}
+
+.div-hora-botao{
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.vertical-line {
+  width: 1px;
+  background-color: #333;
+  margin: 0 20px;
+  display: inline-block;
+  vertical-align: middle;
 }
