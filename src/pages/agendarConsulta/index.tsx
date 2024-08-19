@@ -6,9 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import { apiPost, STATUS_CODE } from '../../api/RestClient';
 
 const AgendarConsulta: FC = () => {
-  const [data, setData] = useState('');
+  const [dataConsulta, setDataConsulta] = useState('');
   const [tipoConsulta, setTipoConsulta] = useState('');
-  const [horarioConsulta, setHorarioConsulta] = useState('');
+  const [horario, setHorario] = useState('');
   const [statusConsulta, setStatusConsulta] = useState('');
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [clienteStore, setClienteStore] = useState<any>(null);
@@ -17,30 +17,40 @@ const AgendarConsulta: FC = () => {
 
   const salvarConsulta = async () => {
    
-  const dataConsulta = {
-    data: "2024-06-02",
-    horario: horarioConsulta,
+  //   const formatarDataParaBackend = (data: string) => {
+  //     // Converte a data para o formato yyyy-MM-dd
+  //     const [dia, mes, ano] = data.split('/');
+  //     return `${ano}-${mes}-${dia}`;
+  // };
+  
+  const formatarHorarioParaBackend = (horario: string) => {
+      // Formata o horário para o formato HH:mm:ss se necessário
+      return horario + ":00";
+  };
+
+  const data = {
+    dataConsulta: "2024-06-25",
+    horario: formatarHorarioParaBackend(horario),
     tipoConsulta: tipoConsulta,
-    statusConsulta: "AGUARDANDO_CONFIRMAÇÃO",
-    pacienteId: "1"
+    statusConsulta: "AGUARDANDO_CONFIRMACAO"
 };
 
   
 
 try {
-    const response = await apiPost("/agendar-consulta/criarConsulta", dataConsulta);
+    const response = await apiPost("/agendar-consulta/criarConsulta", data);
     if (response.status === STATUS_CODE.CREATED) {
         alert("Concluído com sucesso!");
-        navigate('/');
+        navigate('/paciente');
     } else {
         alert(`Erro ao cadastrar consulta: ${response.statusText}`);
     }
 } catch (error) {
     alert("Erro ao conectar com o servidor.");
-    console.log(" dados: " + dataConsulta);
+    console.log(" dados: ", data);
 }
 
-console.log(">>>>", dataConsulta);    
+console.log(">>>>", data);    
 
   };
 
@@ -76,8 +86,8 @@ console.log(">>>>", dataConsulta);
         }}
       >
         <option value=""></option>
-        <option value="Odontológica">Odontológica</option>
-        <option value="Clínico Geral">Clínico Geral</option>
+        <option value="DENTISTA">Dentista</option>
+        <option value="CLINICO_GERAL">Clínico Geral</option>
       </TextField>
           </div>
           <Calendario />
@@ -97,8 +107,8 @@ console.log(">>>>", dataConsulta);
           select
           fullWidth
           variant="standard"
-          value={horarioConsulta}
-          onChange={(e) => setHorarioConsulta(e.target.value)}
+          value={horario}
+          onChange={(e) => setHorario(e.target.value)}
           SelectProps={{
             native: true,
           }}
@@ -111,7 +121,7 @@ console.log(">>>>", dataConsulta);
           <div className="container-resumo-consulta">
           <p>Data:</p>
           <p>Consulta: {tipoConsulta}</p>
-          <p>Horário: {horarioConsulta}</p>
+          <p>Horário: {horario}</p>
           <p>Local:</p>
         </div>
             <div className="div-hora-botao">
@@ -122,21 +132,17 @@ console.log(">>>>", dataConsulta);
               </Button>
               <Button
                 onClick={() => {
-                  if(tipoConsulta === "" || horarioConsulta === ""){
+                  if(tipoConsulta === "" || horario === ""){
                     //validar data selecionada também
                     alert("É necessário preencher todos os dados!")
                   } else{
-                    handleContinuarClick();
+                    salvarConsulta();
                   }
                 }
                 }
                 variant="contained"
                 color="primary">
                 Continuar
-              </Button>
-
-              <Button variant="contained" onClick={salvarConsulta}>
-                validar
               </Button>
             </div>
           </div>
