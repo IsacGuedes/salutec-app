@@ -2,30 +2,38 @@ import * as React from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { Dayjs } from 'dayjs'; // Importar Dayjs para o tipo de data
+import { Dayjs } from 'dayjs';
 import './styles.css';
 
-export default function BasicDateCalendar() {
-  const [selectedDate, setSelectedDate] = React.useState<Dayjs | null>(null);
+interface BasicDateCalendarProps {
+  selectedDate?: Dayjs | null;
+  onDateChange?: (date: Dayjs | null) => void;
+}
 
-  // const handleDateChange = (date: Dayjs | null) => {
-  //   setSelectedDate(date);
-  //   console.log('Data selecionada:', date ? date.format('DD-MM-YYYY') : 'Nenhuma data selecionada');
-  // };
+const BasicDateCalendar: React.FC<BasicDateCalendarProps> = ({
+  selectedDate: propSelectedDate = null,
+  onDateChange,
+}) => {
+  const [selectedDate, setSelectedDate] = React.useState<Dayjs | null>(propSelectedDate);
+
+  React.useEffect(() => {
+    setSelectedDate(propSelectedDate);
+  }, [propSelectedDate]);
 
   const handleDateChange = (date: Dayjs | null) => {
     setSelectedDate(date);
     if (date) {
       const formattedDate = date.format('DD/MM/YYYY');
-      localStorage.setItem('selectedDate', formattedDate); // Armazena a data no localStorage
+      localStorage.setItem('selectedDate', formattedDate);
       console.log('Data selecionada:', formattedDate);
     } else {
-      localStorage.removeItem('selectedDate'); // Remove a data se não houver seleção
+      localStorage.removeItem('selectedDate');
+    }
+    if (onDateChange) {
+      onDateChange(date);
     }
   };
-  
-  const date = selectedDate ? selectedDate.format('DD/MM/YYYY') : 'Nenhuma data selecionada'
-  
+
   return (
     <div className='calendar'>
       <div className="titulo-calendario">
@@ -34,9 +42,12 @@ export default function BasicDateCalendar() {
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DateCalendar
           className='calendar-container'
+          value={selectedDate}
           onChange={handleDateChange}
         />
       </LocalizationProvider>
-          </div>
+    </div>
   );
 }
+
+export default BasicDateCalendar;

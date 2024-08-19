@@ -1,0 +1,16 @@
+.calendar-container {
+  border: 1px solid black;
+}
+
+.titulo-calendar {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.titulo-calendario {
+  display: inline-block;
+}
+
+.calendar {
+  display: inline-block;
+}

@@ -2,7 +2,7 @@ import React, { FC, useState } from 'react';
 import { TextField, Button, Typography, Checkbox, FormControlLabel } from '@mui/material';
 import { apiPost, STATUS_CODE } from '../../api/RestClient';
 import { aplicarMascaraDocumento, formatarTelefone, removerCaracteresNaoNumericos } from '../../components/formatos';
-import './styles.css';
+import './paciente.css';
 import { useNavigate } from 'react-router-dom';
 
 const Paciente: FC = () => {
@@ -13,52 +13,34 @@ const Paciente: FC = () => {
     const navigate = useNavigate();
 
     const salvarPaciente = async () => {
+        // Validação dos campos obrigatórios
         if (!nome || !documento || !telefone || !dataNascimento) {
-          alert("Por favor, preencha todos os campos obrigatórios.");
-          return;
+            alert("Por favor, preencha todos os campos obrigatórios.");
+            return;
         }
-      
+    
         const data = {
-          nome,
-          documento: removerCaracteresNaoNumericos(documento),
-          telefone: formatarTelefone(removerCaracteresNaoNumericos(telefone), true),
-          dataNascimento,
+            nome,
+            documento: removerCaracteresNaoNumericos(documento),
+            telefone: formatarTelefone(removerCaracteresNaoNumericos(telefone), true), // Formata para envio
+            dataNascimento,
         };
-      
+    
         try {
-          // Criação do paciente
-          const response = await apiPost("/pacientes/criarPaciente", data);
-          if (response.status === STATUS_CODE.CREATED) {
-            const pacienteId = response.data.id;
-      
-            // Recupera os dados da consulta do sessionStorage
-            const consultaData = JSON.parse(sessionStorage.getItem('consultaData') || '{}');
-            consultaData.pacienteId = pacienteId;
-      
-            // Verifica se todos os dados necessários estão presentes
-            if (!consultaData.data || !consultaData.tipoConsulta || !consultaData.horarioConsulta) {
-              alert("Dados da consulta estão incompletos.");
-              return;
-            }
-      
-            // Criação da consulta
-            const consultaResponse = await apiPost("/agendar-consulta/criarConsulta", consultaData);
-            if (consultaResponse.status === STATUS_CODE.CREATED) {
-              alert("Paciente e consulta cadastrados com sucesso!");
-              navigate('/');
+            const response = await apiPost("/pacientes/criarPaciente", data);
+            if (response.status === STATUS_CODE.CREATED) {
+                alert("Concluído com sucesso!");
+                navigate('/');
             } else {
-              alert(`Erro ao cadastrar consulta: ${consultaResponse.statusText}`);
+                alert(`Erro ao cadastrar paciente: ${response.statusText}`);
             }
-          } else {
-            alert(`Erro ao cadastrar paciente: ${response.statusText}`);
-          }
         } catch (error) {
-          alert("Erro ao conectar com o servidor.");
-        }      
+            alert("Erro ao conectar com o servidor.");
+        }
     
-        console.log(">>>>", data);
+        console.log(">>>>", data);    
     };
-    
+
     return (
         <div className="paciente">
             <div className="lembrete">
@@ -113,7 +95,6 @@ const Paciente: FC = () => {
             </div>
         </div>
     );
-
 };
 
 export default Paciente;
