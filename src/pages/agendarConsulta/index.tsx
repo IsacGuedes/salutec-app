@@ -18,7 +18,7 @@ const AgendarConsulta: FC = () => {
 };
 
   const handleContinuarClick = () => {
-    if (tipoConsulta === '' || horario === '' || !selectedDate) {
+    if (tipoConsulta === '' || horario === '') {
       alert('É necessário preencher todos os dados!');
     } else {
       const consultaData = {

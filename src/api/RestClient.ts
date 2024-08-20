@@ -8,6 +8,7 @@ export const apiPost = (endpoint: string, data: any) => {
   return api.post(endpoint, data);
 };
 
+
 export const STATUS_CODE = {
   OK: 200,
   CREATED: 201,
