@@ -13,8 +13,7 @@ const EnvioEmail: FC = () => {
     <div className="container-email">
       <h1 className="titulo">SOLICITAÇÃO ENVIADA COM SUCESSO!</h1>
       <p className="mensagem">
-        Se você forneceu um endereço de e-mail durante a solicitação, receberá um e-mail para confirmar ou cancelar o pedido.
-        Caso contrário, aguarde o contato do responsável pelo Posto de Saúde.
+        Aguarde o contato da Unidade de Saúde para confirmar ou cancelar o agendamento!
       </p>
       <button className="botao" onClick={handleButtonClick}>
         VOLTAR PARA HOME

@@ -57,6 +57,8 @@ const Paciente: FC = () => {
         }      
     
         console.log(">>>>", data);
+
+        navigate('/confirmacao-consulta');
     };
     
     return (
