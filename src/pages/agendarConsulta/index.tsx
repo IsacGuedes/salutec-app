@@ -6,9 +6,9 @@ import { apiPost, STATUS_CODE } from '../../api/RestClient';
 import { Dayjs } from 'dayjs'; // Importa o tipo Dayjs
 
 const AgendarConsulta: FC = () => {
-  const [data, setData] = useState('');
+  const [dataConsulta, setDataConsulta] = useState('');
   const [tipoConsulta, setTipoConsulta] = useState('');
-  const [horarioConsulta, setHorarioConsulta] = useState('');
+  const [horario, setHorario] = useState('');
   const [statusConsulta, setStatusConsulta] = useState('');
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const navigate = useNavigate();
