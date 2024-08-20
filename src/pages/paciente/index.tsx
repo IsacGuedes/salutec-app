@@ -36,7 +36,7 @@ const Paciente: FC = () => {
             consultaData.pacienteId = pacienteId;
       
             // Verifica se todos os dados necessários estão presentes
-            if (!consultaData.data || !consultaData.tipoConsulta || !consultaData.horarioConsulta) {
+            if (!consultaData.dataConsulta || !consultaData.tipoConsulta || !consultaData.horario) {
               alert("Dados da consulta estão incompletos.");
               return;
             }

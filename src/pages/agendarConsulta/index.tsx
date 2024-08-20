@@ -2,25 +2,34 @@ import React, { FC, useState } from 'react';
 import BasicDateCalendar from '../../components/calendario';
 import { Button, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import './styles.css';
 import { Dayjs } from 'dayjs';
+import { CalendarOutlined, FormOutlined, ClockCircleOutlined } from '@ant-design/icons';
 
 const AgendarConsulta: FC = () => {
   const [tipoConsulta, setTipoConsulta] = useState('');
-  const [horarioConsulta, setHorarioConsulta] = useState('');
+  const [horario, setHorario] = useState('');
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const navigate = useNavigate();
 
+  const formatarHorarioParaBackend = (horario: string) => {
+    // Formata o horário para o formato HH:mm:ss se necessário
+    return horario + ":00";
+};
+
   const handleContinuarClick = () => {
-    if (tipoConsulta === '' || horarioConsulta === '' || !selectedDate) {
+    if (tipoConsulta === '' || horario === '' || !selectedDate) {
       alert('É necessário preencher todos os dados!');
     } else {
       const consultaData = {
-        data: selectedDate?.format('YYYY-MM-DD'),
+        dataConsulta: "2024-02-06",
         tipoConsulta: tipoConsulta,
-        horarioConsulta: horarioConsulta,
-        statusConsulta: 'AGUARDANDO_CONFIRMAÇÃO',
+        horario: formatarHorarioParaBackend(horario),
+        statusConsulta: 'AGUARDANDO_CONFIRMACAO',
+        pacienteId: null
       };
       sessionStorage.setItem('consultaData', JSON.stringify(consultaData));
+      console.log(consultaData);
       navigate('/paciente');
     }
   };
@@ -48,7 +57,7 @@ const AgendarConsulta: FC = () => {
           >
             <option value=""></option>
             <option value="Dentista">Dentista</option>
-            <option value="Clínico Geral">Clínico Geral</option>
+            <option value="Clinico Geral">Clínico Geral</option>
           </TextField>
           <BasicDateCalendar selectedDate={selectedDate} onDateChange={(date: Dayjs | null) => setSelectedDate(date)} />
         </div>
@@ -62,8 +71,8 @@ const AgendarConsulta: FC = () => {
             select
             fullWidth
             variant="standard"
-            value={horarioConsulta}
-            onChange={(e) => setHorarioConsulta(e.target.value)}
+            value={horario}
+            onChange={(e) => setHorario(e.target.value)}
             SelectProps={{ native: true }}
           >
             <option value=""></option>
@@ -71,9 +80,9 @@ const AgendarConsulta: FC = () => {
             <option value="10:10">10:10</option>
           </TextField>
           <div className="container-resumo-consulta">
-            <p>Data: {selectedDate?.format('DD/MM/YYYY')}</p>
-            <p>Consulta: {tipoConsulta}</p>
-            <p>Horário: {horarioConsulta}</p>
+            <p> <CalendarOutlined /> Data: {selectedDate?.format('YYYY/MM/DD')}</p>
+            <p><FormOutlined />  Consulta: {tipoConsulta}</p>
+            <p><ClockCircleOutlined /> Horário: {horario}</p>
           </div>
           <div className="div-botao">
             <Button onClick={handleVoltarClick} variant="contained" color="primary">Voltar</Button>

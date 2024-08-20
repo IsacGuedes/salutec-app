@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 import Calendario from '../../components/calendario/calendario';
 import { TextField } from '@mui/material';
-import './agendarConsulta.css';
+
 
 const AgendarConsulta: FC = () => {
   const [medico, setMedico] = useState('');
