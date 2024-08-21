@@ -57,7 +57,7 @@ const Dashboard: FC = () => {
       <DashboardSidebar />
       <Layout className="layout-dashboard">
         <Content className="conteudo-dashboard">
-          <h2>Todos Agendamentos</h2>
+          <h2>Agendamentos Cancelados</h2>
           <Table
             dataSource={agendamentos}
             columns={columns}
