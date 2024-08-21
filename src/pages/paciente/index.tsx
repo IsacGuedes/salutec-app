@@ -45,7 +45,7 @@ const Paciente: FC = () => {
             const consultaResponse = await apiPost("/agendar-consulta/criarConsulta", consultaData);
             if (consultaResponse.status === STATUS_CODE.CREATED) {
               alert("Paciente e consulta cadastrados com sucesso!");
-              navigate('/');
+              navigate('/confirmacao-consulta');
             } else {
               alert(`Erro ao cadastrar consulta: ${consultaResponse.statusText}`);
             }
@@ -57,8 +57,6 @@ const Paciente: FC = () => {
         }      
     
         console.log(">>>>", data);
-
-        navigate('/confirmacao-consulta');
     };
     
     return (
