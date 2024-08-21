@@ -1,0 +1,26 @@
+.layout-dashboard {
+    padding: 24px;
+    background: #fff;
+  }
+  
+  .conteudo-dashboard {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .botao-status {
+    border: none;
+  }
+  
+  .botao-sucesso {
+    background-color: #52c41a; /* verde */
+  }
+  
+  .botao-aviso {
+    background-color: #faad14; /* amarelo */
+  }
+  
+  .botao-erro {
+    background-color: #f5222d; /* vermelho */
+  }
+  

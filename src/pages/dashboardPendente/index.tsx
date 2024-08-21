@@ -6,7 +6,7 @@ import './styles.css';
 
 const { Content } = Layout;
 
-const Dashboard: FC = () => {
+const DashboardPendente: FC = () => {
   const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
 
   useEffect(() => {
@@ -57,7 +57,7 @@ const Dashboard: FC = () => {
       <DashboardSidebar />
       <Layout className="layout-dashboard">
         <Content className="conteudo-dashboard">
-          <h2>Todos Agendamentos</h2>
+          <h2>Agendamentos Pendentes</h2>
           <Table
             dataSource={agendamentos}
             columns={columns}
@@ -70,4 +70,4 @@ const Dashboard: FC = () => {
   );
 };
 
-export default Dashboard;
+export default DashboardPendente;

@@ -7,6 +7,8 @@ import Paciente from './pages/paciente';
 import Login from './pages/login';
 import Dashboard from './pages/dashboard';
 import DashboardCancelado from './pages/dashboardCancelado';
+import DashboardConfirmado from './pages/dashboardConfirmado';
+import DashboardPendente from './pages/dashboardPendente';
 import DisponibilidadeForm from './pages/personalizaAgenda';
 
 const AppRouter = () => {
@@ -20,7 +22,9 @@ const AppRouter = () => {
       <Route path='/login' element={<Login/>}/>
       <Route path='/dashboard' element={<Dashboard/>}/>
       <Route path='/dashboard/todas-consultas' element={<Dashboard/>}/>
+      <Route path='/dashboard/consultas-confirmadas' element={<DashboardConfirmado/>}/>
       <Route path='/dashboard/consultas-canceladas' element={<DashboardCancelado/>}/>
+      <Route path='/dashboard/consultas-pendentes' element={<DashboardPendente/>}/>
       <Route path='/personaliza' element={<DisponibilidadeForm/>}/>
     </Routes>
   );
