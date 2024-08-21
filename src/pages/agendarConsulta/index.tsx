@@ -22,7 +22,7 @@ const AgendarConsulta: FC = () => {
       alert('É necessário preencher todos os dados!');
     } else {
       const consultaData = {
-        dataConsulta: "2024-02-06",
+        dataConsulta: selectedDate?.format('YYYY-MM-DD'),
         tipoConsulta: tipoConsulta,
         horario: formatarHorarioParaBackend(horario),
         statusConsulta: 'AGUARDANDO_CONFIRMACAO',
@@ -57,7 +57,7 @@ const AgendarConsulta: FC = () => {
           >
             <option value=""></option>
             <option value="Dentista">Dentista</option>
-            <option value="Clinico Geral">Clínico Geral</option>
+            <option value="Clinico_Geral">Clínico Geral</option>
           </TextField>
           <BasicDateCalendar selectedDate={selectedDate} onDateChange={(date: Dayjs | null) => setSelectedDate(date)} />
         </div>
@@ -80,7 +80,7 @@ const AgendarConsulta: FC = () => {
             <option value="10:10">10:10</option>
           </TextField>
           <div className="container-resumo-consulta">
-            <p> <CalendarOutlined /> Data: {selectedDate?.format('YYYY/MM/DD')}</p>
+            <p> <CalendarOutlined /> Data: {selectedDate?.format('DD/MM/YYYY')}</p>
             <p><FormOutlined />  Consulta: {tipoConsulta}</p>
             <p><ClockCircleOutlined /> Horário: {horario}</p>
           </div>
