@@ -12,7 +12,7 @@ const Dashboard: FC = () => {
   useEffect(() => {
     const fetchAgendamentos = async () => {
       try {
-        const response = await fetch('/agendar-consulta/listarConsultas');
+        const response = await fetch('http://localhost:8090/agendar-consulta/listarConsultas');
         const data = await response.json();
         setAgendamentos(data);
       } catch (error) {
