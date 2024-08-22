@@ -26,7 +26,7 @@
     flex-wrap: wrap;
     justify-content: space-between;
     width: 100%;
-    max-width: 800px;
+    max-width: 850px;
     background-color: #fff;
     padding: 20px;
     border-radius: 4px;
@@ -59,7 +59,7 @@
 
     .lembrete {
         width: 100%;
-        max-width: 800px;
+        max-width: 850px;
     }
 
     .formulario {

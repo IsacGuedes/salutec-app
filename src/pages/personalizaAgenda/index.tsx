@@ -24,6 +24,7 @@ const DisponibilidadeForm: React.FC = () => {
     );
   };
 
+  
   const handleHorarioChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const newHorarios = [...horarios];
     newHorarios[index] = e.target.value;
@@ -45,6 +46,8 @@ const DisponibilidadeForm: React.FC = () => {
       horariosDisponiveis: horarios.filter(h => h !== '')
     };
 
+    localStorage.setItem('disponibilidade', JSON.stringify(disponibilidade));
+    
     try {
       await axios.post('http://localhost:8080/api/disponibilidade', disponibilidade);
       alert('Disponibilidade salva com sucesso!');

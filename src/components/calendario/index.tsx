@@ -10,11 +10,27 @@ interface BasicDateCalendarProps {
   onDateChange?: (date: Dayjs | null) => void;
 }
 
+  
+type Disponibilidade = {
+  diasDaSemana: string[];
+  horariosDisponiveis: string[];
+};
+
+
 const BasicDateCalendar: React.FC<BasicDateCalendarProps> = ({
   selectedDate: propSelectedDate = null,
   onDateChange,
 }) => {
   const [selectedDate, setSelectedDate] = React.useState<Dayjs | null>(propSelectedDate);
+
+const [disponibilidade, setDisponibilidade] = React.useState<Disponibilidade | null>(null);
+
+React.useEffect(() => {
+  const disponibilidadeSalva = localStorage.getItem('disponibilidade');
+  if (disponibilidadeSalva) {
+    setDisponibilidade(JSON.parse(disponibilidadeSalva));
+  }
+}, []);
 
   React.useEffect(() => {
     setSelectedDate(propSelectedDate);

@@ -1,10 +1,10 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import BasicDateCalendar from '../../components/calendario';
 import { Button, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import './styles.css';
 import { Dayjs } from 'dayjs';
-import { CalendarOutlined, FormOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { CalendarOutlined, FormOutlined, ClockCircleOutlined, InfoCircleOutlined } from '@ant-design/icons';
 
 const AgendarConsulta: FC = () => {
   const [tipoConsulta, setTipoConsulta] = useState('');
@@ -12,13 +12,14 @@ const AgendarConsulta: FC = () => {
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const navigate = useNavigate();
 
+
   const formatarHorarioParaBackend = (horario: string) => {
     // Formata o horário para o formato HH:mm:ss se necessário
     return horario + ":00";
 };
 
   const handleContinuarClick = () => {
-    if (tipoConsulta === '' || horario === '') {
+    if (tipoConsulta === '' || horario === '' || selectedDate === null) {
       alert('É necessário preencher todos os dados!');
     } else {
       const consultaData = {
@@ -40,6 +41,9 @@ const AgendarConsulta: FC = () => {
 
   return (
     <div className="container-principal">
+      <div className="lembrete-consulta">
+          <p><InfoCircleOutlined /> Novos agendamentos são liberados diariamente. Cada unidade possui intervalo de agendamento próprio.</p>
+      </div>
       <div className="container-div">
         <div className="dropdown-medico">
           <h1 className="titulo-consulta">Escolha o tipo de consulta</h1>

@@ -4,6 +4,7 @@ import { apiPost, STATUS_CODE } from '../../api/RestClient';
 import { aplicarMascaraDocumento, formatarTelefone, removerCaracteresNaoNumericos } from '../../components/formatos';
 import './styles.css';
 import { useNavigate } from 'react-router-dom';
+import { InfoCircleOutlined } from '@ant-design/icons';
 
 const Paciente: FC = () => {
     const [nome, setNome] = useState<string>('');
@@ -63,7 +64,7 @@ const Paciente: FC = () => {
         <div className="paciente">
             <div className="lembrete">
                 <Typography variant="h6">
-                    Lembre-se de levar consigo um documento de identificação com foto no dia da consulta.
+                <InfoCircleOutlined /> Lembre-se de levar consigo um documento de identificação com foto no dia da consulta.
                 </Typography>
             </div>
             <div className="div-formulario">
