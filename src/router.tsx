@@ -25,7 +25,7 @@ const AppRouter = () => {
       <Route path='/dashboard/consultas-confirmadas' element={<DashboardConfirmado/>}/>
       <Route path='/dashboard/consultas-canceladas' element={<DashboardCancelado/>}/>
       <Route path='/dashboard/consultas-pendentes' element={<DashboardPendente/>}/>
-      <Route path='/personaliza' element={<DisponibilidadeForm/>}/>
+      <Route path='/dashboard/configurar-horario' element={<DisponibilidadeForm/>}/>
     </Routes>
   );
 };
