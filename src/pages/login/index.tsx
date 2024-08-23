@@ -3,11 +3,13 @@ import { Form, Input, Button, Checkbox } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import './styles.css';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
   const [matricula, setMatricula] = useState<string>('');
   const [senha, setSenha] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const handleLogin = async (values: { matricula: string; senha: string }) => {
     const { matricula, senha } = values;
@@ -19,7 +21,7 @@ const Login: React.FC = () => {
       
       if (response.status === 200) {
         alert('Login bem-sucedido');
-        // Redirecionar ou armazenar o token de autenticação, se necessário
+        navigate('/dashboard');
       }
     } catch (error) {
       setError('Matrícula ou senha incorretos.');
