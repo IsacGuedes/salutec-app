@@ -33,6 +33,9 @@ const BasicDateCalendar: React.FC<BasicDateCalendarProps> = ({
   const [selectedDate, setSelectedDate] = React.useState<Dayjs | null>(propSelectedDate);
   const [disponibilidade, setDisponibilidade] = React.useState<Disponibilidade | null>(null);
 
+  const dataAtual = new Date().toISOString().split('T')[0]; //'2024-09-02'
+  const mesAtual = new Date().getMonth(); // Mês atual (0-11) ex: 9 //
+
   React.useEffect(() => {
     const disponibilidadeSalva = localStorage.getItem('disponibilidade');
     if (disponibilidadeSalva) {
@@ -50,9 +53,13 @@ const BasicDateCalendar: React.FC<BasicDateCalendarProps> = ({
   const CustomPickersDay: React.FC<PickersDayProps<Dayjs>> = (props) => {
     const { day, outsideCurrentMonth } = props;
     const dayOfWeek = day.day();
-    const isAvailable = disponibilidade?.diasDaSemana.some(
-      dia => diasSemanaMap[dia] === dayOfWeek
-    );
+    const isBeforeToday = day.isBefore(dataAtual);
+    const isCurrentMonth = day.month() === mesAtual; // Verifica se o dia é do mês atual
+
+    const isAvailable = 
+      disponibilidade?.diasDaSemana.some(dia => diasSemanaMap[dia] === dayOfWeek) &&
+      !isBeforeToday &&
+      isCurrentMonth; // Inclui a verificação para o mês atual
 
     return (
       <PickersDay

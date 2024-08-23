@@ -22,6 +22,7 @@ const AgendarConsulta: FC = () => {
     return horario + ":00";
 };
 
+
 React.useEffect(() => {
   const disponibilidadeSalva = localStorage.getItem('disponibilidade');
   if (disponibilidadeSalva) {
