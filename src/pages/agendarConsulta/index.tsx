@@ -12,7 +12,6 @@ const AgendarConsulta: FC = () => {
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const navigate = useNavigate();
 
-
   const formatarHorarioParaBackend = (horario: string) => {
     // Formata o horário para o formato HH:mm:ss se necessário
     return horario + ":00";

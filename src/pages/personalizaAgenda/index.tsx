@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './styles.css'; 
+import { apiPost, STATUS_CODE } from '../../api/RestClient';
 
 type Disponibilidade = {
   diasDaSemana: string[];
@@ -40,6 +41,7 @@ const DisponibilidadeForm: React.FC = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+   
     e.preventDefault();
     const disponibilidade: Disponibilidade = {
       diasDaSemana: diasSelecionados,
@@ -48,14 +50,25 @@ const DisponibilidadeForm: React.FC = () => {
 
     localStorage.setItem('disponibilidade', JSON.stringify(disponibilidade));
     
-    try {
-      await axios.post('http://localhost:8080/api/disponibilidade', disponibilidade);
+  //   try {
+  //     await axios.post('http://localhost:8080/api/disponibilidade', disponibilidade);
+  //     alert('Disponibilidade salva com sucesso!');
+  //   } catch (error) {
+  //     console.error('Erro ao salvar disponibilidade', error);
+  //     alert('Erro ao salvar disponibilidade');
+  //   }
+  // };
+
+  try {
+    const disponibilidadeResponse = await apiPost('/personaliza/criaDisponibilidade', disponibilidade);
+    if (disponibilidadeResponse.status === STATUS_CODE.CREATED) {
       alert('Disponibilidade salva com sucesso!');
-    } catch (error) {
-      console.error('Erro ao salvar disponibilidade', error);
-      alert('Erro ao salvar disponibilidade');
-    }
-  };
+    } 
+  } catch (error) {
+    console.error('Erro ao salvar disponibilidade', error);
+    alert('Erro ao salvar disponibilidade');
+  }
+};
 
   return (
     <form onSubmit={handleSubmit} className="form-container">
