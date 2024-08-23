@@ -6,20 +6,34 @@ import './styles.css';
 import { Dayjs } from 'dayjs';
 import { CalendarOutlined, FormOutlined, ClockCircleOutlined, InfoCircleOutlined } from '@ant-design/icons';
 
+type Disponibilidade = {
+  diasDaSemana: string[];
+  horariosDisponiveis: string[];
+};
+
 const AgendarConsulta: FC = () => {
   const [tipoConsulta, setTipoConsulta] = useState('');
   const [horario, setHorario] = useState('');
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
+  const [disponibilidade, setDisponibilidade] = React.useState<Disponibilidade | null>(null);
   const navigate = useNavigate();
 
   const formatarHorarioParaBackend = (horario: string) => {
-    // Formata o horário para o formato HH:mm:ss se necessário
     return horario + ":00";
 };
 
+React.useEffect(() => {
+  const disponibilidadeSalva = localStorage.getItem('disponibilidade');
+  if (disponibilidadeSalva) {
+    setDisponibilidade(JSON.parse(disponibilidadeSalva));
+  }
+}, []);
+
   const handleContinuarClick = () => {
+  
     if (tipoConsulta === '' || horario === '' || selectedDate === null) {
       alert('É necessário preencher todos os dados!');
+      console.log("horas" + disponibilidade?.horariosDisponiveis);
     } else {
       const consultaData = {
         dataConsulta: selectedDate?.format('YYYY-MM-DD'),
@@ -65,23 +79,26 @@ const AgendarConsulta: FC = () => {
           <BasicDateCalendar selectedDate={selectedDate} onDateChange={(date: Dayjs | null) => setSelectedDate(date)} />
         </div>
         <div className="dropdown-medico">
-          <h1 className="titulo-consulta">Escolha o horário</h1>
+        <h1 className="titulo-consulta">Escolha o horário</h1>
           <TextField
-            className="horario-consulta"
-            margin="dense"
-            id="horario-consulta"
-            label="Selecione o horário"
-            select
-            fullWidth
-            variant="standard"
-            value={horario}
-            onChange={(e) => setHorario(e.target.value)}
-            SelectProps={{ native: true }}
-          >
-            <option value=""></option>
-            <option value="09:00">09:00</option>
-            <option value="10:10">10:10</option>
-          </TextField>
+        className="horario-consulta"
+        margin="dense"
+        id="horario-consulta"
+        label="Selecione o horário"
+        select
+        fullWidth
+        variant="standard"
+        value={horario}
+        onChange={(e) => setHorario(e.target.value)}
+        SelectProps={{ native: true }}
+      >
+        <option value=""></option>
+        {disponibilidade?.horariosDisponiveis?.map((horarioDisponivel, index) => (
+          <option key={index} value={horarioDisponivel}>
+            {horarioDisponivel}
+          </option>
+        ))}
+      </TextField>
           <div className="container-resumo-consulta">
             <p> <CalendarOutlined /> Data: {selectedDate?.format('DD/MM/YYYY')}</p>
             <p><FormOutlined />  Consulta: {tipoConsulta}</p>
