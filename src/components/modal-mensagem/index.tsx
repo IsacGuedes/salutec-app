@@ -26,7 +26,7 @@ const ModalAgendamento: FC<ModalMensagemProps> = ({ aberto, aoFechar }) => {
     <div className="modal-fundo">
       <div className="modal">
         <p>
-          Você deve realizar o agendamento no posto de saúde vinculado ao
+          Você deve realizar o agendamento na Únidade Básica de Saúde vinculada ao
           seu endereço. Caso realize o agendamento em um posto de saúde
           incorreto, a consulta não será confirmada.
         </p>

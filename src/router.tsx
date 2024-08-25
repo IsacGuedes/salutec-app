@@ -10,12 +10,14 @@ import DashboardCancelado from './pages/dashboardCancelado';
 import DashboardConfirmado from './pages/dashboardConfirmado';
 import DashboardPendente from './pages/dashboardPendente';
 import DisponibilidadeForm from './pages/personalizaAgenda';
+import FaqQuestions from './pages/faq/perguntas/perguntas';
 
 const AppRouter = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/home" element={<Home />} />
+      <Route path='/faq' element={<FaqQuestions/>}/>
       <Route path="/agendar-consulta" element={<AgendarConsulta />} />
       <Route path='/paciente' element={<Paciente/>}/>
       <Route path='/confirmacao-consulta' element={<EnvioEmail/>}/>

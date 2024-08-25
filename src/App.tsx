@@ -27,9 +27,6 @@ function App() {
               </Link>
             </div>
             <nav className="menu-items">
-              <a href="/calendario" className="menu-item">
-                CALENDÁRIO
-              </a>
               <a href="/faq" className="menu-item">
                 PERGUNTAS FREQUENTES
               </a>
