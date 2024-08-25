@@ -18,7 +18,7 @@ const FaqQuestions: React.FC = () => {
       answer: "Não, você também pode realizar o agendamento presencialmente na Unidade ou via telefone."
     },
     {
-      question: "Como faço para confirma a consulta",
+      question: "Como faço para confirmar a consulta?",
       answer: "Após o agendamento feito pelo site, será enviado um SMS de confirmação via WhatsApp para o telefone informado no momento do agendamento."
     }
   ];
