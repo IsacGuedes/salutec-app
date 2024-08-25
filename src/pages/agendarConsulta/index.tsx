@@ -106,8 +106,21 @@ React.useEffect(() => {
             <p><ClockCircleOutlined /> Horário: {horario}</p>
           </div>
           <div className="div-botao">
-            <Button onClick={handleVoltarClick} variant="contained" color="primary">Voltar</Button>
-            <Button onClick={handleContinuarClick} variant="contained" color="primary">Continuar</Button>
+            <Button 
+              onClick={handleVoltarClick} 
+              variant="contained" 
+              //sx={{ backgroundColor: '#001529', '&:hover': { backgroundColor: '#000e1a' } }}
+              color='primary'>
+                Voltar
+            </Button>
+            <Button 
+              onClick={handleContinuarClick} 
+              variant="contained" 
+              //sx={{ backgroundColor: '#001529', '&:hover': { backgroundColor: '#000e1a' } }}
+              color='primary'
+              >
+                Continuar
+            </Button>
           </div>
         </div>
       </div>
