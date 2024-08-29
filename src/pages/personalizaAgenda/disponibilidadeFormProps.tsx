@@ -12,7 +12,7 @@ const diasDaSemana = [
 ];
 
 interface DisponibilidadeFormProps {
-  tipo: 'medico' | 'dentista';
+  tipo: 'Medico' | 'Dentista';
 }
 
 const DisponibilidadeForm: React.FC<DisponibilidadeFormProps> = ({ tipo }) => {
@@ -43,6 +43,11 @@ const DisponibilidadeForm: React.FC<DisponibilidadeFormProps> = ({ tipo }) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (diasSelecionados.length === 0 || horarios.filter(h => h !== '').length === 0) {
+      alert('Por favor, selecione pelo menos um dia da semana e preencha os horários.');
+      return;
+    }
+    
     const disponibilidade: Disponibilidade = {
       diasDaSemana: diasSelecionados,
       horariosDisponiveis: horarios.filter(h => h !== '')

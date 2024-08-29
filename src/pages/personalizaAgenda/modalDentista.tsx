@@ -17,7 +17,7 @@ const ModalDentista: React.FC = () => {
       <Modal open={open} onClose={handleClose}>
         <div className="modal-container">
           <h2>Personalizar Agenda Odontológica</h2>
-          <DisponibilidadeForm tipo="dentista" /> {}
+          <DisponibilidadeForm tipo="Dentista" /> {}
           <Button onClick={handleClose} variant="contained" color="secondary">
             Fechar
           </Button>
