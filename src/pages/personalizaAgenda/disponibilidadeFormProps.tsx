@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './styles.css'; 
 import { apiPost, STATUS_CODE } from '../../api/RestClient';
 
@@ -18,6 +18,16 @@ interface DisponibilidadeFormProps {
 const DisponibilidadeForm: React.FC<DisponibilidadeFormProps> = ({ tipo }) => {
   const [diasSelecionados, setDiasSelecionados] = useState<string[]>([]);
   const [horarios, setHorarios] = useState<string[]>(['']);
+
+  // Carregar a disponibilidade do localStorage ao montar o componente
+  useEffect(() => {
+    const disponibilidadeSalva = localStorage.getItem('disponibilidade');
+    if (disponibilidadeSalva) {
+      const disponibilidade: Disponibilidade = JSON.parse(disponibilidadeSalva);
+      setDiasSelecionados(disponibilidade.diasDaSemana);
+      setHorarios(disponibilidade.horariosDisponiveis);
+    }
+  }, []);
 
   const toggleDia = (dia: string) => {
     setDiasSelecionados(prevState => 
@@ -53,6 +63,9 @@ const DisponibilidadeForm: React.FC<DisponibilidadeFormProps> = ({ tipo }) => {
       horariosDisponiveis: horarios.filter(h => h !== '')
     };
 
+    console.log(disponibilidade);
+    localStorage.setItem('disponibilidade', JSON.stringify(disponibilidade));
+    
     try {
       const disponibilidadeResponse = await apiPost(`/personaliza/criaDisponibilidade/${tipo}`, disponibilidade);
       if (disponibilidadeResponse.status === STATUS_CODE.CREATED) {

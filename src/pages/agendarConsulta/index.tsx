@@ -45,6 +45,7 @@ React.useEffect(() => {
       };
       sessionStorage.setItem('consultaData', JSON.stringify(consultaData));
       console.log(consultaData);
+      console.log("AQUI",disponibilidade)
       navigate('/paciente');
     }
   };
@@ -81,25 +82,25 @@ React.useEffect(() => {
         </div>
         <div className="dropdown-medico">
         <h1 className="titulo-consulta">Escolha o horário</h1>
-          <TextField
-        className="horario-consulta"
-        margin="dense"
-        id="horario-consulta"
-        label="Selecione o horário"
-        select
-        fullWidth
-        variant="standard"
-        value={horario}
-        onChange={(e) => setHorario(e.target.value)}
-        SelectProps={{ native: true }}
-      >
-        <option value=""></option>
-        {disponibilidade?.horariosDisponiveis?.map((horarioDisponivel, index) => (
-          <option key={index} value={horarioDisponivel}>
-            {horarioDisponivel}
-          </option>
-        ))}
-      </TextField>
+        <TextField
+  className="horario-consulta"
+  margin="dense"
+  id="horario-consulta"
+  label="Selecione o horário"
+  select
+  fullWidth
+  variant="standard"
+  value={horario}
+  onChange={(e) => setHorario(e.target.value)}
+  SelectProps={{ native: true }}
+>
+  <option value=""></option>
+  {disponibilidade?.horariosDisponiveis?.map((horarioDisponivel, index) => (
+    <option key={index} value={horarioDisponivel}>
+      {horarioDisponivel}
+    </option>
+  ))}
+</TextField>
           <div className="container-resumo-consulta">
             <p> <CalendarOutlined /> Data: {selectedDate?.format('DD/MM/YYYY')}</p>
             <p><FormOutlined />  Consulta: {tipoConsulta}</p>
