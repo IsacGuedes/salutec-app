@@ -13,21 +13,21 @@ const diasDaSemana = [
 
 interface DisponibilidadeFormProps {
   tipo: 'Medico' | 'Dentista';
+  onDisponibilidadeChange: (disponibilidade: Disponibilidade) => void; // Adicione esta prop
 }
 
-const DisponibilidadeForm: React.FC<DisponibilidadeFormProps> = ({ tipo }) => {
+const DisponibilidadeForm: React.FC<DisponibilidadeFormProps> = ({ tipo, onDisponibilidadeChange }) => {
   const [diasSelecionados, setDiasSelecionados] = useState<string[]>([]);
   const [horarios, setHorarios] = useState<string[]>(['']);
 
-  // Carregar a disponibilidade do localStorage ao montar o componente
   useEffect(() => {
-    const disponibilidadeSalva = localStorage.getItem('disponibilidade');
+    const disponibilidadeSalva = localStorage.getItem(`disponibilidade-${tipo}`);
     if (disponibilidadeSalva) {
       const disponibilidade: Disponibilidade = JSON.parse(disponibilidadeSalva);
       setDiasSelecionados(disponibilidade.diasDaSemana);
       setHorarios(disponibilidade.horariosDisponiveis);
     }
-  }, []);
+  }, [tipo]);
 
   const toggleDia = (dia: string) => {
     setDiasSelecionados(prevState => 
@@ -57,15 +57,15 @@ const DisponibilidadeForm: React.FC<DisponibilidadeFormProps> = ({ tipo }) => {
       alert('Por favor, selecione pelo menos um dia da semana e preencha os horários.');
       return;
     }
-    
+
     const disponibilidade: Disponibilidade = {
       diasDaSemana: diasSelecionados,
       horariosDisponiveis: horarios.filter(h => h !== '')
     };
 
-    console.log(disponibilidade);
-    localStorage.setItem('disponibilidade', JSON.stringify(disponibilidade));
-    
+    localStorage.setItem(`disponibilidade-${tipo}`, JSON.stringify(disponibilidade)); 
+    onDisponibilidadeChange(disponibilidade); // Atualizar o calendário
+
     try {
       const disponibilidadeResponse = await apiPost(`/personaliza/criaDisponibilidade/${tipo}`, disponibilidade);
       if (disponibilidadeResponse.status === STATUS_CODE.CREATED) {
@@ -76,7 +76,6 @@ const DisponibilidadeForm: React.FC<DisponibilidadeFormProps> = ({ tipo }) => {
       alert('Erro ao salvar disponibilidade');
     }
   };
-
   return (
     <form onSubmit={handleSubmit} className="form-container">
       <div>

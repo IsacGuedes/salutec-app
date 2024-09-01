@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
@@ -7,6 +7,7 @@ import { Dayjs } from "dayjs";
 import "./styles.css";
 
 interface BasicDateCalendarProps {
+  tipo: 'Medico' | 'Dentista'; 
   selectedDate?: Dayjs | null;
   onDateChange?: (date: Dayjs | null) => void;
 }
@@ -27,26 +28,24 @@ const diasSemanaMap: { [key: string]: number } = {
 };
 
 const BasicDateCalendar: React.FC<BasicDateCalendarProps> = ({
+  tipo,
   selectedDate: propSelectedDate = null,
   onDateChange,
 }) => {
-  const [selectedDate, setSelectedDate] = React.useState<Dayjs | null>(
-    propSelectedDate
-  );
-  const [disponibilidade, setDisponibilidade] =
-    React.useState<Disponibilidade | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(propSelectedDate);
+  const [disponibilidade, setDisponibilidade] = useState<Disponibilidade | null>(null);
 
-  const dataAtual = new Date().toISOString().split("T")[0]; //'2024-09-02'
-  const mesAtual = new Date().getMonth(); // Mês atual (0-11) ex: 9 //
-
-  React.useEffect(() => {
-    const disponibilidadeSalva = localStorage.getItem("disponibilidade");
+  useEffect(() => {
+    const disponibilidadeSalva = localStorage.getItem(`disponibilidade-${tipo}`);
     if (disponibilidadeSalva) {
       setDisponibilidade(JSON.parse(disponibilidadeSalva));
     }
-  }, []);
+  }, [tipo]);
+  
 
-  console.log(disponibilidade)
+  const dataAtual = new Date().toISOString().split("T")[0];
+  const mesAtual = new Date().getMonth();
+
   const handleDateChange = (date: Dayjs | null) => {
     setSelectedDate(date);
     if (onDateChange) {
@@ -55,17 +54,17 @@ const BasicDateCalendar: React.FC<BasicDateCalendarProps> = ({
   };
 
   const CustomPickersDay: React.FC<PickersDayProps<Dayjs>> = (props) => {
-    const { day, outsideCurrentMonth } = props;
+    const { day } = props;
     const dayOfWeek = day.day();
     const isBeforeToday = day.isBefore(dataAtual);
-    const isCurrentMonth = day.month() === mesAtual; // Verifica se o dia é do mês atual
+    const isCurrentMonth = day.month() === mesAtual;
   
     const isAvailable =
       disponibilidade?.diasDaSemana.some(
         (dia) => diasSemanaMap[dia] === dayOfWeek
       ) &&
       !isBeforeToday &&
-      isCurrentMonth; // Inclui a verificação para o mês atual
+      isCurrentMonth;
   
     return (
       <PickersDay
@@ -84,9 +83,6 @@ const BasicDateCalendar: React.FC<BasicDateCalendarProps> = ({
 
   return (
     <div className="calendar">
-      <div className="titulo-calendario">
-        <h1 className="titulo-calendar">Escolha uma data e horário</h1>
-      </div>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DateCalendar
           value={selectedDate}
