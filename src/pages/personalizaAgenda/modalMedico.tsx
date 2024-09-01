@@ -18,18 +18,22 @@ const ModalMedico: React.FC = () => {
 
   return (
     <>
-      <Button onClick={handleOpen} variant="contained" color="primary">
-        Personalizar Agenda Médica
-      </Button>
-      <Modal open={open} onClose={handleClose}>
-        <div className="modal-container">
-          <h2>Personalizar Agenda Médica</h2>
-          <DisponibilidadeForm tipo="Medico" onDisponibilidadeChange={handleDisponibilidadeChange} />
-          <Button onClick={handleClose} variant="contained" color="secondary">
-            Fechar
+      <div className="div-modal">
+        <div className="botao-personalizacao">
+          <Button onClick={handleOpen} variant="contained" color="primary">
+            Personalizar Agenda Médica
           </Button>
         </div>
-      </Modal>
+        <Modal open={open} onClose={handleClose}>
+          <div className="modal-container">
+            <h2>Personalizar Agenda Médica</h2>
+            <DisponibilidadeForm tipo="Medico" onDisponibilidadeChange={handleDisponibilidadeChange} />
+            <Button onClick={handleClose} variant="contained" color="secondary">
+              Fechar
+            </Button>
+          </div>
+        </Modal>
+      </div>
     </>
   );
 };
