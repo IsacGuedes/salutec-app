@@ -6,30 +6,37 @@ import './styles.css';
 
 const { Content } = Layout;
 
-const DashboardConfirmado: FC = () => {
+const DashboardConfirmadas: FC = () => {
   const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
 
   useEffect(() => {
-    const fetchAgendamentos = async () => {
+    const fetchAgendamentosConfirmados = async () => {
       try {
-        const response = await fetch('/agendar-consulta/listarConsultas');
+        const response = await fetch('http://localhost:8090/agendar-consulta/listarConsultasConfirmadas');
         const data = await response.json();
-        setAgendamentos(data);
+
+        if (Array.isArray(data)) {
+          setAgendamentos(data);
+        } else {
+          console.error('Os dados retornados não são um array', data);
+          setAgendamentos([]);
+        }
       } catch (error) {
-        console.error('Erro ao buscar agendamentos:', error);
+        console.error('Erro ao buscar agendamentos confirmados:', error);
+        setAgendamentos([]);
       }
     };
 
-    fetchAgendamentos();
+    fetchAgendamentosConfirmados();
   }, []);
 
   const columns = [
     { title: 'Consulta', dataIndex: 'id', key: 'id' },
-    { title: 'Nome', dataIndex: 'nome', key: 'nome' },
-    { title: 'CPF', dataIndex: 'cpf', key: 'cpf' },
-    { title: 'Contato', dataIndex: 'contato', key: 'contato' },
-    { title: 'Data da Consulta', dataIndex: 'data', key: 'data' },
-    { title: 'Tipo de Consulta', dataIndex: 'tipo', key: 'tipo' },
+    { title: 'Nome', dataIndex: ['paciente', 'nome'], key: 'nome' },
+    { title: 'CPF', dataIndex: ['paciente', 'documento'], key: 'cpf' },
+    { title: 'Contato', dataIndex: ['paciente', 'telefone'], key: 'contato' },
+    { title: 'Data da Consulta', dataIndex: 'dataConsulta', key: 'dataConsulta' },
+    { title: 'Tipo de Consulta', dataIndex: 'tipoConsulta', key: 'tipoConsulta' },
     {
       title: 'Status',
       key: 'status',
@@ -59,7 +66,7 @@ const DashboardConfirmado: FC = () => {
         <Content className="conteudo-dashboard">
           <h2>Agendamentos Confirmados</h2>
           <Table
-            dataSource={agendamentos}
+            dataSource={Array.isArray(agendamentos) ? agendamentos : []}
             columns={columns}
             rowKey={(record) => record.id.toString()}
             pagination={false}
@@ -70,4 +77,4 @@ const DashboardConfirmado: FC = () => {
   );
 };
 
-export default DashboardConfirmado;
+export default DashboardConfirmadas;

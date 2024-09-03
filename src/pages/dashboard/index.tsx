@@ -1,5 +1,5 @@
 import React, { useState, useEffect, FC } from 'react';
-import { Layout, Table, Button, Modal } from 'antd'; // Importando Modal
+import { Layout, Table, Button, Modal } from 'antd';
 import { IAgendamento } from '../../components/interface';
 import DashboardSidebar from '../../components/sidebar';
 import { aplicarMascaraDocumento, formatarTelefone, formatDate } from '../../components/formatos';
@@ -26,18 +26,15 @@ const Dashboard: FC = () => {
     fetchAgendamentos();
   }, []);
 
-  // Função para abrir o modal
   const showModal = (record: IAgendamento) => {
     setSelectedRecord(record);
     setIsModalVisible(true);
   };
 
-  // Função para fechar o modal
   const handleCancel = () => {
     setIsModalVisible(false);
   };
 
-  // Função para atualizar o status no backend
   const handleStatusChange = async (status: string) => {
     if (selectedRecord) {
       try {
@@ -49,13 +46,12 @@ const Dashboard: FC = () => {
           body: JSON.stringify({ id: selectedRecord.id, status }),
         });
         if (response.ok) {
-          // Atualiza a lista de agendamentos
           setAgendamentos((prevAgendamentos) =>
             prevAgendamentos.map((agendamento) =>
               agendamento.id === selectedRecord.id ? { ...agendamento, statusConsulta: status } : agendamento
             )
           );
-          setIsModalVisible(false); // Fecha o modal após a atualização
+          setIsModalVisible(false);
         } else {
           console.error('Erro ao atualizar o status');
         }
@@ -81,15 +77,18 @@ const Dashboard: FC = () => {
           className={`botao-status ${
             record.statusConsulta === 'Confirmado'
               ? 'botao-sucesso'
-              : record.statusConsulta === 'A Confirmar'
+              : record.statusConsulta === 'AGUARDANDO_CONFIRMACAO'
               ? 'botao-aviso'
               : record.statusConsulta === 'Cancelado'
               ? 'botao-erro'
               : ''
           }`}
-          onClick={() => showModal(record)} // Abre o modal ao clicar
+          onClick={() => showModal(record)}
         >
-          {record.statusConsulta}
+          {record.statusConsulta === 'Confirmado' ? 'Confirmado' :
+            record.statusConsulta === 'Cancelado' ? 'Cancelado' :
+            record.statusConsulta === 'AGUARDANDO_CONFIRMACAO' ? 'Aguardando Confirmação' :
+            record.statusConsulta}
         </Button>
       ),
     },
@@ -110,11 +109,10 @@ const Dashboard: FC = () => {
         </Content>
       </Layout>
 
-      {/* Modal de confirmação */}
       <Modal
         title="O que você deseja fazer?"
         visible={isModalVisible}
-        onCancel={handleCancel} // Fecha o modal sem fazer nada
+        onCancel={handleCancel}
         footer={[
           <Button key="back" onClick={handleCancel}>
             Cancelar

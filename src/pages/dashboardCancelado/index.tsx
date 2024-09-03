@@ -6,30 +6,39 @@ import './styles.css';
 
 const { Content } = Layout;
 
-const Dashboard: FC = () => {
+const DashboardCancelado: FC = () => {
   const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
 
   useEffect(() => {
-    const fetchAgendamentos = async () => {
+    const fetchAgendamentosCancelados = async () => {
       try {
-        const response = await fetch('URL_DA_API/aqui');
+        const response = await fetch('http://localhost:8090/agendar-consulta/listarConsultasCanceladas');
         const data = await response.json();
-        setAgendamentos(data);
+
+        console.log("Dados recebidos da API:", data);
+
+        if (Array.isArray(data)) {
+          setAgendamentos(data);
+        } else {
+          console.error('Os dados retornados não são um array', data);
+          setAgendamentos([]);
+        }
       } catch (error) {
-        console.error('Erro ao buscar agendamentos:', error);
+        console.error('Erro ao buscar agendamentos cancelados:', error);
+        setAgendamentos([]);
       }
     };
 
-    fetchAgendamentos();
+    fetchAgendamentosCancelados();
   }, []);
 
   const columns = [
     { title: 'Consulta', dataIndex: 'id', key: 'id' },
-    { title: 'Nome', dataIndex: 'nome', key: 'nome' },
-    { title: 'CPF', dataIndex: 'cpf', key: 'cpf' },
-    { title: 'Contato', dataIndex: 'contato', key: 'contato' },
-    { title: 'Data da Consulta', dataIndex: 'data', key: 'data' },
-    { title: 'Tipo de Consulta', dataIndex: 'tipo', key: 'tipo' },
+    { title: 'Nome', dataIndex: ['paciente', 'nome'], key: 'nome' },
+    { title: 'CPF', dataIndex: ['paciente', 'documento'], key: 'cpf' },
+    { title: 'Contato', dataIndex: ['paciente', 'telefone'], key: 'contato' },
+    { title: 'Data da Consulta', dataIndex: 'dataConsulta', key: 'dataConsulta' },
+    { title: 'Tipo de Consulta', dataIndex: 'tipoConsulta', key: 'tipoConsulta' },
     {
       title: 'Status',
       key: 'status',
@@ -59,7 +68,7 @@ const Dashboard: FC = () => {
         <Content className="conteudo-dashboard">
           <h2>Agendamentos Cancelados</h2>
           <Table
-            dataSource={agendamentos}
+            dataSource={Array.isArray(agendamentos) ? agendamentos : []}
             columns={columns}
             rowKey={(record) => record.id.toString()}
             pagination={false}
@@ -70,4 +79,4 @@ const Dashboard: FC = () => {
   );
 };
 
-export default Dashboard;
+export default DashboardCancelado;
