@@ -38,10 +38,9 @@ const AgendarConsulta: FC = () => {
     }
   }, [tipoConsulta]);
 
-  const handleDisponibilidadeChange = (novaDisponibilidade: Disponibilidade) => {
-    setDisponibilidade(novaDisponibilidade);
-    setMostrarDisponibilidadeForm(false);
-  };
+  //  const handleDisponibilidadeChange = (novaDisponibilidade: Disponibilidade) => {
+  //    alert("olá")
+  //  };
 
   const handleContinuarClick = () => {
     if (tipoConsulta === "" || horario === "" || selectedDate === null) {
@@ -65,9 +64,6 @@ const AgendarConsulta: FC = () => {
 
   return (
     <div className="container-principal">
-      {mostrarDisponibilidadeForm && tipoConsulta !== "" ? (
-        <DisponibilidadeForm tipo={tipoConsulta as TipoConsulta} onDisponibilidadeChange={handleDisponibilidadeChange} />
-      ) : (
         <>
           <div className="lembrete-consulta">
             <p>
@@ -145,7 +141,7 @@ const AgendarConsulta: FC = () => {
             </div>
           </div>
         </>
-      )}
+      )
     </div>
   );
 };
