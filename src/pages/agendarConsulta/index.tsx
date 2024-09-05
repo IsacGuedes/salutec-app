@@ -141,7 +141,7 @@ const AgendarConsulta: FC = () => {
             </div>
           </div>
         </>
-      )
+      
     </div>
   );
 };
