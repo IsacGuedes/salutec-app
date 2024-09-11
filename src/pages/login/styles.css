@@ -19,11 +19,6 @@
 
 .botao-login {
   width: 100%;
-  background-color: #00001E; 
-  border-color: #00001E;
 }
 
-.botao-login:hover {
-  background-color: #000033; 
-  border-color: #000033;
-}
+

@@ -3,12 +3,14 @@ import { Form, Input, Button, Checkbox } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import './styles.css';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import EsqueciSenha from '../../components/modalNovaSenha';
 
 const Login: React.FC = () => {
   const [matricula, setMatricula] = useState<string>('');
   const [senha, setSenha] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
+  const [modalVisible, setModalVisible] = useState<boolean>(false); // Controla a visibilidade do modal
   const navigate = useNavigate();
 
   const handleLogin = async (values: { matricula: string; senha: string }) => {
@@ -26,6 +28,16 @@ const Login: React.FC = () => {
     } catch (error) {
       setError('Matrícula ou senha incorretos.');
     }
+  };
+
+  // Função para abrir o modal
+  const openEsqueciSenhaModal = () => {
+    setModalVisible(true);
+  };
+
+  // Função para fechar o modal
+  const closeEsqueciSenhaModal = () => {
+    setModalVisible(false);
   };
 
   return (
@@ -64,7 +76,7 @@ const Login: React.FC = () => {
           <Form.Item name="lembrar" valuePropName="checked" noStyle>
             <Checkbox>Lembrar-me</Checkbox>
           </Form.Item>
-          <a className="esqueceu-senha" href="#">
+          <a className="esqueceu-senha" href="#" onClick={openEsqueciSenhaModal}>
             Esqueceu sua senha?
           </a>
         </Form.Item>
@@ -74,6 +86,7 @@ const Login: React.FC = () => {
           </Button>
         </Form.Item>
       </Form>
+      <EsqueciSenha modalVisible={modalVisible} closeModal={closeEsqueciSenhaModal} />
     </div>
   );
 };
