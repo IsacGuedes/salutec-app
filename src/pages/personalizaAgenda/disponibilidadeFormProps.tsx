@@ -57,25 +57,26 @@ const DisponibilidadeForm: React.FC<DisponibilidadeFormProps> = ({ tipo, onDispo
       alert('Por favor, selecione pelo menos um dia da semana e preencha os horários.');
       return;
     }
-
+  
     const disponibilidade: Disponibilidade = {
       diasDaSemana: diasSelecionados,
       horariosDisponiveis: horarios.filter(h => h !== '')
     };
-
-    localStorage.setItem(`disponibilidade-${tipo}`, JSON.stringify(disponibilidade)); 
+  
+    localStorage.setItem(`disponibilidade-${tipo}`, JSON.stringify(disponibilidade));
     onDisponibilidadeChange(disponibilidade); // Atualizar o calendário
-
+  
     try {
       const disponibilidadeResponse = await apiPost(`/personaliza/criaDisponibilidade/${tipo}`, disponibilidade);
       if (disponibilidadeResponse.status === STATUS_CODE.CREATED) {
         alert('Disponibilidade salva com sucesso!');
-      } 
+      }
     } catch (error) {
       console.error('Erro ao salvar disponibilidade', error);
       alert('Erro ao salvar disponibilidade');
     }
   };
+  
   return (
     <form onSubmit={handleSubmit} className="form-container">
       <div>
