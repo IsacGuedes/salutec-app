@@ -16,10 +16,10 @@ const Home: React.FC = () => {
 
   return (
     <div className="home">
-      <Button 
-      type='primary' 
-        size="large" 
-        onClick={abrirModal} 
+      <Button
+        type='primary'
+        size="large"
+        onClick={abrirModal}
         className="botao-grande"
       >
         AGENDAR CONSULTA
