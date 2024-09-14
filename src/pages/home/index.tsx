@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Button } from 'antd';
 import './styles.css';
 import ModalAgendamento from '../../components/modal-mensagem';
 
@@ -15,10 +16,15 @@ const Home: React.FC = () => {
 
   return (
     <div className="home">
-      <button className="botao-grande" onClick={abrirModal}>
+      <Button 
+      type='primary' 
+        size="large" 
+        onClick={abrirModal} 
+        className="botao-grande"
+      >
         AGENDAR CONSULTA
-      </button>
-      
+      </Button>
+
       <ModalAgendamento aberto={modalAberto} aoFechar={fecharModal} />
     </div>
   );
