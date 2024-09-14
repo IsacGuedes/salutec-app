@@ -1,24 +1,67 @@
 .home {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f0f0f0;
-  }
-  
-  .botao-grande {
-    background-color: black;
-    color: white;
-    font-size: 24px;
-    padding: 20px 40px;
-    border: 2px solid white;
-    border-radius: 5px;
-    cursor: pointer;
-    text-transform: uppercase;
-  }
-  
-  .botao-grande:hover {
-    background-color: #333;
-    border-color: #ccc;
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #002b36;
+}
+
+.botao-grande {
+  font-size: 24px;
+  text-transform: uppercase;
+  padding: 0 40px;
+  height: 60px;
+  border-radius: 8px;
+  background-color: #004d40; 
+  color: #ffffff; 
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.botao-grande:hover {
+  background-color: #00bfa5;
+}
+
+.botao-grande:focus,
+.botao-grande:active {
+  background-color: #00bfa5;
+  border-color: #00bfa5;
+  box-shadow: none;
+}
+
+.ant-btn-primary {
+  background-color: #004d40 !important;
+  border-color: #004d40 !important;
+  color: #ffffff !important;
+}
+
+.ant-btn-primary:hover,
+.ant-btn-primary:focus,
+.ant-btn-primary:active {
+  background-color: #00bfa5 !important;
+  border-color: #00bfa5 !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.ant-modal-content {
+  background-color: #1c1c1c;
+  color: #ffffff;
+}
+
+.ant-modal-title,
+.ant-modal-body {
+  color: #ffffff;
+}
+
+.ant-input,
+.ant-select-selector {
+  background-color: #002b36; 
+  color: #ffffff; 
+  border: 1px solid #00bfa5;
+}
+
+.ant-input:hover,
+.ant-select-selector:hover {
+  border-color: #00bfa5;
+}

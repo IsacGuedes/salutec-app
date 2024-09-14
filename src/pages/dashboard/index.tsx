@@ -1,9 +1,10 @@
 import React, { useState, useEffect, FC } from 'react';
-import { Layout, Table, Button, Modal } from 'antd';
+import { Layout, Table, Button, Modal, message } from 'antd';
 import { IAgendamento } from '../../components/interface';
 import DashboardSidebar from '../../components/sidebar';
-import { aplicarMascaraDocumento, formatarTelefone, formatDate } from '../../components/formatos';
+import { gerarPDF } from '../../components/gerarPDF';
 import './styles.css';
+import { aplicarMascaraDocumento, formatarTelefone, formatDate } from '../../components/formatos';
 
 const { Content } = Layout;
 
@@ -11,6 +12,7 @@ const Dashboard: FC = () => {
   const [agendamentos, setAgendamentos] = useState<IAgendamento[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState<IAgendamento | null>(null);
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchAgendamentos = async () => {
@@ -26,6 +28,22 @@ const Dashboard: FC = () => {
     fetchAgendamentos();
   }, []);
 
+  const showPdfModal = () => {
+    const pdfBlob = gerarPDF(agendamentos);
+    const pdfUrl = URL.createObjectURL(pdfBlob);
+    setPdfUrl(pdfUrl);
+    setIsModalVisible(true);
+  };
+
+  const downloadPdf = () => {
+    if (pdfUrl) {
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.download = 'relatorio.pdf';
+      link.click();
+    }
+  };
+
   const showModal = (record: IAgendamento) => {
     setSelectedRecord(record);
     setIsModalVisible(true);
@@ -33,32 +51,7 @@ const Dashboard: FC = () => {
 
   const handleCancel = () => {
     setIsModalVisible(false);
-  };
-
-  const handleStatusChange = async (status: string) => {
-    if (selectedRecord) {
-      try {
-        const response = await fetch(`http://localhost:8090/agendar-consulta/atualizarStatus`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ id: selectedRecord.id, status }),
-        });
-        if (response.ok) {
-          setAgendamentos((prevAgendamentos) =>
-            prevAgendamentos.map((agendamento) =>
-              agendamento.id === selectedRecord.id ? { ...agendamento, statusConsulta: status } : agendamento
-            )
-          );
-          setIsModalVisible(false);
-        } else {
-          console.error('Erro ao atualizar o status');
-        }
-      } catch (error) {
-        console.error('Erro ao conectar com o servidor:', error);
-      }
-    }
+    setPdfUrl(null);
   };
 
   const columns = [
@@ -85,10 +78,7 @@ const Dashboard: FC = () => {
           }`}
           onClick={() => showModal(record)}
         >
-          {record.statusConsulta === 'Confirmado' ? 'Confirmado' :
-            record.statusConsulta === 'Cancelado' ? 'Cancelado' :
-            record.statusConsulta === 'AGUARDANDO_CONFIRMACAO' ? 'Aguardando Confirmação' :
-            record.statusConsulta}
+          {record.statusConsulta}
         </Button>
       ),
     },
@@ -100,6 +90,13 @@ const Dashboard: FC = () => {
       <Layout className="layout-dashboard">
         <Content className="conteudo-dashboard">
           <h2>Todos Agendamentos</h2>
+          <Button
+            type="primary"
+            onClick={showPdfModal}
+            className="botao-exportar-pdf"
+          >
+            Exportar para PDF
+          </Button>
           <Table
             dataSource={agendamentos}
             columns={columns}
@@ -108,24 +105,27 @@ const Dashboard: FC = () => {
           />
         </Content>
       </Layout>
-
       <Modal
-        title="O que você deseja fazer?"
+        title="Visualizar PDF"
         visible={isModalVisible}
         onCancel={handleCancel}
         footer={[
-          <Button key="back" onClick={handleCancel}>
-            Cancelar
+          <Button key="download" type="primary" onClick={downloadPdf}>
+            Baixar PDF
           </Button>,
-          <Button key="confirm" type="primary" onClick={() => handleStatusChange('Confirmado')}>
-            Confirmar Consulta
-          </Button>,
-          <Button key="cancel" type="primary" danger onClick={() => handleStatusChange('Cancelado')}>
-            Cancelar Consulta
+          <Button key="close" onClick={handleCancel}>
+            Fechar
           </Button>,
         ]}
       >
-        <p>Escolha uma ação para a consulta.</p>
+        {pdfUrl && (
+          <iframe
+            src={pdfUrl}
+            width="100%"
+            height="400px"
+            title="Visualizar PDF"
+          />
+        )}
       </Modal>
     </Layout>
   );
