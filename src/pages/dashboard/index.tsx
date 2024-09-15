@@ -4,7 +4,7 @@ import { IAgendamento } from '../../components/interface';
 import DashboardSidebar from '../../components/sidebar';
 import { gerarPDF } from '../../components/gerarPDF';
 import './styles.css';
-import { aplicarMascaraDocumento, formatarTelefone, formatDate } from '../../components/formatos';
+import { aplicarMascaraDocumentocpf, aplicarMascaraDocumentocns, formatarTelefone, formatDate } from '../../components/formatos';
 
 const { Content } = Layout;
 
@@ -57,7 +57,8 @@ const Dashboard: FC = () => {
   const columns = [
     { title: 'Consulta', dataIndex: 'id', key: 'id' },
     { title: 'Nome', dataIndex: ['paciente', 'nome'], key: 'nome' },
-    { title: 'CPF', dataIndex: ['paciente', 'documento'], key: 'cpf', render: (cpf: string) => aplicarMascaraDocumento(cpf) },
+    { title: 'CPF', dataIndex: ['paciente', 'documentocpf'], key: 'cpf', render: (cpf: string) => aplicarMascaraDocumentocpf(cpf) },
+    { title: 'CNS', dataIndex: ['paciente', 'documentocns'], key: 'cns', render: (cns: string) => aplicarMascaraDocumentocns(cns) },
     { title: 'Contato', dataIndex: ['paciente', 'telefone'], key: 'contato', render: (telefone: string) => formatarTelefone(telefone) },
     { title: 'Data da Consulta', dataIndex: 'dataConsulta', key: 'dataConsulta', render: (dataConsulta: string) => formatDate(dataConsulta) },
     { title: 'Tipo de Consulta', dataIndex: 'tipoConsulta', key: 'tipoConsulta' },

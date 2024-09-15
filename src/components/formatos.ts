@@ -1,22 +1,30 @@
 // src/components/formatos.ts
 
-export const aplicarMascaraDocumento = (documento: string): string => {
-    // Função para aplicar máscara de CPF e CNS
-    const apenasDigitos = documento.replace(/\D/g, '').slice(0, 15);
+export const aplicarMascaraDocumentocpf = (documentocpf: string): string => {
+    // Função para aplicar máscara de CPF
+    const apenasDigitos = documentocpf.replace(/\D/g, '').slice(0, 11);
     
     if (apenasDigitos.length <= 11) {
         return apenasDigitos
             .replace(/(\d{3})(\d)/, '$1.$2')
             .replace(/(\d{3})(\d)/, '$1.$2')
             .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-    } else if (apenasDigitos.length <= 15) {
+    } 
+    return documentocpf;
+};
+
+export const aplicarMascaraDocumentocns = (documentocns: string): string => {
+    // Função para aplicar máscara de CNS
+    const apenasDigitos = documentocns.replace(/\D/g, '').slice(0, 15);
+    
+    if (apenasDigitos.length <= 15) {
         return apenasDigitos
             .replace(/(\d{3})(\d)/, '$1.$2')
             .replace(/(\d{3})(\d)/, '$1.$2')
             .replace(/(\d{3})(\d)/, '$1.$2')
             .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
     } 
-    return documento;
+    return documentocns;
 };
 
 export const formatarTelefone = (telefone: string, paraEnvio: boolean = false): string => {

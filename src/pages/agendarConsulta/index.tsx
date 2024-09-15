@@ -43,6 +43,7 @@ const AgendarConsulta: FC = () => {
       horario: formatarHorarioParaBackend(horario),
       statusConsulta: "AGUARDANDO_CONFIRMACAO",
       pacienteId: null,
+      postoDeSaude: 1,
     };
 
     sessionStorage.setItem("consultaData", JSON.stringify(consultaData));

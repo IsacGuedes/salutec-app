@@ -1,27 +1,30 @@
 import React, { FC, useState } from 'react';
-import { TextField, Button, Typography } from '@mui/material';
+import { TextField, Button, Typography, Radio, FormControlLabel, Grid } from '@mui/material';
 import { apiPost, STATUS_CODE } from '../../api/RestClient';
-import { aplicarMascaraDocumento, formatarTelefone, removerCaracteresNaoNumericos } from '../../components/formatos';
+import { aplicarMascaraDocumentocns, aplicarMascaraDocumentocpf, formatarTelefone, removerCaracteresNaoNumericos } from '../../components/formatos';
 import { useNavigate } from 'react-router-dom';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import './styles.css';
 
 const Paciente: FC = () => {
   const [nome, setNome] = useState<string>('');
-  const [documento, setDocumento] = useState<string>('');
+  const [documentocpf, setDocumentocpf] = useState<string>('');
+  const [documentocns, setDocumentocns] = useState<string>('');
   const [dataNascimento, setDataNascimento] = useState<string>('');
   const [telefone, setTelefone] = useState<string>('');
+  const [selectedDocType, setSelectedDocType] = useState<string>('cpf'); // Estado para controlar o tipo de documento
   const navigate = useNavigate();
 
   const salvarPaciente = async () => {
-    if (!nome || !documento || !telefone || !dataNascimento) {
+    if (!nome || (!documentocpf && !documentocns) || !telefone || !dataNascimento) {
       alert("Preencha todos os campos obrigatórios.");
       return;
     }
 
     const data = {
       nome,
-      documento: removerCaracteresNaoNumericos(documento),
+      documentocpf: removerCaracteresNaoNumericos(documentocpf),
+      documentocns: removerCaracteresNaoNumericos(documentocns),
       telefone: formatarTelefone(removerCaracteresNaoNumericos(telefone), true),
       dataNascimento,
     };
@@ -80,14 +83,53 @@ const Paciente: FC = () => {
             onChange={(event) => setDataNascimento(event.target.value)}
           />
         </div>
-        <div className="div-linha">
-          <TextField
-            fullWidth
-            label="CPF/CNS"
-            value={documento}
-            onChange={(event) => setDocumento(aplicarMascaraDocumento(event.target.value))}
-          />
-        </div>
+
+        {/* Colocando os labels de CPF e CNS lado a lado */}
+        <Grid container spacing={2} alignItems="center">
+          <Grid item xs={6}>
+            <FormControlLabel
+              control={<Radio
+                checked={selectedDocType === 'cpf'}
+                onChange={() => setSelectedDocType('cpf')}
+                value="cpf"
+              />}
+              label="Informar CPF"
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <FormControlLabel
+              control={<Radio
+                checked={selectedDocType === 'cns'}
+                onChange={() => setSelectedDocType('cns')}
+                value="cns"
+              />}
+              label="Informar CNS"
+            />
+          </Grid>
+        </Grid>
+
+        {/* Colocando os campos de CPF e CNS lado a lado */}
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              label="CPF"
+              value={documentocpf}
+              onChange={(event) => setDocumentocpf(aplicarMascaraDocumentocpf(event.target.value))}
+              disabled={selectedDocType !== 'cpf'}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              label="CNS"
+              value={documentocns}
+              onChange={(event) => setDocumentocns(aplicarMascaraDocumentocns(event.target.value))}
+              disabled={selectedDocType !== 'cns'}
+            />
+          </Grid>
+        </Grid>
+        <div className="div-linha"></div>
         <div className="div-linha">
           <TextField
             fullWidth
