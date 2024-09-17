@@ -5,25 +5,25 @@ import AppRouter from './router';
 import Logo from './assets/logo.png';
 import { Link } from 'react-router-dom';
 import DashboardNavbar from './components/navbarDashboard';
+import Footer from './components/footer';
 
 function App() {
-
   const location = useLocation();
   const isDashboardRoute = location.pathname.startsWith('/dashboard');
-  
+
   return (
-      <div className="App">
-      {isDashboardRoute ?(
+    <div className="App">
+      {isDashboardRoute ? (
         <>
-          <DashboardNavbar/>
-          <AppRouter/>
+          <DashboardNavbar />
+          <AppRouter />
         </>
       ) : (
         <>
           <header className="menu-bar">
             <div className="logo">
               <Link to="/home">
-              <img src={Logo} alt="Logo" className='logo-imagem'/>
+                <img src={Logo} alt="Logo" className='logo-imagem' />
               </Link>
             </div>
             <nav className="menu-items">
@@ -33,10 +33,10 @@ function App() {
             </nav>
           </header>
           <AppRouter />
+          <Footer /> {/* Adicionar o rodapé aqui */}
         </>
       )}
-        
-      </div>
+    </div>
   );
 }
 
@@ -47,6 +47,5 @@ function AppWrapper() {
     </Router>
   );
 }
-
 
 export default AppWrapper;

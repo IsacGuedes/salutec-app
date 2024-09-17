@@ -1,76 +1,67 @@
+/* Fundo da página */
 .home {
-  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #002b36;
-  overflow: hidden;
+  background-color: #f4f6f8; /* Fundo claro */
 }
 
-.letreiro-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  pointer-events: none;
-}
-
+/* Botão principal */
 .botao-grande {
-  z-index: 1;
   font-size: 24px;
   text-transform: uppercase;
   padding: 0 40px;
   height: 60px;
   border-radius: 8px;
-  background-color: #004d40;
+  background-color: #00bfa5; /* Verde água */
   color: #ffffff;
   border: none;
   transition: background-color 0.3s ease;
 }
 
 .botao-grande:hover {
-  background-color: #00bfa5;
+  background-color: #00796b; /* Verde escuro */
 }
 
 .botao-grande:focus,
 .botao-grande:active {
-  background-color: #00bfa5;
-  border-color: #00bfa5;
+  background-color: #00796b;
+  border-color: #00796b;
   box-shadow: none;
 }
 
+/* Ajustando elementos do Ant Design para a nova paleta */
 .ant-btn-primary {
-  background-color: #004d40 !important;
-  border-color: #004d40 !important;
+  background-color: #00bfa5 !important;
+  border-color: #00bfa5 !important;
   color: #ffffff !important;
 }
 
 .ant-btn-primary:hover,
 .ant-btn-primary:focus,
 .ant-btn-primary:active {
-  background-color: #00bfa5 !important;
-  border-color: #00bfa5 !important;
+  background-color: #00796b !important;
+  border-color: #00796b !important;
   color: #ffffff !important;
   box-shadow: none !important;
 }
 
+/* Estilo do modal */
 .ant-modal-content {
-  background-color: #1c1c1c;
-  color: #ffffff;
+  background-color: #ffffff; /* Modal branco */
+  color: #333333; /* Texto escuro para melhor legibilidade */
 }
 
 .ant-modal-title,
 .ant-modal-body {
-  color: #ffffff;
+  color: #333333;
 }
 
 .ant-input,
 .ant-select-selector {
-  background-color: #002b36;
-  color: #ffffff;
+  background-color: #ffffff; 
+  color: #333333; 
   border: 1px solid #00bfa5;
 }
 
