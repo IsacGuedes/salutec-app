@@ -36,19 +36,23 @@ const AgendarConsulta: FC = () => {
       alert("Preencha todos os dados!");
       return;
     }
-
+  
+    const diaSemana = selectedDate.format("dddd").toUpperCase(); // Obtém o dia da semana
+  
     const consultaData = {
       dataConsulta: selectedDate.format("YYYY-MM-DD"),
+      diaSemana, // Adiciona o dia da semana no payload
       tipoConsulta,
       horario: formatarHorarioParaBackend(horario),
       statusConsulta: "AGUARDANDO_CONFIRMACAO",
       pacienteId: null,
       postoDeSaude: 1,
     };
-
+  
     sessionStorage.setItem("consultaData", JSON.stringify(consultaData));
     navigate("/paciente");
   };
+  
 
   const handleVoltarClick = () => navigate("/home");
 
