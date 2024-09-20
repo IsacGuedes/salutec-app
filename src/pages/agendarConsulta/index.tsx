@@ -1,7 +1,8 @@
 import React, { FC, useEffect, useState } from "react";
-import { Button, TextField } from "@mui/material";
+import { Button, TextField, Snackbar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Dayjs } from "dayjs";
+import axios from 'axios';
 import { CalendarOutlined, FormOutlined, ClockCircleOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import BasicDateCalendar from "../../components/calendario";
 import "./styles.css";
@@ -18,27 +19,43 @@ const AgendarConsulta: FC = () => {
   const [horario, setHorario] = useState("");
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [disponibilidade, setDisponibilidade] = useState<Disponibilidade | null>(null);
+  const [erro, setErro] = useState<string | null>(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const navigate = useNavigate();
 
-  const formatarHorarioParaBackend = (horario: string) => horario + ":00";
+  const formatarHorarioParaBackend = (horario: string) => {
+    const partes = horario.split(":");
+    return `${partes[0]}:${partes[1]}:${partes[2]}`; // Retorna no formato HH:mm:ss
+  };  
 
   useEffect(() => {
-    if (tipoConsulta !== "") {
-      const disponibilidadeSalva = localStorage.getItem(`disponibilidade-${tipoConsulta}`);
-      if (disponibilidadeSalva) {
-        setDisponibilidade(JSON.parse(disponibilidadeSalva));
-      }
+    if (tipoConsulta !== "" && selectedDate) {
+      const dataConsulta = selectedDate.format("YYYY-MM-DD");
+
+      axios
+  .get(`http://localhost:8090/agendar-consulta/horarios-disponiveis`, { params: { tipoConsulta, data: dataConsulta } })
+        .then((response) => {
+          setDisponibilidade({
+            diasDaSemana: [], // Se necessário, adicione a lógica para dias da semana
+            horariosDisponiveis: response.data,
+          });
+        })
+        .catch((error) => {
+          setErro("Erro ao buscar horários disponíveis");
+          setSnackbarOpen(true);
+          console.error("Erro ao buscar horários disponíveis", error);
+        });
     }
-  }, [tipoConsulta]);
+  }, [tipoConsulta, selectedDate]);
 
   const handleContinuarClick = () => {
     if (!tipoConsulta || !horario || !selectedDate) {
       alert("Preencha todos os dados!");
       return;
     }
-  
+
     const diaSemana = selectedDate.format("dddd").toUpperCase(); // Obtém o dia da semana
-  
+
     const consultaData = {
       dataConsulta: selectedDate.format("YYYY-MM-DD"),
       diaSemana, // Adiciona o dia da semana no payload
@@ -48,13 +65,17 @@ const AgendarConsulta: FC = () => {
       pacienteId: null,
       postoDeSaude: 1,
     };
-  
+
     sessionStorage.setItem("consultaData", JSON.stringify(consultaData));
     navigate("/paciente");
   };
-  
 
   const handleVoltarClick = () => navigate("/home");
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+    setErro(null);
+  };
 
   return (
     <div className="container-principal">
@@ -116,6 +137,14 @@ const AgendarConsulta: FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Snackbar para exibir erros */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        message={erro}
+      />
     </div>
   );
 };
