@@ -8,6 +8,18 @@ export const apiPost = (endpoint: string, data: any) => {
   return api.post(endpoint, data);
 };
 
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token'); // ou de onde você estiver armazenando o token
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 export const STATUS_CODE = {
   OK: 200,

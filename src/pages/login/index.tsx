@@ -10,18 +10,21 @@ const Login: React.FC = () => {
   const [matricula, setMatricula] = useState<string>('');
   const [senha, setSenha] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
-  const [modalVisible, setModalVisible] = useState<boolean>(false); // Controla a visibilidade do modal
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const handleLogin = async (values: { matricula: string; senha: string }) => {
     const { matricula, senha } = values;
     
     try {
-      const response = await axios.post('http://localhost:8090/api/enfermeiros/login', null, {
-        params: { matricula, senha },
+      const response = await axios.post('http://localhost:8090/api/enfermeiros/login', {
+        matricula, // Enviando no corpo da requisição
+        senha,
       });
       
       if (response.status === 200) {
+        const { token } = response.data; // Supondo que o token seja retornado no corpo da resposta
+        localStorage.setItem('token', token); // Armazenando o token no localStorage
         alert('Login bem-sucedido');
         navigate('/dashboard');
       }
@@ -30,12 +33,10 @@ const Login: React.FC = () => {
     }
   };
 
-  // Função para abrir o modal
   const openEsqueciSenhaModal = () => {
     setModalVisible(true);
   };
 
-  // Função para fechar o modal
   const closeEsqueciSenhaModal = () => {
     setModalVisible(false);
   };
@@ -46,7 +47,7 @@ const Login: React.FC = () => {
         name="formulario_login"
         className="formulario-login"
         initialValues={{ remember: true }}
-        onFinish={handleLogin} // Conecta o handleLogin ao envio do formulário
+        onFinish={handleLogin}
       >
         <Form.Item
           name="matricula"
