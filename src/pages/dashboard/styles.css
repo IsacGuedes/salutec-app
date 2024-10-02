@@ -11,6 +11,13 @@
 .botao-status {
   border: none;
   color: white !important;
+  cursor: pointer; /* Adiciona cursor de pointer para destacar que é clicável */
+  transition: background-color 0.3s ease, border-color 0.3s ease; /* Adiciona transição suave */
+}
+
+.botao-status:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2); /* Indicação visual de foco para acessibilidade */
 }
 
 .botao-sucesso {
@@ -18,9 +25,17 @@
   border-color: #52c41a !important;
 }
 
+.botao-sucesso:hover {
+  background-color: #41a013 !important; /* Cor mais escura ao passar o mouse */
+}
+
 .botao-aviso {
   background-color: #faad14 !important;
   border-color: #faad14 !important; 
+}
+
+.botao-aviso:hover {
+  background-color: #d9960e !important; /* Cor mais escura ao passar o mouse */
 }
 
 .botao-erro {
@@ -28,10 +43,31 @@
   border-color: #f5222d !important;
 }
 
+.botao-erro:hover {
+  background-color: #cf1a21 !important; /* Cor mais escura ao passar o mouse */
+}
+
 .botao-exportar-pdf {
   position: fixed;
   bottom: 24px;
   right: 24px;
   z-index: 1000;
+  background-color: #1890ff;
+  color: #fff !important;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+.botao-exportar-pdf:hover {
+  background-color: #40a9ff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25); /* Mais destaque ao passar o mouse */
+}
+
+.botao-exportar-pdf:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(24, 144, 255, 0.4); /* Indicação de foco */
+}

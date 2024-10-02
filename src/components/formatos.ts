@@ -1,6 +1,8 @@
 // src/components/formatos.ts
 
-export const aplicarMascaraDocumentocpf = (documentocpf: string): string => {
+export const aplicarMascaraDocumentocpf = (documentocpf: string | null | undefined): string => {
+    if (!documentocpf) return ''; // Verifica se o valor é nulo ou indefinido e retorna uma string vazia
+
     // Função para aplicar máscara de CPF
     const apenasDigitos = documentocpf.replace(/\D/g, '').slice(0, 11);
     
@@ -13,7 +15,9 @@ export const aplicarMascaraDocumentocpf = (documentocpf: string): string => {
     return documentocpf;
 };
 
-export const aplicarMascaraDocumentocns = (documentocns: string): string => {
+export const aplicarMascaraDocumentocns = (documentocns: string | null | undefined): string => {
+    if (!documentocns) return ''; // Verifica se o valor é nulo ou indefinido e retorna uma string vazia
+
     // Função para aplicar máscara de CNS
     const apenasDigitos = documentocns.replace(/\D/g, '').slice(0, 15);
     
@@ -27,7 +31,9 @@ export const aplicarMascaraDocumentocns = (documentocns: string): string => {
     return documentocns;
 };
 
-export const formatarTelefone = (telefone: string, paraEnvio: boolean = false): string => {
+export const formatarTelefone = (telefone: string | null | undefined, paraEnvio: boolean = false): string => {
+    if (!telefone) return ''; // Verifica se o valor é nulo ou indefinido e retorna uma string vazia
+    
     const apenasDigitos = telefone.replace(/\D/g, '').slice(0, 11);
 
     if (paraEnvio) {
@@ -49,17 +55,23 @@ export const formatarTelefone = (telefone: string, paraEnvio: boolean = false): 
     return telefone;
 };
 
-export const formatDate = (dateString: string): string => {
+export const formatDate = (dateString: string | null | undefined): string => {
+    if (!dateString) return ''; // Verifica se o valor é nulo ou indefinido e retorna uma string vazia
+
     const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
     return new Date(dateString).toLocaleDateString('pt-BR', options);
 };
 
-export const removerCaracteresNaoNumericos = (valor: string): string => {
+export const removerCaracteresNaoNumericos = (valor: string | null | undefined): string => {
+    if (!valor) return ''; // Verifica se o valor é nulo ou indefinido e retorna uma string vazia
+
     return valor.replace(/\D/g, '');
 };
 
 // Função para validar o CPF
-export const validarCpf = (cpf: string): boolean => {
+export const validarCpf = (cpf: string | null | undefined): boolean => {
+    if (!cpf) return false; // Verifica se o valor é nulo ou indefinido e retorna falso
+
     const cpfLimpo = cpf.replace(/\D/g, '');
     
     if (cpfLimpo.length !== 11 || /^(\d)\1{10}$/.test(cpfLimpo)) {

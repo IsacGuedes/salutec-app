@@ -8,7 +8,7 @@ export const gerarPDF = (agendamentos: IAgendamento[]): Blob => {
 
   doc.text('Relatório de Agendamentos', 14, 20);
 
-  const tableColumn = ['ID', 'Nome', 'CPF', 'Contato', 'Data da Consulta', 'Tipo de Consulta', 'Status'];
+  const tableColumn = ['ID', 'Nome', 'CPF', 'CNS', 'Contato', 'Data da Consulta', 'Tipo de Consulta', 'Status'];
   const tableRows: any[] = [];
 
   agendamentos.forEach(agendamento => {

@@ -1,0 +1,33 @@
+/* Estilos para a página Sobre Nós */
+.conteudo-sobre-nos {
+    background-color: #f0f2f5;
+    padding: 40px;
+  }
+  
+  .cabecalho-sobre-nos {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  .corpo-sobre-nos {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .cartao-missao, .cartao-visao, .linha-caracteristicas, .linha-objetivos {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+  }
+  
+  .linha-caracteristicas .ant-card {
+    background-color: #fafafa;
+  }
+  
+  .linha-objetivos .ant-card {
+    background-color: #e6f7ff;
+  }
+  
+  .ant-card-title {
+    color: #1890ff;
+  }
+  

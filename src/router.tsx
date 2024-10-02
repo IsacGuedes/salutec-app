@@ -11,6 +11,8 @@ import DashboardConfirmado from './pages/dashboardConfirmado';
 import DashboardPendente from './pages/dashboardPendente';
 import DisponibilidadeForm from './pages/personalizaAgenda';
 import FaqQuestions from './pages/faq/perguntas/perguntas';
+import SobreNos from './pages/sobre';
+import Contato from './pages/contato';
 
 const AppRouter = () => {
   return (
@@ -28,6 +30,8 @@ const AppRouter = () => {
       <Route path='/dashboard/consultas-canceladas' element={<DashboardCancelado/>}/>
       <Route path='/dashboard/consultas-pendentes' element={<DashboardPendente/>}/>
       <Route path='/dashboard/configurar-horario' element={<DisponibilidadeForm/>}/>
+      <Route path='/sobre' element={<SobreNos/>}/>
+      <Route path='/contato' element={<Contato/>}/>
     </Routes>
   );
 };
