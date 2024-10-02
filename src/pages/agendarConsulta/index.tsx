@@ -36,7 +36,7 @@ const AgendarConsulta: FC = () => {
   .get(`http://localhost:8090/agendar-consulta/horarios-disponiveis`, { params: { tipoConsulta, data: dataConsulta } })
         .then((response) => {
           setDisponibilidade({
-            diasDaSemana: [], // Se necessário, adicione a lógica para dias da semana
+            diasDaSemana: [], 
             horariosDisponiveis: response.data,
           });
         })

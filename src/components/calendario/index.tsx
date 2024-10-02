@@ -42,9 +42,15 @@ const BasicDateCalendar: React.FC<BasicDateCalendarProps> = ({
     }
   }, [tipo]);
   
+  const dataAtual = new Date();
+  const inicioSemana = new Date(dataAtual.setDate(dataAtual.getDate() - dataAtual.getDay())); // Primeiro dia da semana
+  const fimSemana = new Date(inicioSemana);
+  fimSemana.setDate(inicioSemana.getDate() + 5); // Último dia da semana
 
-  const dataAtual = new Date().toISOString().split("T")[0];
-  const mesAtual = new Date().getMonth();
+
+  console.log("Data Atual Simulada:", dataAtual.toISOString());
+console.log("Início da Semana:", inicioSemana.toISOString());
+console.log("Fim da Semana:", fimSemana.toISOString());
 
   const handleDateChange = (date: Dayjs | null) => {
     setSelectedDate(date);
@@ -56,16 +62,16 @@ const BasicDateCalendar: React.FC<BasicDateCalendarProps> = ({
   const CustomPickersDay: React.FC<PickersDayProps<Dayjs>> = (props) => {
     const { day } = props;
     const dayOfWeek = day.day();
-    const isBeforeToday = day.isBefore(dataAtual);
-    const isCurrentMonth = day.month() === mesAtual;
-  
+    const isBeforeToday = day.isBefore(new Date());
+    const isWithinWeek = day.isAfter(inicioSemana) && day.isBefore(fimSemana);
+
     const isAvailable =
       disponibilidade?.diasDaSemana.some(
         (dia) => diasSemanaMap[dia] === dayOfWeek
       ) &&
       !isBeforeToday &&
-      isCurrentMonth;
-  
+      isWithinWeek;
+
     return (
       <PickersDay
         {...props}
