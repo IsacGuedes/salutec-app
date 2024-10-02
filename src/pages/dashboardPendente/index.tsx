@@ -1,7 +1,8 @@
 import React, { useState, useEffect, FC } from 'react';
-import { Layout, Table, Button } from 'antd';
+import { Layout, Table, Button, message } from 'antd';
 import { Agendamento } from '../../types/agendamento';
 import DashboardSidebar from '../../components/sidebar';
+import { aplicarMascaraDocumentocpf, formatarTelefone, formatDate } from '../../components/formatos'; // Importando as funções de formatação
 import './styles.css';
 
 const { Content } = Layout;
@@ -12,7 +13,7 @@ const DashboardPendentes: FC = () => {
   useEffect(() => {
     const fetchAgendamentosPendentes = async () => {
       try {
-        const response = await fetch('http://localhost:8090/agendar-consulta/listarConsultasPendentes');
+        const response = await fetch('http://localhost:8090/agendar-consulta/listarConsultasPendentes'); // Alterando a rota para listar pendentes
         const data = await response.json();
 
         if (Array.isArray(data)) {
@@ -30,12 +31,36 @@ const DashboardPendentes: FC = () => {
     fetchAgendamentosPendentes();
   }, []);
 
+  const handleAction = async (id: number, status: string) => {
+    try {
+      const response = await fetch(`http://localhost:8090/agendar-consulta/atualizarStatus`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id, status }),
+      });
+
+      if (response.ok) {
+        message.success('Status atualizado com sucesso!');
+        const updatedAgendamentos = agendamentos.map((agendamento) =>
+          Number(agendamento.id) === id ? { ...agendamento, status: status } : agendamento // Atualiza o status corretamente
+        );
+        setAgendamentos(updatedAgendamentos);
+      } else {
+        message.error('Erro ao atualizar status!');
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar status:', error);
+    }
+  };
+
   const columns = [
     { title: 'Consulta', dataIndex: 'id', key: 'id' },
     { title: 'Nome', dataIndex: ['paciente', 'nome'], key: 'nome' },
-    { title: 'CPF', dataIndex: ['paciente', 'documento'], key: 'cpf' },
-    { title: 'Contato', dataIndex: ['paciente', 'telefone'], key: 'contato' },
-    { title: 'Data da Consulta', dataIndex: 'dataConsulta', key: 'dataConsulta' },
+    { title: 'CPF', dataIndex: ['paciente', 'documento'], key: 'cpf', render: (cpf: string) => aplicarMascaraDocumentocpf(cpf) }, // Aplicando máscara CPF
+    { title: 'Contato', dataIndex: ['paciente', 'telefone'], key: 'contato', render: (telefone: string) => formatarTelefone(telefone) }, // Formatação telefone
+    { title: 'Data da Consulta', dataIndex: 'dataConsulta', key: 'dataConsulta', render: (dataConsulta: string) => formatDate(dataConsulta) }, // Formatação data
     { title: 'Tipo de Consulta', dataIndex: 'tipoConsulta', key: 'tipoConsulta' },
     {
       title: 'Status',
@@ -44,14 +69,15 @@ const DashboardPendentes: FC = () => {
         <Button
           type="primary"
           className={`botao-status ${
-            record.status === 'Confirmado'
+            record.status === 'CONFIRMADO'
               ? 'botao-sucesso'
-              : record.status === 'A Confirmar'
+              : record.status === 'A CONFIRMAR'
               ? 'botao-aviso'
-              : record.status === 'Cancelado'
+              : record.status === 'CANCELADO'
               ? 'botao-erro'
               : ''
           }`}
+          onClick={() => handleAction(Number(record.id), record.status === 'CANCELADO' ? 'CONFIRMADO' : 'CANCELADO')} // Lidando com o status pendente
         >
           {record.status}
         </Button>
@@ -68,7 +94,7 @@ const DashboardPendentes: FC = () => {
           <Table
             dataSource={Array.isArray(agendamentos) ? agendamentos : []}
             columns={columns}
-            rowKey={(record) => record.id.toString()}
+            rowKey={(record) => record.id.toString()} // Garantindo que o ID seja uma string para o rowKey
             pagination={false}
           />
         </Content>

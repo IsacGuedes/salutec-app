@@ -26,11 +26,7 @@ function App() {
                 <img src={Logo} alt="Logo" className='logo-imagem' />
               </Link>
             </div>
-            <nav className="menu-items">
-              <a href="/faq" className="menu-item">
-                PERGUNTAS FREQUENTES
-              </a>
-            </nav>
+            
           </header>
           <AppRouter />
           <Footer /> {/* Adicionar o rodapé aqui */}

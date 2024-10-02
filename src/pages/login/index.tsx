@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, Checkbox } from 'antd';
+import { Form, Input, Button, Checkbox, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import './styles.css';
@@ -18,13 +18,13 @@ const Login: React.FC = () => {
     
     try {
       const response = await axios.post('http://localhost:8090/api/enfermeiros/login', {
-        matricula, // Enviando no corpo da requisição
+        matricula,
         senha,
       });
       
       if (response.status === 200) {
-        const { token } = response.data; // Supondo que o token seja retornado no corpo da resposta
-        localStorage.setItem('token', token); // Armazenando o token no localStorage
+        const { token } = response.data;
+        localStorage.setItem('token', token);
         alert('Login bem-sucedido');
         navigate('/dashboard');
       }
@@ -35,6 +35,11 @@ const Login: React.FC = () => {
 
   const openEsqueciSenhaModal = () => {
     setModalVisible(true);
+    message.info({
+      content: "Se você não lembra da sua senha atual, por favor, entre em contato com o administrador.",
+      duration: 5,
+      className: 'esqueci-senha-message', // Aplicando a classe CSS
+    });
   };
 
   const closeEsqueciSenhaModal = () => {
@@ -74,9 +79,6 @@ const Login: React.FC = () => {
         </Form.Item>
         {error && <div className="error-message">{error}</div>}
         <Form.Item>
-          <Form.Item name="lembrar" valuePropName="checked" noStyle>
-            <Checkbox>Lembrar-me</Checkbox>
-          </Form.Item>
           <a className="esqueceu-senha" href="#" onClick={openEsqueciSenhaModal}>
             Esqueceu sua senha?
           </a>

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, FC } from 'react';
-import { Layout, Table, Button } from 'antd';
+import { Layout, Table, Button, message } from 'antd';
 import { Agendamento } from '../../types/agendamento';
 import DashboardSidebar from '../../components/sidebar';
+import { aplicarMascaraDocumentocpf, formatarTelefone, formatDate } from '../../components/formatos'; // Usando as máscaras
 import './styles.css';
 
 const { Content } = Layout;
@@ -32,12 +33,36 @@ const DashboardCancelado: FC = () => {
     fetchAgendamentosCancelados();
   }, []);
 
+  const handleAction = async (id: number, status: string) => {
+    try {
+      const response = await fetch(`http://localhost:8090/agendar-consulta/atualizarStatus`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id, status }),
+      });
+
+      if (response.ok) {
+        message.success('Status atualizado com sucesso!');
+        const updatedAgendamentos = agendamentos.map((agendamento) =>
+          Number(agendamento.id) === id ? { ...agendamento, status: status } : agendamento // Comparando ambos como números
+        );
+        setAgendamentos(updatedAgendamentos);
+      } else {
+        message.error('Erro ao atualizar status!');
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar status:', error);
+    }
+  };
+
   const columns = [
     { title: 'Consulta', dataIndex: 'id', key: 'id' },
     { title: 'Nome', dataIndex: ['paciente', 'nome'], key: 'nome' },
-    { title: 'CPF', dataIndex: ['paciente', 'documento'], key: 'cpf' },
-    { title: 'Contato', dataIndex: ['paciente', 'telefone'], key: 'contato' },
-    { title: 'Data da Consulta', dataIndex: 'dataConsulta', key: 'dataConsulta' },
+    { title: 'CPF', dataIndex: ['paciente', 'documento'], key: 'cpf', render: (cpf: string) => aplicarMascaraDocumentocpf(cpf) }, // Aplicando máscara de CPF
+    { title: 'Contato', dataIndex: ['paciente', 'telefone'], key: 'contato', render: (telefone: string) => formatarTelefone(telefone) }, // Formatação de telefone
+    { title: 'Data da Consulta', dataIndex: 'dataConsulta', key: 'dataConsulta', render: (dataConsulta: string) => formatDate(dataConsulta) }, // Formatando data
     { title: 'Tipo de Consulta', dataIndex: 'tipoConsulta', key: 'tipoConsulta' },
     {
       title: 'Status',
@@ -46,14 +71,15 @@ const DashboardCancelado: FC = () => {
         <Button
           type="primary"
           className={`botao-status ${
-            record.status === 'Confirmado'
+            record.status === 'CONFIRMADO'
               ? 'botao-sucesso'
-              : record.status === 'A Confirmar'
+              : record.status === 'Aguardando Confirmação'
               ? 'botao-aviso'
-              : record.status === 'Cancelado'
+              : record.status === 'CANCELADO'
               ? 'botao-erro'
               : ''
           }`}
+          onClick={() => handleAction(Number(record.id), record.status === 'CANCELADO' ? 'CONFIRMADO' : 'CANCELADO')} // Garantir que `record.id` é tratado como número
         >
           {record.status}
         </Button>
@@ -70,7 +96,7 @@ const DashboardCancelado: FC = () => {
           <Table
             dataSource={Array.isArray(agendamentos) ? agendamentos : []}
             columns={columns}
-            rowKey={(record) => record.id.toString()}
+            rowKey={(record) => record.id.toString()} // Convertendo `id` para string para usar como `rowKey`
             pagination={false}
           />
         </Content>

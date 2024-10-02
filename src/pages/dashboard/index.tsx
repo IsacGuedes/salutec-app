@@ -50,8 +50,39 @@ const Dashboard: FC = () => {
   };
 
   const handleCancel = () => {
-    setIsModalVisible(false);
-    setPdfUrl(null);
+    // Verifica se há um PDF aberto e o fecha
+    if (pdfUrl) {
+      setPdfUrl(null); // Reseta o URL do PDF para garantir que o modal feche
+    }
+    // Fecha o modal de status também
+    setIsModalVisible(false); 
+    setSelectedRecord(null); // Reseta a seleção do agendamento
+  };
+  
+
+  const handleAction = async (id: number, status: string) => {
+    try {
+      const response = await fetch(`http://localhost:8090/agendar-consulta/atualizarStatus`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id, status }),
+      });
+
+      if (response.ok) {
+        message.success('Status atualizado com sucesso!');
+        const updatedAgendamentos = agendamentos.map((agendamento) =>
+          agendamento.id === id ? { ...agendamento, statusConsulta: status } : agendamento
+        );
+        setAgendamentos(updatedAgendamentos);
+        setIsModalVisible(false);
+      } else {
+        message.error('Erro ao atualizar status!');
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar status:', error);
+    }
   };
 
   const columns = [
@@ -69,11 +100,11 @@ const Dashboard: FC = () => {
         <Button
           type="primary"
           className={`botao-status ${
-            record.statusConsulta === 'Confirmado'
+            record.statusConsulta === 'CONFIRMADO'
               ? 'botao-sucesso'
               : record.statusConsulta === 'AGUARDANDO_CONFIRMACAO'
               ? 'botao-aviso'
-              : record.statusConsulta === 'Cancelado'
+              : record.statusConsulta === 'CANCELADO'
               ? 'botao-erro'
               : ''
           }`}
@@ -107,8 +138,26 @@ const Dashboard: FC = () => {
         </Content>
       </Layout>
       <Modal
+        title="Atualizar Status da Consulta"
+        visible={isModalVisible && !!selectedRecord}
+        onCancel={handleCancel}
+        footer={[
+          <Button key="confirm" type="primary" onClick={() => handleAction(selectedRecord?.id!, 'CONFIRMADO')}>
+            Confirmar Consulta
+          </Button>,
+          <Button key="cancel" danger onClick={() => handleAction(selectedRecord?.id!, 'CANCELADO')}>
+            Cancelar Consulta
+          </Button>,
+          <Button key="close" onClick={handleCancel}>
+            Fechar
+          </Button>,
+        ]}
+      >
+        <p>Status atual: {selectedRecord?.statusConsulta}</p>
+      </Modal>
+      <Modal
         title="Visualizar PDF"
-        visible={isModalVisible}
+        visible={!!pdfUrl}
         onCancel={handleCancel}
         footer={[
           <Button key="download" type="primary" onClick={downloadPdf}>
@@ -117,8 +166,8 @@ const Dashboard: FC = () => {
           <Button key="close" onClick={handleCancel}>
             Fechar
           </Button>,
-        ]}
-      >
+          ]}
+        >
         {pdfUrl && (
           <iframe
             src={pdfUrl}

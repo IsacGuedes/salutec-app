@@ -1,0 +1,46 @@
+/* Estilos para a página de Contato */
+.contact-content {
+    padding: 40px;
+    background-color: #f0f2f5;
+  }
+  
+  .contact-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  .contact-body {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .contact-info {
+    padding: 20px;
+    background-color: #fafafa;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .contact-info p {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+  .contact-info p .anticon {
+    margin-right: 8px;
+    color: #1890ff;
+  }
+  
+  .contact-form {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .submit-button {
+    width: 100%;
+    background-color: #1890ff;
+    border-color: #1890ff;
+  }
+  
