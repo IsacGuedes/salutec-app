@@ -18,15 +18,6 @@ const Footer: React.FC = () => {
           <Link to="/contato">Contato</Link>
           <Link to="/sobre">Sobre Nós</Link>
         </div>
-        
-        <div className="footer-section social-media">
-          <h4>Siga-nos</h4>
-          <div className="social-icons">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"><FacebookOutlined /></a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"><InstagramOutlined /></a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"><TwitterOutlined /></a>
-          </div>
-        </div>
 
         <div className="footer-section login">
           <h4>Acesso Restrito</h4>

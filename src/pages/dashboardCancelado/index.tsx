@@ -2,7 +2,7 @@ import React, { useState, useEffect, FC } from 'react';
 import { Layout, Table, Button, message } from 'antd';
 import { Agendamento } from '../../types/agendamento';
 import DashboardSidebar from '../../components/sidebar';
-import { aplicarMascaraDocumentocpf, formatarTelefone, formatDate } from '../../components/formatos'; // Usando as máscaras
+import { aplicarMascaraDocumentocns, aplicarMascaraDocumentocpf, formatarTelefone, formatDate } from '../../components/formatos'; // Usando as máscaras
 import './styles.css';
 
 const { Content } = Layout;
@@ -60,9 +60,10 @@ const DashboardCancelado: FC = () => {
   const columns = [
     { title: 'Consulta', dataIndex: 'id', key: 'id' },
     { title: 'Nome', dataIndex: ['paciente', 'nome'], key: 'nome' },
-    { title: 'CPF', dataIndex: ['paciente', 'documento'], key: 'cpf', render: (cpf: string) => aplicarMascaraDocumentocpf(cpf) }, // Aplicando máscara de CPF
-    { title: 'Contato', dataIndex: ['paciente', 'telefone'], key: 'contato', render: (telefone: string) => formatarTelefone(telefone) }, // Formatação de telefone
-    { title: 'Data da Consulta', dataIndex: 'dataConsulta', key: 'dataConsulta', render: (dataConsulta: string) => formatDate(dataConsulta) }, // Formatando data
+    { title: 'CPF', dataIndex: ['paciente', 'documentocpf'], key: 'cpf', render: (cpf: string) => aplicarMascaraDocumentocpf(cpf) },
+    { title: 'CNS', dataIndex: ['paciente', 'documentocns'], key: 'cns', render: (cns: string) => aplicarMascaraDocumentocns(cns) },
+    { title: 'Contato', dataIndex: ['paciente', 'telefone'], key: 'contato', render: (telefone: string) => formatarTelefone(telefone) },
+    { title: 'Data da Consulta', dataIndex: 'dataConsulta', key: 'dataConsulta', render: (dataConsulta: string) => formatDate(dataConsulta) },
     { title: 'Tipo de Consulta', dataIndex: 'tipoConsulta', key: 'tipoConsulta' },
     {
       title: 'Status',

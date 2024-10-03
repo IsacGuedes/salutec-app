@@ -2,7 +2,7 @@ import React, { useState, useEffect, FC } from 'react';
 import { Layout, Table, Button, message } from 'antd';
 import { Agendamento } from '../../types/agendamento';
 import DashboardSidebar from '../../components/sidebar';
-import { aplicarMascaraDocumentocpf, formatarTelefone, formatDate } from '../../components/formatos'; // Importando as funções de formatação
+import { aplicarMascaraDocumentocns, aplicarMascaraDocumentocpf, formatarTelefone, formatDate } from '../../components/formatos'; // Importando as funções de formatação
 import './styles.css';
 
 const { Content } = Layout;
@@ -58,9 +58,10 @@ const DashboardPendentes: FC = () => {
   const columns = [
     { title: 'Consulta', dataIndex: 'id', key: 'id' },
     { title: 'Nome', dataIndex: ['paciente', 'nome'], key: 'nome' },
-    { title: 'CPF', dataIndex: ['paciente', 'documento'], key: 'cpf', render: (cpf: string) => aplicarMascaraDocumentocpf(cpf) }, // Aplicando máscara CPF
-    { title: 'Contato', dataIndex: ['paciente', 'telefone'], key: 'contato', render: (telefone: string) => formatarTelefone(telefone) }, // Formatação telefone
-    { title: 'Data da Consulta', dataIndex: 'dataConsulta', key: 'dataConsulta', render: (dataConsulta: string) => formatDate(dataConsulta) }, // Formatação data
+    { title: 'CPF', dataIndex: ['paciente', 'documentocpf'], key: 'cpf', render: (cpf: string) => aplicarMascaraDocumentocpf(cpf) },
+    { title: 'CNS', dataIndex: ['paciente', 'documentocns'], key: 'cns', render: (cns: string) => aplicarMascaraDocumentocns(cns) },
+    { title: 'Contato', dataIndex: ['paciente', 'telefone'], key: 'contato', render: (telefone: string) => formatarTelefone(telefone) },
+    { title: 'Data da Consulta', dataIndex: 'dataConsulta', key: 'dataConsulta', render: (dataConsulta: string) => formatDate(dataConsulta) },
     { title: 'Tipo de Consulta', dataIndex: 'tipoConsulta', key: 'tipoConsulta' },
     {
       title: 'Status',
@@ -94,7 +95,7 @@ const DashboardPendentes: FC = () => {
           <Table
             dataSource={Array.isArray(agendamentos) ? agendamentos : []}
             columns={columns}
-            rowKey={(record) => record.id.toString()} // Garantindo que o ID seja uma string para o rowKey
+            rowKey={(record) => record.id.toString()}
             pagination={false}
           />
         </Content>
