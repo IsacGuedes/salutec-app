@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8090',  
+  baseURL: process.env.REACT_BACKEND_URL,  
 });
 
 export const apiPost = (endpoint: string, data: any) => {
