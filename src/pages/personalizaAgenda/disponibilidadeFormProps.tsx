@@ -67,7 +67,8 @@ const DisponibilidadeForm: React.FC<DisponibilidadeFormProps> = ({ tipo, onDispo
     onDisponibilidadeChange(disponibilidade); // Atualizar o calendário
   
     try {
-      const disponibilidadeResponse = await apiPost(`/personaliza/criaDisponibilidade/${tipo}`, disponibilidade);
+      const apiUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8090';
+      const disponibilidadeResponse = await apiPost(`${apiUrl}/personaliza/criaDisponibilidade/${tipo}`, disponibilidade);
       if (disponibilidadeResponse.status === STATUS_CODE.CREATED) {
         alert('Disponibilidade salva com sucesso!');
       }
