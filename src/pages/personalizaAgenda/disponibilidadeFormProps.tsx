@@ -64,6 +64,8 @@ const DisponibilidadeForm: React.FC<DisponibilidadeFormProps> = ({ tipoConsultaI
       horariosDisponiveis: horarios.filter(h => h !== '')
     };
   
+
+    
     localStorage.setItem(`disponibilidade-${tipoConsultaId}`, JSON.stringify(disponibilidade));
     onDisponibilidadeChange(disponibilidade);
   
