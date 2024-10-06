@@ -1,3 +1,4 @@
+// ModalDentista.tsx
 import React, { useState } from 'react';
 import { Modal, Button } from '@mui/material';
 import './styles.css'; 
@@ -16,6 +17,8 @@ const ModalDentista: React.FC = () => {
     console.log('Nova disponibilidade:', novaDisponibilidade);
   };
 
+  const tipoConsultaId = 2; // Ajuste conforme necessário
+
   return (
     <>
       <div className="div-modal">
@@ -27,7 +30,7 @@ const ModalDentista: React.FC = () => {
         <Modal open={open} onClose={handleClose}>
           <div className="modal-container">
             <h2>Personalizar Agenda Odontológica</h2>
-            <DisponibilidadeForm tipo="Dentista" onDisponibilidadeChange={handleDisponibilidadeChange} />
+            <DisponibilidadeForm tipoConsultaId={tipoConsultaId} onDisponibilidadeChange={handleDisponibilidadeChange} />
             <Button onClick={handleClose} variant="contained" color="secondary">
               Fechar
             </Button>

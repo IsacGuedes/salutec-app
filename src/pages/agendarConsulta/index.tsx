@@ -21,22 +21,28 @@ const AgendarConsulta: FC = () => {
   const [disponibilidade, setDisponibilidade] = useState<Disponibilidade | null>(null);
   const [erro, setErro] = useState<string | null>(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [consultaData, setConsultaData] = useState<any>(null); // Armazenar dados da consulta
   const navigate = useNavigate();
 
   const formatarHorarioParaBackend = (horario: string) => {
     const partes = horario.split(":");
     return `${partes[0]}:${partes[1]}:${partes[2]}`; // Retorna no formato HH:mm:ss
-  };  
+  };
 
   useEffect(() => {
     if (tipoConsulta !== "" && selectedDate) {
       const dataConsulta = selectedDate.format("YYYY-MM-DD");
 
       axios
-  .get(`http://localhost:8090/agendar-consulta/horarios-disponiveis`, { params: { tipoConsulta, data: dataConsulta } })
+        .get(`http://localhost:8090/agendar-consulta/horarios-disponiveis`, {
+          params: {
+            tipoConsultaId: tipoConsulta === "Medico" ? 1 : 2,
+            data: dataConsulta
+          }
+        })
         .then((response) => {
           setDisponibilidade({
-            diasDaSemana: [], 
+            diasDaSemana: [],
             horariosDisponiveis: response.data,
           });
         })
@@ -48,26 +54,56 @@ const AgendarConsulta: FC = () => {
     }
   }, [tipoConsulta, selectedDate]);
 
+  // Mapeamento de tipos de consulta para seus respectivos IDs
+  const tipoConsultaIdMap: { [key in TipoConsulta]: number } = {
+    Medico: 1,
+    Dentista: 2,
+  };
+
   const handleContinuarClick = () => {
     if (!tipoConsulta || !horario || !selectedDate) {
       alert("Preencha todos os dados!");
       return;
     }
 
-    const diaSemana = selectedDate.format("dddd").toUpperCase(); // Obtém o dia da semana
+    const diaSemana = selectedDate.format("dddd").toUpperCase();
 
-    const consultaData = {
+    // Armazenar os dados da consulta sem gravar ainda
+    const consultaTempData = {
       dataConsulta: selectedDate.format("YYYY-MM-DD"),
-      diaSemana, // Adiciona o dia da semana no payload
-      tipoConsulta,
+      diaSemana,
+      tipoConsulta: tipoConsultaIdMap[tipoConsulta],
       horario: formatarHorarioParaBackend(horario),
       statusConsulta: "AGUARDANDO_CONFIRMACAO",
-      pacienteId: null,
+      pacienteId: null, // Será preenchido quando o paciente for salvo
       postoDeSaude: 1,
     };
 
-    sessionStorage.setItem("consultaData", JSON.stringify(consultaData));
+    sessionStorage.setItem('consultaData', JSON.stringify(consultaTempData)); // Salvar no sessionStorage
+    navigate("/paciente"); // Redirecionar para a página de cadastro de paciente
+  };
+
+  // Esse método será chamado no processo de salvar paciente
+  const handleSalvarPaciente = (pacienteId: number) => {
+    if (!consultaData) return;
+
+    // Atualizar o pacienteId antes de enviar a consulta
+    const consultaFinalData = {
+      ...consultaData,
+      pacienteId, // Associar o paciente ao agendamento
+    };
+
+    axios.post('http://localhost:8090/agendar-consulta/criarConsulta', consultaData)
+  .then(response => {
+    console.log("Consulta criada com sucesso:", response.data);
     navigate("/paciente");
+  })
+  .catch(error => {
+    setErro("Erro ao criar consulta");
+    setSnackbarOpen(true);
+    console.error("Erro ao criar consulta", error);
+  });
+
   };
 
   const handleVoltarClick = () => navigate("/home");

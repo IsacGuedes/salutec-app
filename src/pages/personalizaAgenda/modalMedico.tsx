@@ -1,3 +1,4 @@
+// ModalMedico.tsx
 import React, { useState } from 'react';
 import { Modal, Button } from '@mui/material';
 import './styles.css'; 
@@ -16,6 +17,8 @@ const ModalMedico: React.FC = () => {
     console.log('Nova disponibilidade:', novaDisponibilidade);
   };
 
+  const tipoConsultaId = 1; // Ajuste conforme necessário
+
   return (
     <>
       <div className="div-modal">
@@ -27,7 +30,7 @@ const ModalMedico: React.FC = () => {
         <Modal open={open} onClose={handleClose}>
           <div className="modal-container">
             <h2>Personalizar Agenda Médica</h2>
-            <DisponibilidadeForm tipo="Medico" onDisponibilidadeChange={handleDisponibilidadeChange} />
+            <DisponibilidadeForm tipoConsultaId={tipoConsultaId} onDisponibilidadeChange={handleDisponibilidadeChange} />
             <Button onClick={handleClose} variant="contained" color="secondary">
               Fechar
             </Button>

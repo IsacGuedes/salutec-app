@@ -28,25 +28,29 @@ const Paciente: FC = () => {
   
     const data = {
       nome,
-      documentocpf: removerCaracteresNaoNumericos(documentocpf),
-      documentocns: removerCaracteresNaoNumericos(documentocns),
+      documentocpf: selectedDocType === 'cpf' ? removerCaracteresNaoNumericos(documentocpf) : null,
+      documentocns: selectedDocType === 'cns' ? removerCaracteresNaoNumericos(documentocns) : null,
       telefone: formatarTelefone(removerCaracteresNaoNumericos(telefone), true),
       dataNascimento,
     };
   
     try {
-      const response = await apiPost("/pacientes/criarPaciente", data);
+      const response = await apiPost("http://localhost:8090/pacientes/criarPaciente", data);
       if (response.status === STATUS_CODE.CREATED) {
         const pacienteId = response.data.id;
+  
+        // Recupera os dados da consulta do sessionStorage
         const consultaData = JSON.parse(sessionStorage.getItem('consultaData') || '{}');
         consultaData.pacienteId = pacienteId;
   
+        // Verifica se os dados da consulta estão completos
         if (!consultaData.dataConsulta || !consultaData.tipoConsulta || !consultaData.horario) {
           alert("Dados da consulta estão incompletos.");
           return;
         }
   
-        const consultaResponse = await apiPost("/agendar-consulta/criarConsulta", consultaData);
+        // Faz a requisição para criar a consulta
+        const consultaResponse = await apiPost("http://localhost:8090/agendar-consulta/criarConsulta", consultaData);
         if (consultaResponse.status === STATUS_CODE.CREATED) {
           alert("Paciente e consulta cadastrados com sucesso!");
           navigate('/confirmacao-consulta');
@@ -57,11 +61,11 @@ const Paciente: FC = () => {
         alert(`Erro ao cadastrar paciente: ${response.statusText}`);
       }
     } catch (error) {
+      console.error(error);
       alert("Erro ao conectar com o servidor.");
     }
-  };
+  };  
   
-
   return (
     <div className="paciente">
       <div className="lembrete">
