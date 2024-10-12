@@ -25,7 +25,7 @@ const Login: React.FC = () => {
       if (response.status === 200) {
         const { token } = response.data;
         localStorage.setItem('token', token);
-        alert('Login bem-sucedido');
+        //alert('Login bem-sucedido');
         navigate('/dashboard');
       }
     } catch (error) {

@@ -30,29 +30,29 @@ const AgendarConsulta: FC = () => {
   };
 
   useEffect(() => {
-    if (tipoConsulta !== "" && selectedDate) {
-      const dataConsulta = selectedDate.format("YYYY-MM-DD");
-
+    if (tipoConsulta !== "") {
       axios
-        .get(`http://localhost:8090/agendar-consulta/horarios-disponiveis`, {
+        .get(`http://localhost:8090/agendar-consulta/dias-disponiveis`, {
           params: {
-            tipoConsultaId: tipoConsulta === "Medico" ? 1 : 2,
-            data: dataConsulta
+            tipoConsultaId: tipoConsulta === "Medico" ? 1 : 2
           }
         })
         .then((response) => {
+          const diasDisponiveis = response.data;
           setDisponibilidade({
-            diasDaSemana: [],
-            horariosDisponiveis: response.data,
+            diasDaSemana: diasDisponiveis,
+            horariosDisponiveis: [], // Inicialmente vazio, será preenchido quando a data for selecionada
           });
+          localStorage.setItem(`disponibilidade-${tipoConsulta}`, JSON.stringify({ diasDaSemana: diasDisponiveis, horariosDisponiveis: [] }));
         })
         .catch((error) => {
-          setErro("Erro ao buscar horários disponíveis");
+          setErro("Erro ao buscar dias e horários disponíveis");
           setSnackbarOpen(true);
-          console.error("Erro ao buscar horários disponíveis", error);
+          console.error("Erro ao buscar disponibilidade", error);
         });
     }
-  }, [tipoConsulta, selectedDate]);
+  }, [tipoConsulta]);
+  
 
   // Mapeamento de tipos de consulta para seus respectivos IDs
   const tipoConsultaIdMap: { [key in TipoConsulta]: number } = {

@@ -64,14 +64,17 @@ console.log("Fim da Semana:", fimSemana.toISOString());
     const dayOfWeek = day.day();
     const isBeforeToday = day.isBefore(new Date());
     const isWithinWeek = day.isAfter(inicioSemana) && day.isBefore(fimSemana);
-
-    const isAvailable =
+  
+    // Verifique se o dia está disponível
+    const isAvailable = 
       disponibilidade?.diasDaSemana.some(
         (dia) => diasSemanaMap[dia] === dayOfWeek
       ) &&
       !isBeforeToday &&
       isWithinWeek;
-
+  
+    console.log(`Dia: ${day.format('dddd')} - Disponível: ${isAvailable}`);
+  
     return (
       <PickersDay
         {...props}
@@ -86,6 +89,7 @@ console.log("Fim da Semana:", fimSemana.toISOString());
       />
     );
   };
+  
 
   return (
     <div className="calendar">
