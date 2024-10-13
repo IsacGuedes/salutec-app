@@ -21,29 +21,42 @@ const AgendarConsulta: FC = () => {
   const [disponibilidade, setDisponibilidade] = useState<Disponibilidade | null>(null);
   const [erro, setErro] = useState<string | null>(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [consultaData, setConsultaData] = useState<any>(null); // Armazenar dados da consulta
   const navigate = useNavigate();
 
-  const formatarHorarioParaBackend = (horario: string) => {
-    const partes = horario.split(":");
-    return `${partes[0]}:${partes[1]}:${partes[2]}`; // Retorna no formato HH:mm:ss
-  };
+  // Função para buscar os horários disponíveis
+  const buscarHorariosDisponiveis = (data: string) => {
+    if (!tipoConsulta || !data) return; // Verifica se os dados estão disponíveis
+  
+    axios.get(`http://localhost:8090/agendar-consulta/horarios-disponiveis`, {
+        params: { tipoConsultaId: tipoConsulta === "Medico" ? 1 : 2, data }
+      })
+      .then((response) => {
+        setDisponibilidade((prev) => ({
+          diasDaSemana: prev?.diasDaSemana || [],
+          horariosDisponiveis: response.data || [], // Assegura que seja um array
+        }));
+      })
+      .catch((error) => {
+        setErro("Erro ao buscar horários disponíveis");
+        setSnackbarOpen(true);
+        console.error("Erro ao buscar horários disponíveis", error);
+      });
+  };  
 
   useEffect(() => {
     if (tipoConsulta !== "") {
       axios
         .get(`http://localhost:8090/agendar-consulta/dias-disponiveis`, {
           params: {
-            tipoConsultaId: tipoConsulta === "Medico" ? 1 : 2
-          }
+            tipoConsultaId: tipoConsulta === "Medico" ? 1 : 2,
+          },
         })
         .then((response) => {
           const diasDisponiveis = response.data;
           setDisponibilidade({
             diasDaSemana: diasDisponiveis,
-            horariosDisponiveis: [], // Inicialmente vazio, será preenchido quando a data for selecionada
+            horariosDisponiveis: [],
           });
-          localStorage.setItem(`disponibilidade-${tipoConsulta}`, JSON.stringify({ diasDaSemana: diasDisponiveis, horariosDisponiveis: [] }));
         })
         .catch((error) => {
           setErro("Erro ao buscar dias e horários disponíveis");
@@ -52,13 +65,12 @@ const AgendarConsulta: FC = () => {
         });
     }
   }, [tipoConsulta]);
-  
 
-  // Mapeamento de tipos de consulta para seus respectivos IDs
-  const tipoConsultaIdMap: { [key in TipoConsulta]: number } = {
-    Medico: 1,
-    Dentista: 2,
-  };
+  useEffect(() => {
+    if (selectedDate) {
+      buscarHorariosDisponiveis(selectedDate.format("YYYY-MM-DD")); // Chama a função ao selecionar a data
+    }
+  }, [selectedDate]);
 
   const handleContinuarClick = () => {
     if (!tipoConsulta || !horario || !selectedDate) {
@@ -67,43 +79,18 @@ const AgendarConsulta: FC = () => {
     }
 
     const diaSemana = selectedDate.format("dddd").toUpperCase();
-
-    // Armazenar os dados da consulta sem gravar ainda
     const consultaTempData = {
       dataConsulta: selectedDate.format("YYYY-MM-DD"),
       diaSemana,
-      tipoConsulta: tipoConsultaIdMap[tipoConsulta],
-      horario: formatarHorarioParaBackend(horario),
+      tipoConsulta: tipoConsulta === "Medico" ? 1 : 2,
+      horario,
       statusConsulta: "AGUARDANDO_CONFIRMACAO",
-      pacienteId: null, // Será preenchido quando o paciente for salvo
+      pacienteId: null,
       postoDeSaude: 1,
     };
 
-    sessionStorage.setItem('consultaData', JSON.stringify(consultaTempData)); // Salvar no sessionStorage
-    navigate("/paciente"); // Redirecionar para a página de cadastro de paciente
-  };
-
-  // Esse método será chamado no processo de salvar paciente
-  const handleSalvarPaciente = (pacienteId: number) => {
-    if (!consultaData) return;
-
-    // Atualizar o pacienteId antes de enviar a consulta
-    const consultaFinalData = {
-      ...consultaData,
-      pacienteId, // Associar o paciente ao agendamento
-    };
-
-    axios.post('http://localhost:8090/agendar-consulta/criarConsulta', consultaData)
-  .then(response => {
-    console.log("Consulta criada com sucesso:", response.data);
+    sessionStorage.setItem('consultaData', JSON.stringify(consultaTempData));
     navigate("/paciente");
-  })
-  .catch(error => {
-    setErro("Erro ao criar consulta");
-    setSnackbarOpen(true);
-    console.error("Erro ao criar consulta", error);
-  });
-
   };
 
   const handleVoltarClick = () => navigate("/home");
@@ -174,7 +161,6 @@ const AgendarConsulta: FC = () => {
         </div>
       </div>
 
-      {/* Snackbar para exibir erros */}
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}

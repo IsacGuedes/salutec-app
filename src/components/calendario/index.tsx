@@ -4,10 +4,11 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { PickersDay, PickersDayProps } from "@mui/x-date-pickers/PickersDay";
 import { Dayjs } from "dayjs";
+import axios from "axios"; // Certifique-se de que o axios está importado
 import "./styles.css";
 
 interface BasicDateCalendarProps {
-  tipo: 'Medico' | 'Dentista'; 
+  tipo: 'Medico' | 'Dentista';
   selectedDate?: Dayjs | null;
   onDateChange?: (date: Dayjs | null) => void;
 }
@@ -17,14 +18,15 @@ type Disponibilidade = {
   horariosDisponiveis: string[];
 };
 
+// Mapeamento para dias da semana em inglês
 const diasSemanaMap: { [key: string]: number } = {
-  DOMINGO: 0,
-  SEGUNDA: 1,
-  TERCA: 2,
-  QUARTA: 3,
-  QUINTA: 4,
-  SEXTA: 5,
-  SABADO: 6,
+  SUNDAY: 0,
+  MONDAY: 1,
+  TUESDAY: 2,
+  WEDNESDAY: 3,
+  THURSDAY: 4,
+  FRIDAY: 5,
+  SATURDAY: 6,
 };
 
 const BasicDateCalendar: React.FC<BasicDateCalendarProps> = ({
@@ -35,22 +37,21 @@ const BasicDateCalendar: React.FC<BasicDateCalendarProps> = ({
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(propSelectedDate);
   const [disponibilidade, setDisponibilidade] = useState<Disponibilidade | null>(null);
 
+  // Fazer a requisição para buscar os dias disponíveis
   useEffect(() => {
-    const disponibilidadeSalva = localStorage.getItem(`disponibilidade-${tipo}`);
-    if (disponibilidadeSalva) {
-      setDisponibilidade(JSON.parse(disponibilidadeSalva));
-    }
+    const fetchDisponibilidade = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8090/agendar-consulta/dias-disponiveis?tipoConsultaId=${tipo === 'Medico' ? 1 : 2}`
+        );
+        // Definir os dias de disponibilidade retornados pela API
+        setDisponibilidade({ diasDaSemana: response.data, horariosDisponiveis: [] });
+      } catch (error) {
+        console.error("Erro ao buscar disponibilidade:", error);
+      }
+    };
+    fetchDisponibilidade();
   }, [tipo]);
-  
-  const dataAtual = new Date();
-  const inicioSemana = new Date(dataAtual.setDate(dataAtual.getDate() - dataAtual.getDay())); // Primeiro dia da semana
-  const fimSemana = new Date(inicioSemana);
-  fimSemana.setDate(inicioSemana.getDate() + 5); // Último dia da semana
-
-
-  console.log("Data Atual Simulada:", dataAtual.toISOString());
-console.log("Início da Semana:", inicioSemana.toISOString());
-console.log("Fim da Semana:", fimSemana.toISOString());
 
   const handleDateChange = (date: Dayjs | null) => {
     setSelectedDate(date);
@@ -63,18 +64,13 @@ console.log("Fim da Semana:", fimSemana.toISOString());
     const { day } = props;
     const dayOfWeek = day.day();
     const isBeforeToday = day.isBefore(new Date());
-    const isWithinWeek = day.isAfter(inicioSemana) && day.isBefore(fimSemana);
-  
-    // Verifique se o dia está disponível
-    const isAvailable = 
+
+    // Verifique se o dia está disponível (mapeando o retorno da API)
+    const isAvailable =
       disponibilidade?.diasDaSemana.some(
-        (dia) => diasSemanaMap[dia] === dayOfWeek
-      ) &&
-      !isBeforeToday &&
-      isWithinWeek;
-  
-    console.log(`Dia: ${day.format('dddd')} - Disponível: ${isAvailable}`);
-  
+        (dia) => diasSemanaMap[dia.toUpperCase()] === dayOfWeek
+      ) && !isBeforeToday;
+
     return (
       <PickersDay
         {...props}
@@ -89,7 +85,6 @@ console.log("Fim da Semana:", fimSemana.toISOString());
       />
     );
   };
-  
 
   return (
     <div className="calendar">
