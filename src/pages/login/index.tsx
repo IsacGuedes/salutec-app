@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, Checkbox, message } from 'antd';
+import { Form, Input, Button, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import './styles.css';
@@ -13,32 +13,34 @@ const Login: React.FC = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const handleLogin = async (values: { matricula: string; senha: string }) => {
-    const { matricula, senha } = values;
-    
-    try {
-      const response = await axios.post('http://localhost:8090/api/enfermeiros/login', {
-        matricula,
-        senha,
-      });
-      
-      if (response.status === 200) {
-        const { token } = response.data;
-        localStorage.setItem('token', token);
-        //alert('Login bem-sucedido');
-        navigate('/dashboard');
-      }
-    } catch (error) {
-      setError('Matrícula ou senha incorretos.');
+  // No handleLogin do componente Login
+const handleLogin = async (values: { matricula: string; senha: string }) => {
+  const { matricula, senha } = values;
+
+  try {
+    const response = await axios.post('http://localhost:8090/api/enfermeiros/login', {
+      matricula,
+      senha,
+    });
+
+    if (response.status === 200 && response.data.token) {
+      const { token } = response.data;
+      localStorage.setItem('token', token); // Apenas salva o token se ele for válido
+    } else {
+      setError('Erro ao fazer login. Token não encontrado.');
+      localStorage.removeItem('token'); // Remove o token inválido ou inexistente    
     }
-  };
+  } catch (error) {
+    setError('Matrícula ou senha incorretos.');
+  }
+};
 
   const openEsqueciSenhaModal = () => {
     setModalVisible(true);
     message.info({
-      content: "Se você não lembra da sua senha atual, por favor, entre em contato com o administrador.",
+      content: "Se você não lembra da sua senha, entre em contato com o administrador.",
       duration: 5,
-      className: 'esqueci-senha-message', // Aplicando a classe CSS
+      className: 'esqueci-senha-message', 
     });
   };
 

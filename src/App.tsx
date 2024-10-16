@@ -26,10 +26,9 @@ function App() {
                 <img src={Logo} alt="Logo" className='logo-imagem' />
               </Link>
             </div>
-            
           </header>
           <AppRouter />
-          <Footer /> {/* Adicionar o rodapé aqui */}
+          <Footer />
         </>
       )}
     </div>

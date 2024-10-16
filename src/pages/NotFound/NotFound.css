@@ -1,0 +1,39 @@
+/* pages/NotFound.css */
+
+.not-found-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Para ocupar toda a altura da tela */
+    text-align: center;
+    background-color: #f9f9f9; /* Cor de fundo */
+    color: #333; /* Cor do texto */
+  }
+  
+  .not-found-container h1 {
+    font-size: 5rem;
+    margin: 0;
+  }
+  
+  .not-found-container h2 {
+    font-size: 2rem;
+  }
+  
+  .not-found-container p {
+    margin: 10px 0;
+  }
+  
+  .home-link {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff; /* Cor do botão */
+    color: white; /* Cor do texto do botão */
+    text-decoration: none;
+    border-radius: 5px;
+  }
+  
+  .home-link:hover {
+    background-color: #0056b3; /* Cor do botão ao passar o mouse */
+  }
+  
