@@ -25,7 +25,8 @@ const handleLogin = async (values: { matricula: string; senha: string }) => {
 
     if (response.status === 200 && response.data.token) {
       const { token } = response.data;
-      localStorage.setItem('token', token); // Apenas salva o token se ele for válido
+      localStorage.setItem('token', token);
+      navigate("/dashboard");
     } else {
       setError('Erro ao fazer login. Token não encontrado.');
       localStorage.removeItem('token'); // Remove o token inválido ou inexistente    

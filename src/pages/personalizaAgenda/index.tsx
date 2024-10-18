@@ -3,17 +3,23 @@ import ModalMedico from './modalMedico';
 import ModalDentista from './modalDentista';
 import DashboardSidebar from '../../components/sidebar'; // Importando o Sidebar
 import './styles.css';
+import { Layout } from 'antd';
+import { Content } from 'antd/es/layout/layout';
 
-const AgendaPersonalizacao: React.FC = () => {
+
+const AgendaPersonalizacao = () => {
   return (
-    <div style={{ display: 'flex' }}>
-      <DashboardSidebar /> {/* Adicionando o Sidebar */}
-      <div className="agenda-personalizacao" style={{ marginLeft: '250px', padding: '20px' }}>
-        {/* Mantém o restante do layout intacto */}
-        <ModalMedico />
-        <ModalDentista />
-      </div>
-    </div>
+    <Layout style={{ minHeight: '100vh' }}>
+      <DashboardSidebar />
+      <Layout className="layout-dashboard">
+        <Content className="conteudo-dashboard">
+          <div className="agenda-personalizacao" style={{ marginLeft: '250px', padding: '20px' }}>
+            <ModalMedico />
+            <ModalDentista />
+          </div>
+        </Content>
+      </Layout>
+    </Layout>
   );
 };
 
