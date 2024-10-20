@@ -38,7 +38,7 @@ export const formatarTelefone = (telefone: string | null | undefined, paraEnvio:
 
     if (paraEnvio) {
         return apenasDigitos.length === 10 || apenasDigitos.length === 11
-            ? `+55${apenasDigitos}`
+            ? `55${apenasDigitos}`
             : telefone;
     } else {
         if (apenasDigitos.length === 11) {

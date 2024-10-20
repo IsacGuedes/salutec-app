@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import axios from 'axios';
@@ -13,28 +13,48 @@ const Login: React.FC = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  // No handleLogin do componente Login
-const handleLogin = async (values: { matricula: string; senha: string }) => {
-  const { matricula, senha } = values;
+  const handleLogin = async (values: { matricula: string; senha: string }) => {
+    const { matricula, senha } = values;
 
-  try {
-    const response = await axios.post('http://localhost:8090/api/enfermeiros/login', {
-      matricula,
-      senha,
-    });
+    try {
+      const response = await axios.post('http://localhost:8090/api/enfermeiros/login', {
+        matricula,
+        senha,
+      });
 
-    if (response.status === 200 && response.data.token) {
-      const { token } = response.data;
-      localStorage.setItem('token', token);
-      navigate("/dashboard");
-    } else {
-      setError('Erro ao fazer login. Token não encontrado.');
-      localStorage.removeItem('token'); // Remove o token inválido ou inexistente    
+      if (response.status === 200 && response.data.token) {
+        const { token } = response.data;
+        localStorage.setItem('token', token);
+        navigate("/dashboard");
+      } else {
+        setError('Erro ao fazer login. Token não encontrado.');
+        localStorage.removeItem('token'); // Remove o token inválido ou inexistente    
+      }
+    } catch (error) {
+      setError('Matrícula ou senha incorretos.');
     }
-  } catch (error) {
-    setError('Matrícula ou senha incorretos.');
-  }
-};
+  };
+
+  const checkTokenExpiration = () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decodifica o token JWT
+        const currentTime = Math.floor(Date.now() / 1000); // Tempo atual em segundos
+        if (decodedToken.exp < currentTime) {
+          localStorage.removeItem('token'); // Remove o token se expirado
+          navigate("/login"); // Redireciona para a página de login
+        }
+      } catch (error) {
+        localStorage.removeItem('token'); // Remove o token se estiver corrompido ou inválido
+      }
+    }
+  };
+
+  useEffect(() => {
+    const interval = setInterval(checkTokenExpiration, 10000); // Verifica a cada 10 segundos
+    return () => clearInterval(interval);
+  }, []);
 
   const openEsqueciSenhaModal = () => {
     setModalVisible(true);

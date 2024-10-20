@@ -21,34 +21,46 @@ const AppRouter: React.FC = () => {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/home" element={<Home />} />
-      <Route path='/faq' element={<FaqQuestions />} />
+      <Route path="/faq" element={<FaqQuestions />} />
       <Route path="/agendar-consulta" element={<AgendarConsulta />} />
-      <Route path='/paciente' element={<Paciente />} />
-      <Route path='/confirmacao-consulta' element={<EnvioEmail />} />
-      <Route path='/login' element={<Login />} />
-      
+      <Route path="/paciente" element={<Paciente />} />
+      <Route path="/confirmacao-consulta" element={<EnvioEmail />} />
+      <Route path="/login" element={<Login />} />
+
       {/* Rotas protegidas */}
       <Route path="/dashboard" element={
-        <PrivateRoute element={<Dashboard />} />
+        <PrivateRoute>
+          <Dashboard />
+        </PrivateRoute>
       } />
-      <Route path='/dashboard/todas-consultas' element={
-        <PrivateRoute element={<Dashboard />} />
+      <Route path="/dashboard/todas-consultas" element={
+        <PrivateRoute>
+          <Dashboard />
+        </PrivateRoute>
       } />
-      <Route path='/dashboard/consultas-confirmadas' element={
-        <PrivateRoute element={<DashboardConfirmado />} />
+      <Route path="/dashboard/consultas-confirmadas" element={
+        <PrivateRoute>
+          <DashboardConfirmado />
+        </PrivateRoute>
       } />
-      <Route path='/dashboard/consultas-canceladas' element={
-        <PrivateRoute element={<DashboardCancelado />} />
+      <Route path="/dashboard/consultas-canceladas" element={
+        <PrivateRoute>
+          <DashboardCancelado />
+        </PrivateRoute>
       } />
-      <Route path='/dashboard/consultas-pendentes' element={
-        <PrivateRoute element={<DashboardPendente />} />
+      <Route path="/dashboard/consultas-pendentes" element={
+        <PrivateRoute>
+          <DashboardPendente />
+        </PrivateRoute>
       } />
       <Route path="/dashboard/configurar-horario" element={
-        <PrivateRoute element={<DisponibilidadeForm />} />
+        <PrivateRoute>
+          <DisponibilidadeForm />
+        </PrivateRoute>
       } />
-      
-      <Route path='/sobre' element={<SobreNos />} />
-      <Route path='/contato' element={<Contato />} />
+
+      <Route path="/sobre" element={<SobreNos />} />
+      <Route path="/contato" element={<Contato />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
