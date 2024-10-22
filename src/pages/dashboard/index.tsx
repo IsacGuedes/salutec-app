@@ -92,7 +92,7 @@ const Dashboard: FC = () => {
     { title: 'CNS', dataIndex: ['paciente', 'documentocns'], key: 'cns', render: (cns: string) => aplicarMascaraDocumentocns(cns) },
     { title: 'Contato', dataIndex: ['paciente', 'telefone'], key: 'contato', render: (telefone: string) => formatarTelefone(telefone) },
     { title: 'Data da Consulta', dataIndex: 'dataConsulta', key: 'dataConsulta', render: (dataConsulta: string) => formatDate(dataConsulta) },
-    { title: 'Tipo de Consulta', dataIndex: 'tipoConsulta', key: 'tipoConsulta' },
+    { title: 'Tipo de Consulta', dataIndex: ['tipoConsulta', 'descricao'], key: 'tipoConsulta' },
     {
         title: 'Status',
         key: 'status',
