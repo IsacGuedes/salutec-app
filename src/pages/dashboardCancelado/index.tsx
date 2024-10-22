@@ -66,24 +66,16 @@ const DashboardCancelado: FC = () => {
     { title: 'Data da Consulta', dataIndex: 'dataConsulta', key: 'dataConsulta', render: (dataConsulta: string) => formatDate(dataConsulta) },
     { title: 'Tipo de Consulta', dataIndex: 'tipoConsulta', key: 'tipoConsulta' },
     {
-      title: 'Status',
-      key: 'status',
-      render: (text: string, record: Agendamento) => (
-        <Button
-          type="primary"
-          className={`botao-status ${
-            record.status === 'CONFIRMADO'
-              ? 'botao-sucesso'
-              : record.status === 'Aguardando Confirmação'
-              ? 'botao-aviso'
-              : record.status === 'CANCELADO'
-              ? 'botao-erro'
-              : ''
-          }`}
-          onClick={() => handleAction(Number(record.id), record.status === 'CANCELADO' ? 'CONFIRMADO' : 'CANCELADO')} // Garantir que `record.id` é tratado como número
-        >
-          {record.status}
-        </Button>
+        title: 'Status',
+        key: 'status',
+        render: (text: string, record: Agendamento) => (
+          <Button
+            type="primary"
+            className="botao-erro"
+            disabled
+          >
+            CANCELADO
+          </Button>
       ),
     },
   ];

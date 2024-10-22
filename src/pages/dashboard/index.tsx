@@ -94,26 +94,27 @@ const Dashboard: FC = () => {
     { title: 'Data da Consulta', dataIndex: 'dataConsulta', key: 'dataConsulta', render: (dataConsulta: string) => formatDate(dataConsulta) },
     { title: 'Tipo de Consulta', dataIndex: 'tipoConsulta', key: 'tipoConsulta' },
     {
-      title: 'Status',
-      key: 'status',
-      render: (text: string, record: IAgendamento) => (
-        <Button
-          type="primary"
-          className={`botao-status ${
-            record.statusConsulta === 'CONFIRMADO'
-              ? 'botao-sucesso'
-              : record.statusConsulta === 'AGUARDANDO_CONFIRMACAO'
-              ? 'botao-aviso'
-              : record.statusConsulta === 'CANCELADO'
-              ? 'botao-erro'
-              : ''
-          }`}
-          onClick={() => showModal(record)}
-        >
-          {record.statusConsulta}
-        </Button>
-      ),
-    },
+        title: 'Status',
+        key: 'status',
+        render: (text: string, record: IAgendamento) => (
+          <Button
+            type="primary"
+            className={`botao-status ${
+              record.statusConsulta === 'CONFIRMADO'
+                ? 'botao-sucesso'
+                : record.statusConsulta === 'AGUARDANDO_CONFIRMACAO'
+                ? 'botao-aviso'
+                : record.statusConsulta === 'CANCELADO'
+                ? 'botao-erro'
+                : ''
+            }`}
+            onClick={() => record.statusConsulta !== 'CANCELADO' && showModal(record)}
+            disabled={record.statusConsulta === 'CANCELADO'}
+          >
+            {record.statusConsulta}
+          </Button>
+        ),
+      }      
   ];
 
   return (
