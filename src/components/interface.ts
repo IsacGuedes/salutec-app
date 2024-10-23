@@ -1,3 +1,8 @@
+export interface ITipoConsulta {
+  id: number; // ou outro identificador, se necessário
+  descricao: string;
+}
+
 export interface IPaciente {
     nome: string;
     documento: string;
@@ -9,7 +14,7 @@ export interface IPaciente {
     dataConsulta: string;  
     horario: string;
     paciente: IPaciente;
-    tipoConsulta: string;
+    tipoConsulta: ITipoConsulta;
     statusConsulta: string;
   }
   

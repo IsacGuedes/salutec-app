@@ -3,6 +3,7 @@ import 'jspdf-autotable';
 import { IAgendamento } from '../components/interface';
 import { aplicarMascaraDocumentocpf, aplicarMascaraDocumentocns, formatarTelefone, formatDate } from '../components/formatos';
 
+
 export const gerarPDF = (agendamentos: IAgendamento[]): Blob => {
   const doc = new jsPDF();
 
@@ -19,7 +20,7 @@ export const gerarPDF = (agendamentos: IAgendamento[]): Blob => {
       aplicarMascaraDocumentocns(agendamento.paciente.documento),
       formatarTelefone(agendamento.paciente.telefone),
       formatDate(agendamento.dataConsulta),
-      agendamento.tipoConsulta,
+      agendamento.tipoConsulta.descricao,
       agendamento.statusConsulta,
     ];
     tableRows.push(agendamentoData);
