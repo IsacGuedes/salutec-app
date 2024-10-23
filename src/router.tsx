@@ -17,6 +17,7 @@ import NotFound from './pages/NotFound/NotFound';
 import PrivateRoute from './components/PrivateRoute';
 
 const AppRouter: React.FC = () => {
+
   return (
     <Routes>
       <Route path="/" element={<Home />} />

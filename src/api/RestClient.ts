@@ -23,6 +23,15 @@ api.interceptors.request.use(
   }
 );
 
+api.interceptors.response.use(response => {
+  return response;
+}, error => {
+  if (error.response.status === 401) {
+    localStorage.removeItem('token'); // Remove o token se expirar ou for inválido
+    window.location.href = "/login";
+  }
+})
+
 // Função para requisições GET protegidas com token, recebe `navigate` como parâmetro
 export const apiRequest = async (navigate: (path: string) => void) => {
   try {

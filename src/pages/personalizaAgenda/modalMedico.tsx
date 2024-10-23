@@ -1,16 +1,14 @@
-// ModalMedico.tsx
 import React, { useState } from 'react';
-import { Modal, Button } from '@mui/material';
-import './styles.css'; 
+import { Button } from '@mui/material';
+import './styles.css';
 import DisponibilidadeForm from './disponibilidadeFormProps';
 import { Disponibilidade } from './disponibilidade';
 
-const ModalMedico: React.FC = () => {
-  const [open, setOpen] = useState(false);
+const ModalDentista: React.FC = () => {
+  const [expand, setExpand] = useState(false); // Controla o estado de expansão da div
   const [disponibilidade, setDisponibilidade] = useState<Disponibilidade | null>(null);
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleToggleExpand = () => setExpand(!expand); // Alterna entre expandido e colapsado
 
   const handleDisponibilidadeChange = (novaDisponibilidade: Disponibilidade) => {
     setDisponibilidade(novaDisponibilidade);
@@ -20,25 +18,21 @@ const ModalMedico: React.FC = () => {
   const tipoConsultaId = 1; // Ajuste conforme necessário
 
   return (
-    <>
-      <div className="div-modal">
-        <div className="botao-personalizacao">
-          <Button onClick={handleOpen} variant="contained" color="primary">
-            Personalizar Agenda Médica
-          </Button>
-        </div>
-        <Modal open={open} onClose={handleClose}>
-          <div className="modal-container">
-            <h2>Personalizar Agenda Médica</h2>
-            <DisponibilidadeForm tipoConsultaId={tipoConsultaId} onDisponibilidadeChange={handleDisponibilidadeChange} />
-            <Button onClick={handleClose} variant="contained" color="secondary">
-              Fechar
-            </Button>
-          </div>
-        </Modal>
+    <div className="div-modal">
+      <div className="form-container">
+        <Button onClick={handleToggleExpand} variant="contained" color="primary">
+          {expand ? 'Ocultar Agenda Médica' : 'Personalizar Agenda Médica'}
+        </Button>
       </div>
-    </>
+
+      {expand && ( // Renderiza a div expandida quando o estado `expand` for true
+        <div className="expanded-container">
+          <h2>Personalizar Agenda Médica</h2>
+          <DisponibilidadeForm tipoConsultaId={tipoConsultaId} onDisponibilidadeChange={handleDisponibilidadeChange} />
+        </div>
+      )}
+    </div>
   );
 };
 
-export default ModalMedico;
+export default ModalDentista;

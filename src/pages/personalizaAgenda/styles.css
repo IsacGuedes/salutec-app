@@ -1,41 +1,39 @@
-/* Estilo para o formulário de disponibilidade */
 .form-container {
   max-width: 600px;
-  margin: 20px auto;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.form-container h1 {
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 24px;
+  margin: 40px auto; /* Aumenta a margem superior para centralizar melhor */
+  padding: 30px;
+  border: 1px solid #e0e0e0; /* Cor mais suave para o border */
+  border-radius: 10px;
+  background-color: #fff; /* Fundo branco para contraste */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Sombra mais suave */
 }
 
 .dias-buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 12px; /* Aumenta o espaço entre os botões */
   justify-content: center;
-  margin-bottom: 20px;
 }
 
 .dias-buttons button {
-  background-color: #e0e0e0;
-  color: #000;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 10px 15px;
+  background-color: #f1f1f1;
+  color: #333;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s;
 }
 
+.dias-buttons button:hover {
+  background-color: #e2e2e2;
+}
+
 .dias-buttons button.selected {
   background-color: #007bff;
-  color: #fff;
+  color: white;
+  border: 2px solid #0056b3;
 }
 
 .horarios-container {
@@ -45,40 +43,36 @@
 .horarios-container div {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   margin-bottom: 10px;
 }
 
 .horarios-container input {
   border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 5px;
+  border-radius: 6px;
+  padding: 6px;
   width: 100px;
+  transition: border 0.3s;
 }
 
-.horarios-container button {
-  background-color: #ff4d4d;
-  color: #fff;
+.horarios-container input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+}
+
+.add-horario, .submit-button {
+  width: 100%; /* Para maior acessibilidade no mobile */
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 6px;
   border: none;
-  border-radius: 4px;
-  padding: 5px 10px;
   cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.horarios-container button:hover {
-  background-color: #e60000;
+  transition: background-color 0.3s ease;
 }
 
 .add-horario {
-  margin-top: 10px;
   background-color: #28a745;
   color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 10px 15px;
-  cursor: pointer;
-  transition: background-color 0.3s;
 }
 
 .add-horario:hover {
@@ -86,65 +80,32 @@
 }
 
 .submit-button {
-  margin-top: 20px;
   background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 10px 15px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+  color: white;
+  margin-top: 20px;
 }
 
 .submit-button:hover {
   background-color: #0056b3;
 }
 
-/* Estilo para a modal */
-.modal-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  max-width: 90%;
-  width: 100%;
-  box-sizing: border-box;
+.submit-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
-.modal-container h2 {
-  margin-bottom: 20px;
-  font-size: 22px;
-}
+/* Responsividade */
+@media (max-width: 768px) {
+  .form-container {
+    padding: 20px;
+  }
 
-.modal-container button {
-  margin-top: 10px;
-}
+  .dias-buttons {
+    gap: 8px;
+  }
 
-.div-modal{
-  display: flex;
-  justify-content: center;
-  justify-content: space-between;
-}
-
-.botao-personalizacao{
-  display: flex;
-  justify-content: center;
-  
-}
-
-.agenda-personalizacao{
-  display: flex;
-  justify-content: center;
-  margin-top: 20%;
-  margin-left: 30%;
-  justify-content: space-between;
-  width:40%;
+  .add-horario, .submit-button {
+    padding: 10px;
+    font-size: 14px;
+  }
 }

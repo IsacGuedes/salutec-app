@@ -13,10 +13,8 @@ const AgendaPersonalizacao = () => {
       <DashboardSidebar />
       <Layout className="layout-dashboard">
         <Content className="conteudo-dashboard">
-          <div className="agenda-personalizacao" style={{ marginLeft: '250px', padding: '20px' }}>
             <ModalMedico />
             <ModalDentista />
-          </div>
         </Content>
       </Layout>
     </Layout>
