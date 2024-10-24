@@ -1,14 +1,18 @@
 import React, { useState, useEffect, FC } from 'react';
-import { Layout, Table, Button, message } from 'antd';
+import { Layout, Table, Button, message, Modal } from 'antd';
 import { Agendamento } from '../../types/agendamento';
 import DashboardSidebar from '../../components/sidebar';
 import { aplicarMascaraDocumentocns, aplicarMascaraDocumentocpf, formatarTelefone, formatDate } from '../../components/formatos'; // Usando as máscaras
 import './styles.css';
-
+import { IAgendamento } from '../../components/interface';
+import { gerarPDF } from '../../components/gerarPDF';
 const { Content } = Layout;
 
 const DashboardCancelado: FC = () => {
-  const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
+  const [agendamentos, setAgendamentos] = useState<IAgendamento[]>([]);
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedRecord, setSelectedRecord] = useState<IAgendamento | null>(null);
 
   useEffect(() => {
     const fetchAgendamentosCancelados = async () => {
@@ -68,34 +72,108 @@ const DashboardCancelado: FC = () => {
     {
         title: 'Status',
         key: 'status',
-        render: (text: string, record: Agendamento) => (
+        render: (text: string, record: IAgendamento) => (
           <Button
             type="primary"
-            className="botao-erro"
-            disabled
+            className={`botao-status ${
+              record.statusConsulta === 'CONFIRMADO'
+                ? 'botao-sucesso'
+                : record.statusConsulta === 'AGUARDANDO_CONFIRMACAO'
+                ? 'botao-aviso'
+                : record.statusConsulta === 'CANCELADO'
+                ? 'botao-erro'
+                : ''
+            }`}
+            onClick={() => record.statusConsulta !== 'CANCELADO' && showModal(record)}
+            disabled={record.statusConsulta === 'CANCELADO'}
           >
-            CANCELADO
+            {record.statusConsulta}
           </Button>
-      ),
-    },
+        ),
+      }      
   ];
+
+  const showPdfModal = () => {
+    const pdfBlob = gerarPDF(agendamentos);
+    const pdfUrl = URL.createObjectURL(pdfBlob);
+    setPdfUrl(pdfUrl);
+    setIsModalVisible(true);
+  };
+
+  const downloadPdf = () => {
+    if (pdfUrl) {
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.download = 'relatorio.pdf';
+      link.click();
+    }
+  };
+
+  const showModal = (record: IAgendamento) => {
+    setSelectedRecord(record);
+    setIsModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    // Verifica se há um PDF aberto e o fecha
+    if (pdfUrl) {
+      setPdfUrl(null); // Reseta o URL do PDF para garantir que o modal feche
+    }
+    // Fecha o modal de status também
+    setIsModalVisible(false); 
+    setSelectedRecord(null); // Reseta a seleção do agendamento
+  };
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <DashboardSidebar />
       <Layout className="layout-dashboard">
         <Content className="conteudo-dashboard">
-          <h2>Agendamentos Cancelados</h2>
+          <h2>Todos Agendamentos</h2>
+          <Button
+            type="primary"
+            onClick={showPdfModal}
+            className="botao-exportar-pdf"
+          >
+            Exportar para PDF
+          </Button>
           <Table
-            dataSource={Array.isArray(agendamentos) ? agendamentos : []}
+            dataSource={agendamentos}
             columns={columns}
-            rowKey={(record) => record.id.toString()} // Convertendo `id` para string para usar como `rowKey`
+            rowKey={(record) => record.id.toString()}
             pagination={false}
           />
         </Content>
+        
       </Layout>
-    </Layout>
+      <Modal
+        title="Visualizar PDF"
+        visible={!!pdfUrl}
+        onCancel={handleCancel}
+        footer={[
+          <Button key="download" type="primary" onClick={downloadPdf}>
+            Baixar PDF
+          </Button>,
+          <Button key="close" onClick={handleCancel}>
+            Fechar
+          </Button>,
+          ]}
+        >
+        {pdfUrl && (
+          <iframe
+            src={pdfUrl}
+            width="100%"
+            height="400px"
+            title="Visualizar PDF"
+          />
+        )}
+      </Modal>
+      </Layout>
   );
 };
 
 export default DashboardCancelado;
+function showModal(record: IAgendamento): void {
+  throw new Error('Function not implemented.');
+}
+
