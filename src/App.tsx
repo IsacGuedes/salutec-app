@@ -15,7 +15,11 @@ function App() {
     <div className="App">
       {isDashboardRoute ? (
         <>
-          <DashboardNavbar />
+           <header className="menu-bar">
+            <div className="logo">
+                <img src={Logo} alt="Logo" className='logo-imagem' />
+            </div>
+          </header>
           <AppRouter />
         </>
       ) : (
