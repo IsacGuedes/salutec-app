@@ -57,10 +57,14 @@ export const formatarTelefone = (telefone: string | null | undefined, paraEnvio:
 
 export const formatDate = (dateString: string | null | undefined): string => {
     if (!dateString) return ''; // Verifica se o valor é nulo ou indefinido e retorna uma string vazia
-
+  
+    const date = new Date(dateString);
+    const localDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000); // Ajusta para o fuso local
+    
     const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
-    return new Date(dateString).toLocaleDateString('pt-BR', options);
-};
+    return localDate.toLocaleDateString('pt-BR', options);
+  };
+  
 
 export const removerCaracteresNaoNumericos = (valor: string | null | undefined): string => {
     if (!valor) return ''; // Verifica se o valor é nulo ou indefinido e retorna uma string vazia

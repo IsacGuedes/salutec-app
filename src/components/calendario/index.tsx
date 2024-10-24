@@ -91,6 +91,7 @@ const BasicDateCalendar: React.FC<BasicDateCalendarProps> = ({
       />
     );
   };
+  console.log(selectedDate);
 
   return (
     <div className="calendar">
