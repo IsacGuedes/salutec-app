@@ -4,9 +4,13 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { PickersDay, PickersDayProps } from "@mui/x-date-pickers/PickersDay";
 import { Dayjs } from "dayjs";
-import dayjs from "dayjs"; // Certifique-se de que o dayjs está importado corretamente
+import dayjs from "dayjs"; 
 import axios from "axios"; 
 import "./styles.css";
+import "dayjs/locale/pt-br"; 
+
+// Configurando o Day.js para usar o locale em português
+dayjs.locale('pt-br');
 
 interface BasicDateCalendarProps {
   tipo: 'Medico' | 'Dentista';
@@ -37,12 +41,9 @@ const BasicDateCalendar: React.FC<BasicDateCalendarProps> = ({
 }) => {
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(propSelectedDate);
   const [disponibilidade, setDisponibilidade] = useState<Disponibilidade | null>(null);
-
-  // Data atual e limite de 7 dias no futuro
   const today = dayjs();
   const sevenDaysLater = today.add(7, "day");
 
-  // Fazer a requisição para buscar os dias disponíveis
   useEffect(() => {
     const fetchDisponibilidade = async () => {
       try {
@@ -67,15 +68,10 @@ const BasicDateCalendar: React.FC<BasicDateCalendarProps> = ({
   const CustomPickersDay: React.FC<PickersDayProps<Dayjs>> = (props) => {
     const { day } = props;
     const dayOfWeek = day.day();
-
-    // Verifique se a data está dentro dos próximos 7 dias
     const isWithinNext7Days = day.isAfter(today) && day.isBefore(sevenDaysLater);
-
-    // Verifique se o dia está disponível (mapeando o retorno da API)
-    const isAvailable =
-      disponibilidade?.diasDaSemana.some(
-        (dia) => diasSemanaMap[dia.toUpperCase()] === dayOfWeek
-      ) && isWithinNext7Days;
+    const isAvailable = disponibilidade?.diasDaSemana.some(
+      (dia) => diasSemanaMap[dia.toUpperCase()] === dayOfWeek
+    ) && isWithinNext7Days;
 
     return (
       <PickersDay
@@ -91,7 +87,6 @@ const BasicDateCalendar: React.FC<BasicDateCalendarProps> = ({
       />
     );
   };
-  console.log(selectedDate);
 
   return (
     <div className="calendar">

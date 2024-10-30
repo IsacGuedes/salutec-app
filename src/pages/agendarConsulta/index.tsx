@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { Button, TextField, Snackbar } from "@mui/material";
+import { Button, TextField, Snackbar, Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Dayjs } from "dayjs";
 import axios from 'axios';
@@ -23,9 +23,8 @@ const AgendarConsulta: FC = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const navigate = useNavigate();
 
-  // Função para buscar os horários disponíveis
   const buscarHorariosDisponiveis = (data: string) => {
-    if (!tipoConsulta || !data) return; // Verifica se os dados estão disponíveis
+    if (!tipoConsulta || !data) return;
   
     axios.get(`http://localhost:8090/agendar-consulta/horarios-disponiveis`, {
         params: { tipoConsultaId: tipoConsulta === "Medico" ? 1 : 2, data }
@@ -33,7 +32,7 @@ const AgendarConsulta: FC = () => {
       .then((response) => {
         setDisponibilidade((prev) => ({
           diasDaSemana: prev?.diasDaSemana || [],
-          horariosDisponiveis: response.data || [], // Assegura que seja um array
+          horariosDisponiveis: response.data || [],
         }));
       })
       .catch((error) => {
@@ -41,22 +40,16 @@ const AgendarConsulta: FC = () => {
         setSnackbarOpen(true);
         console.error("Erro ao buscar horários disponíveis", error);
       });
-  };  
+  };
 
   useEffect(() => {
     if (tipoConsulta !== "") {
-      axios
-        .get(`http://localhost:8090/agendar-consulta/dias-disponiveis`, {
-          params: {
-            tipoConsultaId: tipoConsulta === "Medico" ? 1 : 2,
-          },
+      axios.get(`http://localhost:8090/agendar-consulta/dias-disponiveis`, {
+          params: { tipoConsultaId: tipoConsulta === "Medico" ? 1 : 2 },
         })
         .then((response) => {
           const diasDisponiveis = response.data;
-          setDisponibilidade({
-            diasDaSemana: diasDisponiveis,
-            horariosDisponiveis: [],
-          });
+          setDisponibilidade({ diasDaSemana: diasDisponiveis, horariosDisponiveis: [] });
         })
         .catch((error) => {
           setErro("Erro ao buscar dias e horários disponíveis");
@@ -68,7 +61,7 @@ const AgendarConsulta: FC = () => {
 
   useEffect(() => {
     if (selectedDate) {
-      buscarHorariosDisponiveis(selectedDate.format("YYYY-MM-DD")); // Chama a função ao selecionar a data
+      buscarHorariosDisponiveis(selectedDate.format("YYYY-MM-DD"));
     }
   }, [selectedDate]);
 
@@ -134,21 +127,28 @@ const AgendarConsulta: FC = () => {
         </div>
         <div className="dropdown-medico">
           <h1 className="titulo-consulta">Escolha o horário</h1>
-          <TextField
-            className="horario-consulta"
-            margin="dense"
-            label="Horário"
-            select
-            fullWidth
-            value={horario}
-            onChange={(e) => setHorario(e.target.value)}
-            SelectProps={{ native: true }}
+          <Tooltip
+            title={disponibilidade?.horariosDisponiveis.length === 0 ? "Este é um dia em que há atendimentos, mas todos os horários disponíveis já foram reservados." : ""}
+            placement="top"
+            arrow
           >
-            <option value=""></option>
-            {disponibilidade?.horariosDisponiveis.map((h, index) => (
-              <option key={index} value={h}>{h}</option>
-            ))}
-          </TextField>
+            <TextField
+              className="horario-consulta"
+              margin="dense"
+              label="Horário"
+              select
+              fullWidth
+              value={horario}
+              onChange={(e) => setHorario(e.target.value)}
+              SelectProps={{ native: true }}
+              disabled={disponibilidade?.horariosDisponiveis.length === 0}
+            >
+              <option value=""></option>
+              {disponibilidade?.horariosDisponiveis.map((h, index) => (
+                <option key={index} value={h}>{h}</option>
+              ))}
+            </TextField>
+          </Tooltip>
           <div className="container-resumo-consulta">
             <p><CalendarOutlined /> Data: {selectedDate?.format("DD/MM/YYYY")}</p>
             <p><FormOutlined /> Consulta: {tipoConsulta}</p>

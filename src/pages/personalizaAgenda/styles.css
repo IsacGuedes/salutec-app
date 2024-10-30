@@ -1,17 +1,27 @@
 .form-container {
-  max-width: 600px;
   margin: 40px auto; /* Aumenta a margem superior para centralizar melhor */
-  padding: 30px;
+  padding: 20px;
   border: 1px solid #e0e0e0; /* Cor mais suave para o border */
   border-radius: 10px;
   background-color: #fff; /* Fundo branco para contraste */
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Sombra mais suave */
 }
 
+/* Container das modais */
+.modals-container {
+  display: flex;
+  gap: 20px; /* Espaço entre as modais */
+  justify-content: center; /* Centraliza as modais */
+  align-items: flex-start; /* Alinha as modais ao topo */
+  white-space: nowrap;
+  flex: 1; /* Garante que as modais ocupem o mesmo espaço */
+  max-width: 800px; /* Define a largura máxima de cada modal */
+}
+
 .dias-buttons {
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px; /* Aumenta o espaço entre os botões */
+  flex-wrap: nowrap;
+  gap: 11px; /* Aumenta o espaço entre os botões */
   justify-content: center;
 }
 

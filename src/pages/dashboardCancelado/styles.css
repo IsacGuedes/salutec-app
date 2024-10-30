@@ -1,26 +1,88 @@
 .layout-dashboard {
-    padding: 24px;
-    background: #fff;
-  }
-  
-  .conteudo-dashboard {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  .botao-status {
-    border: none;
-  }
-  
-  .botao-sucesso {
-    background-color: #52c41a; /* verde */
-  }
-  
-  .botao-aviso {
-    background-color: #faad14; /* amarelo */
-  }
-  
-  .botao-erro {
-    background-color: #f5222d; /* vermelho */
-  }
-  
+  padding: 24px;
+  background: #fff;
+}
+
+.conteudo-dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.botao-status {
+  border: none;
+}
+
+.botao-sucesso {
+  background-color: #52c41a; /* verde */
+  color: white;
+  border-radius: 4px;
+  padding: 8px 16px;
+  transition: background-color 0.3s ease;
+}
+
+.botao-sucesso:hover {
+  background-color: #4caf50; /* verde mais escuro */
+}
+
+.botao-aviso {
+  background-color: #faad14; /* amarelo */
+  color: white;
+  border-radius: 4px;
+  padding: 8px 16px;
+  transition: background-color 0.3s ease;
+}
+
+.botao-aviso:hover {
+  background-color: #f9c100; /* amarelo mais escuro */
+}
+
+.botao-erro {
+  background-color: #f5222d; /* vermelho */
+  color: white;
+  border-radius: 4px;
+  padding: 8px 16px;
+  transition: background-color 0.3s ease;
+}
+
+.botao-erro:hover {
+  background-color: #e41e27; /* vermelho mais escuro */
+}
+
+.botao-filtrar {
+  background-color: #1890ff; /* azul */
+  color: white;
+  border-radius: 4px;
+  padding: 8px 16px;
+  margin-left: 16px; /* Adiciona espaçamento à esquerda */
+  transition: background-color 0.3s ease;
+}
+
+.botao-filtrar:hover {
+  background-color: #007bff; /* azul mais escuro */
+}
+
+.botao-exportar-pdf {
+  background-color: #ff4d4f; /* vermelho */
+  color: white;
+  border-radius: 4px;
+  padding: 8px 16px;
+  margin-left: 16px; /* Adiciona espaçamento à esquerda */
+  transition: background-color 0.3s ease;
+}
+
+.botao-exportar-pdf:hover {
+  background-color: #ff1a1a; /* vermelho mais escuro */
+}
+
+/* Estilizando o RangePicker */
+.ant-picker {
+  border-radius: 4px; /* bordas arredondadas */
+  border: 1px solid #d9d9d9; /* borda padrão */
+  margin: 16px; /* Adiciona espaçamento à direita */
+}
+
+.ant-picker:hover,
+.ant-picker:focus {
+  border-color: #40a9ff; /* cor da borda ao passar o mouse ou focar */
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2); /* sombra ao focar */
+}

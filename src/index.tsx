@@ -3,13 +3,19 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { ConfigProvider } from 'antd';
+import ptBR from 'antd/lib/locale/pt_BR'; // Importação correta do locale
+import DashboardCancelado from './pages/dashboardCancelado';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
-    <App />
+    <ConfigProvider locale={ptBR}>
+      <App />
+    </ConfigProvider>
   </React.StrictMode>
 );
 
