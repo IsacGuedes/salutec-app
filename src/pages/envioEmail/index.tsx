@@ -11,9 +11,9 @@ const EnvioEmail: FC = () => {
 
   return (
     <div className="container-email">
-      <h1 className="titulo">SOLICITAÇÃO ENVIADA COM SUCESSO!</h1>
+      <h1 className="titulo">AGENDAMENTO REALIZADO COM SUCESSO!</h1>
       <p className="mensagem">
-        Aguarde o contato da Unidade de Saúde para confirmar ou cancelar o agendamento!
+        Aguarde o contato da Unidade de Saúde para confirmar ou cancelar seu agendamento!
       </p>
       <button className="botao" onClick={handleButtonClick}>
         VOLTAR PARA HOME

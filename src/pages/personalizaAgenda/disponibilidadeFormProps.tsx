@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import './styles.css'; 
+import './styles.css';
 import { apiPost, STATUS_CODE } from '../../api/RestClient';
+import { Snackbar, Alert, AlertColor } from '@mui/material';
 
 type Disponibilidade = {
   diasDaSemana: string[];
@@ -12,14 +13,20 @@ const diasDaSemana = [
 ];
 
 interface DisponibilidadeFormProps {
-  tipoConsultaId: number; // Alterado para ID
+  tipoConsultaId: number;
   onDisponibilidadeChange: (disponibilidade: Disponibilidade) => void;
 }
 
 const DisponibilidadeForm: React.FC<DisponibilidadeFormProps> = ({ tipoConsultaId, onDisponibilidadeChange }) => {
   const [diasSelecionados, setDiasSelecionados] = useState<string[]>([]);
   const [horarios, setHorarios] = useState<string[]>(['']);
-  const [loading, setLoading] = useState(false); // Estado de carregamento
+  const [loading, setLoading] = useState(false);
+
+  const [alert, setAlert] = useState<{ open: boolean; message: string; severity: AlertColor }>({
+    open: false,
+    message: '',
+    severity: 'success',
+  });
 
   useEffect(() => {
     const disponibilidadeSalva = localStorage.getItem(`disponibilidade-${tipoConsultaId}`);
@@ -31,9 +38,9 @@ const DisponibilidadeForm: React.FC<DisponibilidadeFormProps> = ({ tipoConsultaI
   }, [tipoConsultaId]);
 
   const toggleDia = (dia: string) => {
-    setDiasSelecionados(prevState => 
-      prevState.includes(dia) 
-        ? prevState.filter(d => d !== dia) 
+    setDiasSelecionados(prevState =>
+      prevState.includes(dia)
+        ? prevState.filter(d => d !== dia)
         : [...prevState, dia]
     );
   };
@@ -52,78 +59,89 @@ const DisponibilidadeForm: React.FC<DisponibilidadeFormProps> = ({ tipoConsultaI
     setHorarios(horarios.filter((_, i) => i !== index));
   };
 
+  const showAlert = (message: string, severity: AlertColor) => {
+    setAlert({ open: true, message, severity });
+  };
+
+  const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') return;
+    setAlert({ ...alert, open: false });
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (diasSelecionados.length === 0 || horarios.filter(h => h !== '').length === 0) {
-      alert('Por favor, selecione pelo menos um dia da semana e preencha os horários.');
+      showAlert('Por favor, selecione pelo menos um dia da semana e preencha os horários.', 'warning');
       return;
     }
-  
+
     const disponibilidade: Disponibilidade = {
       diasDaSemana: diasSelecionados,
       horariosDisponiveis: horarios.filter(h => h !== '')
     };
-  
+
     localStorage.setItem(`disponibilidade-${tipoConsultaId}`, JSON.stringify(disponibilidade));
     onDisponibilidadeChange(disponibilidade);
-  
-    setLoading(true); // Inicia o estado de carregamento
+    setLoading(true);
+
     try {
       const disponibilidadeResponse = await apiPost(`http://localhost:8090/personaliza/criaDisponibilidade/${tipoConsultaId}`, disponibilidade);
       if (disponibilidadeResponse.status === STATUS_CODE.CREATED) {
-        alert('Disponibilidade salva com sucesso!');
+        showAlert('Disponibilidade salva com sucesso!', 'success');
       }
     } catch (error) {
       console.error('Erro ao salvar disponibilidade', error);
-  
-      // Verifique se o erro é uma instância de Error
-      if (error instanceof Error) {
-        alert('Erro ao salvar disponibilidade: ' + error.message); // Exibe mensagem de erro
-      } else {
-        alert('Erro ao salvar disponibilidade: ' + String(error)); // Para outros tipos de erro
-      }
+      showAlert('Erro ao salvar disponibilidade: ' + (error instanceof Error ? error.message : String(error)), 'error');
     } finally {
-      setLoading(false); // Finaliza o estado de carregamento
+      setLoading(false);
     }
-  };  
+  };
 
   return (
-    <form onSubmit={handleSubmit} className="form-container">
-      <div>
-        <label>Dias da Semana:</label>
-        <div className="dias-buttons">
-          {diasDaSemana.map(dia => (
-            <button
-              type="button"
-              key={dia}
-              onClick={() => toggleDia(dia)}
-              className={diasSelecionados.includes(dia) ? 'selected' : ''}
-              aria-pressed={diasSelecionados.includes(dia)} // Melhorando acessibilidade
-            >
-              {dia.substring(0, 3)}
-            </button>
-          ))}
-        </div>
-      </div>
-      <div className="horarios-container">
-        <label>Horários Disponíveis:</label>
-        {horarios.map((horario, index) => (
-          <div key={index}>
-            <input
-              type="time"
-              value={horario}
-              onChange={(e) => handleHorarioChange(index, e)}
-              required // Adicionando requisição para preenchimento
-            />
-            <button type="button" onClick={() => removeHorario(index)}>Remover</button>
+    <>
+      <form onSubmit={handleSubmit} className="form-container">
+        <div>
+          <label>Dias da Semana:</label>
+          <div className="dias-buttons">
+            {diasDaSemana.map(dia => (
+              <button
+                type="button"
+                key={dia}
+                onClick={() => toggleDia(dia)}
+                className={diasSelecionados.includes(dia) ? 'selected' : ''}
+                aria-pressed={diasSelecionados.includes(dia)}
+              >
+                {dia.substring(0, 3)}
+              </button>
+            ))}
           </div>
-        ))}
-        <button type="button" className="add-horario" onClick={addHorario}>Adicionar Horário</button>
-      </div>
-      <button type="submit" className="submit-button" disabled={loading}>
-        {loading ? 'Salvando...' : 'Salvar Disponibilidade'}
-      </button>
-    </form>
+        </div>
+        <div className="horarios-container">
+          <label>Horários Disponíveis:</label>
+          {horarios.map((horario, index) => (
+            <div key={index}>
+              <input
+                type="time"
+                value={horario}
+                onChange={(e) => handleHorarioChange(index, e)}
+                required
+              />
+              <button type="button" onClick={() => removeHorario(index)}>Remover</button>
+            </div>
+          ))}
+          <button type="button" className="add-horario" onClick={addHorario}>Adicionar Horário</button>
+        </div>
+        <button type="submit" className="submit-button" disabled={loading}>
+          {loading ? 'Salvando...' : 'Salvar Disponibilidade'}
+        </button>
+      </form>
+
+      <Snackbar open={alert.open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity={alert.severity} sx={{ width: '100%' }}>
+          {alert.message}
+        </Alert>
+      </Snackbar>
+    </>
   );
 };
 
