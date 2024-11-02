@@ -1,53 +1,99 @@
 import React, { useState, useEffect, FC } from 'react';
-import { Layout, Table, Button, message, Modal, DatePicker, ConfigProvider } from 'antd';
-import { Agendamento } from '../../types/agendamento';
-import DashboardSidebar from '../../components/sidebar';
-import { aplicarMascaraDocumentocns, aplicarMascaraDocumentocpf, formatarTelefone, formatDate } from '../../components/formatos';
-import './styles.css';
+import { Layout, Table, Button, Modal, message, DatePicker } from 'antd';
 import { IAgendamento } from '../../components/interface';
+import DashboardSidebar from '../../components/sidebar';
 import { gerarPDF } from '../../components/gerarPDF';
+import './styles.css';
+import { aplicarMascaraDocumentocpf, aplicarMascaraDocumentocns, formatarTelefone, formatDate } from '../../components/formatos';
 import dayjs, { Dayjs } from 'dayjs';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
-import ptBR from 'antd/lib/locale/pt_BR'; // Importando o locale do Ant Design
-import ReactDOM from 'react-dom';
-
-dayjs.extend(isSameOrAfter);
-dayjs.extend(isSameOrBefore);
 
 const { Content } = Layout;
 const { RangePicker } = DatePicker;
 
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
+
 const DashboardCancelado: FC = () => {
   const [agendamentos, setAgendamentos] = useState<IAgendamento[]>([]);
-  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [filteredAgendamentos, setFilteredAgendamentos] = useState<IAgendamento[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState<IAgendamento | null>(null);
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [dataInicio, setDataInicio] = useState<Dayjs | null>(null);
   const [dataFim, setDataFim] = useState<Dayjs | null>(null);
 
   useEffect(() => {
-    const fetchAgendamentosCancelados = async () => {
+    const fetchAgendamentos = async () => {
       try {
-        const url = `http://localhost:8090/agendar-consulta/listarConsultasCanceladas`;
-        const response = await fetch(url);
+        const response = await fetch('http://localhost:8090/agendar-consulta/listarConsultasCanceladas');
         const data = await response.json();
-  
-        if (Array.isArray(data)) {
-          setAgendamentos(data); // Armazena todos os agendamentos inicialmente
-        } else {
-          console.error('Os dados retornados não são um array', data);
-          setAgendamentos([]);
-        }
+        setAgendamentos(data);
+        setFilteredAgendamentos(data); // Inicialmente, os agendamentos filtrados são todos
       } catch (error) {
-        console.error('Erro ao buscar agendamentos cancelados:', error);
-        setAgendamentos([]);
+        console.error('Erro ao buscar agendamentos:', error);
       }
     };
-  
-    fetchAgendamentosCancelados();
+
+    fetchAgendamentos();
   }, []);
-  
+
+  const showPdfModal = () => {
+    const pdfBlob = gerarPDF(filteredAgendamentos);
+    const pdfUrl = URL.createObjectURL(pdfBlob);
+    setPdfUrl(pdfUrl);
+    setIsModalVisible(true);
+  };
+
+  const downloadPdf = () => {
+    if (pdfUrl) {
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.download = 'relatorio.pdf';
+      link.click();
+    }
+  };
+
+  const showModal = (record: IAgendamento) => {
+    setSelectedRecord(record);
+    setIsModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    if (pdfUrl) {
+      setPdfUrl(null);
+    }
+    setIsModalVisible(false);
+    setSelectedRecord(null);
+  };
+
+  const handleAction = async (id: number, status: string) => {
+    try {
+      const response = await fetch(`http://localhost:8090/agendar-consulta/atualizarStatus`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id, status }),
+      });
+
+      if (response.ok) {
+        message.success('Status atualizado com sucesso!');
+        const updatedAgendamentos = agendamentos.map((agendamento) =>
+          agendamento.id === id ? { ...agendamento, statusConsulta: status } : agendamento
+        );
+        setAgendamentos(updatedAgendamentos);
+        setFilteredAgendamentos(updatedAgendamentos); // Atualiza também os agendamentos filtrados
+        setIsModalVisible(false);
+      } else {
+        message.error('Erro ao atualizar status!');
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar status:', error);
+    }
+  };
+
   const handleDateRangeChange = (dates: [Dayjs | null, Dayjs | null] | null) => {
     if (dates) {
       setDataInicio(dates[0]);
@@ -60,7 +106,6 @@ const DashboardCancelado: FC = () => {
 
   const handleFilterClick = () => {
     if (dataInicio && dataFim) {
-      // Filtra os agendamentos
       const agendamentosFiltrados = agendamentos.filter((agendamento) => {
         const dataConsulta = dayjs(agendamento.dataConsulta);
         return (
@@ -68,28 +113,9 @@ const DashboardCancelado: FC = () => {
           dataConsulta.isSameOrBefore(dataFim, 'day')
         );
       });
-      setAgendamentos(agendamentosFiltrados);
+      setFilteredAgendamentos(agendamentosFiltrados);
     } else {
       message.warning('Por favor, selecione um intervalo de datas.');
-    }
-  };
-
-  const handleTodosClick = async () => {
-    try {
-      const response = await fetch('http://localhost:8090/agendar-consulta/listarConsultasCanceladas');
-      const data = await response.json();
-
-      console.log("Dados recebidos da API:", data);
-
-      if (Array.isArray(data)) {
-        setAgendamentos(data);
-      } else {
-        console.error('Os dados retornados não são um array', data);
-        setAgendamentos([]);
-      }
-    } catch (error) {
-      console.error('Erro ao buscar agendamentos cancelados:', error);
-      setAgendamentos([]);
     }
   };
 
@@ -122,37 +148,30 @@ const DashboardCancelado: FC = () => {
           {record.statusConsulta}
         </Button>
       ),
-    }      
+    }
   ];
 
-  const showPdfModal = () => {
-    const pdfBlob = gerarPDF(agendamentos);
-    const pdfUrl = URL.createObjectURL(pdfBlob);
-    setPdfUrl(pdfUrl);
-    setIsModalVisible(true);
-  };
-
-  const downloadPdf = () => {
-    if (pdfUrl) {
-      const link = document.createElement('a');
-      link.href = pdfUrl;
-      link.download = 'relatorio.pdf';
-      link.click();
+  const handleTodosClick = async () => {
+    try {
+      const response = await fetch('http://localhost:8090/agendar-consulta/listarConsultasCanceladas');
+      const data = await response.json();
+  
+      console.log("Dados recebidos da API:", data);
+  
+      if (Array.isArray(data)) {
+        setAgendamentos(data);
+        setFilteredAgendamentos(data); // Atualiza os agendamentos filtrados para exibir todos
+      } else {
+        console.error('Os dados retornados não são um array', data);
+        setAgendamentos([]);
+        setFilteredAgendamentos([]); // Também limpa os agendamentos filtrados
+      }
+    } catch (error) {
+      console.error('Erro ao buscar agendamentos:', error);
+      setAgendamentos([]);
+      setFilteredAgendamentos([]); // Limpa os agendamentos filtrados em caso de erro
     }
-  };
-
-  const showModal = (record: IAgendamento) => {
-    setSelectedRecord(record);
-    setIsModalVisible(true);
-  };
-
-  const handleCancel = () => {
-    if (pdfUrl) {
-      setPdfUrl(null); 
-    }
-    setIsModalVisible(false); 
-    setSelectedRecord(null); 
-  };
+  };  
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -162,38 +181,43 @@ const DashboardCancelado: FC = () => {
           <h2>Agendamentos cancelados</h2>
           <RangePicker
             onChange={handleDateRangeChange}
-            format="DD/MM/YYYY"
-            placeholder={['Data Início', 'Data Fim']}
+            style={{ marginBottom: 16 }}
           />
-          <Button
-            type="primary"
-            onClick={handleFilterClick}
-            className="botao-filtrar"
-          >
+          <Button type="primary" onClick={handleFilterClick} style={{ marginBottom: 16 }}>
             Filtrar
           </Button>
-          <Button
-            type="primary"
-            onClick={handleTodosClick}
-            className="botao-filtrar"
-          >
+          <Button type="primary" onClick={handleTodosClick} className="botao-filtrar">
             Mostrar todos
           </Button>
-          <Button
-            type="primary"
-            onClick={showPdfModal}
-            className="botao-exportar-pdf"
-          >
+          <Button type="primary" onClick={showPdfModal} className="botao-exportar-pdf" style={{ marginLeft: 8 }}>
             Exportar para PDF
           </Button>
           <Table
-            dataSource={agendamentos}
+            dataSource={filteredAgendamentos}
             columns={columns}
             rowKey={(record) => record.id.toString()}
             pagination={false}
           />
         </Content>
       </Layout>
+      <Modal
+        title="Atualizar Status da Consulta"
+        visible={isModalVisible && !!selectedRecord}
+        onCancel={handleCancel}
+        footer={[
+          <Button key="confirm" type="primary" onClick={() => handleAction(selectedRecord?.id!, 'CONFIRMADO')}>
+            Confirmar Consulta
+          </Button>,
+          <Button key="cancel" danger onClick={() => handleAction(selectedRecord?.id!, 'CANCELADO')}>
+            Cancelar Consulta
+          </Button>,
+          <Button key="close" onClick={handleCancel}>
+            Fechar
+          </Button>,
+        ]}
+      >
+        <p>Status atual: {selectedRecord?.statusConsulta}</p>
+      </Modal>
       <Modal
         title="Visualizar PDF"
         visible={!!pdfUrl}
