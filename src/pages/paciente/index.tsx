@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { TextField, Button, Typography, Radio, FormControlLabel, Grid } from '@mui/material';
+import { TextField, Button, Typography, Radio, FormControlLabel, Grid, Tooltip } from '@mui/material';
 import { apiPost, STATUS_CODE } from '../../api/RestClient';
 import { aplicarMascaraDocumentocns, aplicarMascaraDocumentocpf, formatarTelefone, removerCaracteresNaoNumericos, validarCpf } from '../../components/formatos';
 import { useNavigate } from 'react-router-dom';
@@ -12,11 +12,12 @@ const Paciente: FC = () => {
   const [documentocns, setDocumentocns] = useState<string>('');
   const [dataNascimento, setDataNascimento] = useState<string>('');
   const [telefone, setTelefone] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
   const [selectedDocType, setSelectedDocType] = useState<string>('cpf'); // Estado para controlar o tipo de documento
   const navigate = useNavigate();
 
   const salvarPaciente = async () => {
-    if (!nome || (!documentocpf && !documentocns) || !telefone || !dataNascimento) {
+    if (!nome || (!documentocpf && !documentocns) || !telefone || !dataNascimento || !email) {
       alert("Preencha todos os campos obrigatórios.");
       return;
     }
@@ -31,6 +32,7 @@ const Paciente: FC = () => {
       documentocpf: selectedDocType === 'cpf' ? removerCaracteresNaoNumericos(documentocpf) : null,
       documentocns: selectedDocType === 'cns' ? removerCaracteresNaoNumericos(documentocns) : null,
       telefone: formatarTelefone(removerCaracteresNaoNumericos(telefone), true),
+      email,
       dataNascimento,
     };
   
@@ -92,7 +94,6 @@ const Paciente: FC = () => {
             onChange={(event) => setDataNascimento(event.target.value)}
           />
         </div>
-
         {/* Colocando os labels de CPF e CNS lado a lado */}
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={6}>
@@ -146,6 +147,24 @@ const Paciente: FC = () => {
             value={telefone}
             onChange={(event) => setTelefone(formatarTelefone(event.target.value))}
           />
+        </div>
+        <div className="div-linha">
+          <Grid container alignItems="center">
+            <Grid item xs={11}>
+              <TextField
+                fullWidth
+                label="Email"
+                type="text"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+              />
+            </Grid>
+            <Grid item xs={1}>
+              <Tooltip title="Informe um email válido. É nele em que você receberá a solicitação de confirmação de consulta.">
+                <InfoCircleOutlined style={{ fontSize: '15px', cursor: 'pointer' }} />
+              </Tooltip>
+            </Grid>
+          </Grid>
         </div>
         <div className="div-linha full-width">
           <Button variant="contained" onClick={salvarPaciente}>
