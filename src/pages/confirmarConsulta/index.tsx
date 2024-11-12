@@ -5,19 +5,19 @@ import { useSearchParams } from 'react-router-dom';
 
 interface Paciente {
   nome: string;
-  dataNascimento: string;
-  telefone: string;
 }
 
 interface Consulta {
   id: string;
   data: string;
   hora: string;
-  tipoConsulta: string;
   paciente: Paciente;
 }
 
+type TipoConsulta = "Medico" | "Dentista";
+
 const ConfirmacaoPaciente: React.FC = () => {
+  const [tipoConsulta, setTipoConsulta] = useState<TipoConsulta | "">("");
   const [searchParams] = useSearchParams();
   const consultaId = searchParams.get('consultaId');
   
@@ -25,11 +25,9 @@ const ConfirmacaoPaciente: React.FC = () => {
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
 
-  
-
   useEffect(() => {
     // Buscar detalhes da consulta
-    axios.get<Consulta>(`/api/consultas/${consultaId}`)
+    axios.get(`http://localhost:8090/agendar-consulta/listarConsultas/${consultaId}`)
       .then((response) => {
         setConsulta(response.data);
         setCarregando(false);
@@ -60,21 +58,16 @@ const ConfirmacaoPaciente: React.FC = () => {
     return <div className="erro">{erro}</div>;
   }
 
-  console.log(consultaId)
-
   return (
-    <div className="consulta-detalhes">
+    <div className="confirmacao-consulta">
       {consulta && (
         <>
-          <h2>Detalhes da Consulta</h2>
-          <div className="consulta-info">
-            <p><strong>Paciente:</strong> {consulta.paciente.nome}</p>
-            <p><strong>Data de Nascimento:</strong> {consulta.paciente.dataNascimento}</p>
-            <p><strong>Telefone:</strong> {consulta.paciente.telefone}</p>
-            <p><strong>Data da Consulta:</strong> {consulta.data}</p>
-            <p><strong>Hora:</strong> {consulta.hora}</p>
-            <p><strong>Tipo de Consulta:</strong> {consulta.tipoConsulta}</p>
-          </div>
+          <h2>Confirmação de Agendamento</h2>
+          <p>
+            Olá <strong>{consulta.paciente.nome}</strong>, por gentileza, confirme ou cancele o seu
+            agendamento no dia <strong>{consulta.data}</strong> horário <strong>{consulta.hora}</strong> para a consulta.
+          </p>
+
           <div className="acoes">
             <button onClick={handleConfirmar} className="btn confirmar">Confirmar</button>
             <button onClick={handleCancelar} className="btn cancelar">Cancelar</button>
@@ -82,7 +75,7 @@ const ConfirmacaoPaciente: React.FC = () => {
         </>
       )}
     </div>
-  );
+  );  
 };
 
 export default ConfirmacaoPaciente;
