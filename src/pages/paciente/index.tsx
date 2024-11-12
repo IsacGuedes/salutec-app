@@ -54,7 +54,7 @@ const Paciente: FC = () => {
         // Faz a requisição para criar a consulta
         const consultaResponse = await apiPost("http://localhost:8090/agendar-consulta/criarConsulta", consultaData);
         if (consultaResponse.status === STATUS_CODE.CREATED) {
-          navigate('/confirmacao-consulta');
+          navigate('/agendamento-concluido');
         } else {
           alert(`Erro ao cadastrar consulta: ${consultaResponse.statusText}`);
         }
