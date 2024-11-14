@@ -1,5 +1,5 @@
 import React, { useState, useEffect, FC } from 'react';
-import { Layout, Table, Button, Modal, message, DatePicker } from 'antd';
+import { Layout, Table, Button, Modal, message, DatePicker, Input } from 'antd';
 import { IAgendamento } from '../../components/interface';
 import DashboardSidebar from '../../components/sidebar';
 import { gerarPDF } from '../../components/gerarPDF';
@@ -11,11 +11,12 @@ import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 
 const { Content } = Layout;
 const { RangePicker } = DatePicker;
+const { Search } = Input;
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
-const DashboardConfirmadas: FC = () => {
+const Dashboard: FC = () => {
   const [agendamentos, setAgendamentos] = useState<IAgendamento[]>([]);
   const [filteredAgendamentos, setFilteredAgendamentos] = useState<IAgendamento[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -23,6 +24,9 @@ const DashboardConfirmadas: FC = () => {
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [dataInicio, setDataInicio] = useState<Dayjs | null>(null);
   const [dataFim, setDataFim] = useState<Dayjs | null>(null);
+  const [nomeFilter, setNomeFilter] = useState<string>('');
+  const [tipoFilter, setTipoFilter] = useState<string>('');
+  const [cpfFilter, setCpfFilter] = useState<string>('');
 
   useEffect(() => {
     const fetchAgendamentos = async () => {
@@ -105,18 +109,37 @@ const DashboardConfirmadas: FC = () => {
   };
 
   const handleFilterClick = () => {
+    let agendamentosFiltrados = agendamentos;
+
     if (dataInicio && dataFim) {
-      const agendamentosFiltrados = agendamentos.filter((agendamento) => {
+      agendamentosFiltrados = agendamentosFiltrados.filter((agendamento) => {
         const dataConsulta = dayjs(agendamento.dataConsulta);
         return (
           dataConsulta.isSameOrAfter(dataInicio, 'day') && 
           dataConsulta.isSameOrBefore(dataFim, 'day')
         );
       });
-      setFilteredAgendamentos(agendamentosFiltrados);
-    } else {
-      message.warning('Por favor, selecione um intervalo de datas.');
     }
+
+    if (nomeFilter) {
+      agendamentosFiltrados = agendamentosFiltrados.filter((agendamento) =>
+        agendamento.paciente.nome.toLowerCase().includes(nomeFilter.toLowerCase())
+      );
+    }
+
+    if (tipoFilter) {
+      agendamentosFiltrados = agendamentosFiltrados.filter((agendamento) =>
+        agendamento.tipoConsulta.descricao.toLowerCase().includes(tipoFilter.toLowerCase())
+      );
+    }
+
+    if (cpfFilter) {
+      agendamentosFiltrados = agendamentosFiltrados.filter((agendamento) =>
+        aplicarMascaraDocumentocpf(agendamento.paciente.documento).includes(cpfFilter)
+      );
+    }
+
+    setFilteredAgendamentos(agendamentosFiltrados);
   };
 
   const columns = [
@@ -179,46 +202,63 @@ const DashboardConfirmadas: FC = () => {
       <Layout className="layout-dashboard">
         <Content className="conteudo-dashboard">
           <h2>Agendamentos confirmados</h2>
+
+          <div style={{ marginBottom: 16 }}>
+            <Search
+              placeholder="Pesquisar por Nome"
+              onSearch={value => setNomeFilter(value)}
+              style={{ width: 200, marginRight: 8 }}
+            />
+            <Search
+              placeholder="Pesquisar por CPF"
+              onSearch={value => setCpfFilter(value)}
+              style={{ width: 200, marginRight: 8 }}
+            />
+            <Search
+              placeholder="Pesquisar por Tipo"
+              onSearch={value => setTipoFilter(value)}
+              style={{ width: 200, marginRight: 8 }}
+            />
+          </div>
+
           <RangePicker
             onChange={handleDateRangeChange}
             style={{ marginBottom: 16 }}
+            format="DD/MM/YYYY"
           />
-          <Button type="primary" onClick={handleFilterClick} style={{ marginBottom: 16 }}>
-            Filtrar
+          
+          <Button onClick={handleFilterClick} type="primary" style={{ marginBottom: 16, margin: 2}}>
+            Aplicar Filtros
           </Button>
-          <Button type="primary" onClick={handleTodosClick} className="botao-filtrar">
-            Mostrar todos
+
+          <Button type="primary" onClick={handleTodosClick} style={{ marginTop: 20, margin: 2 }}>
+            Ver todos
           </Button>
-          <Button type="primary" onClick={showPdfModal} className="botao-exportar-pdf" style={{ marginLeft: 8 }}>
-            Exportar para PDF
-          </Button>
-          <Table
-            dataSource={filteredAgendamentos}
-            columns={columns}
-            rowKey={(record) => record.id.toString()}
-            pagination={false}
-          />
-        </Content>
-      </Layout>
-      <Modal
-        title="Atualizar Status da Consulta"
-        visible={isModalVisible && !!selectedRecord}
-        onCancel={handleCancel}
-        footer={[
-          <Button key="confirm" type="primary" onClick={() => handleAction(selectedRecord?.id!, 'CONFIRMADO')}>
-            Confirmar Consulta
-          </Button>,
-          <Button key="cancel" danger onClick={() => handleAction(selectedRecord?.id!, 'CANCELADO')}>
-            Cancelar Consulta
-          </Button>,
-          <Button key="close" onClick={handleCancel}>
-            Fechar
-          </Button>,
-        ]}
-      >
-        <p>Status atual: {selectedRecord?.statusConsulta}</p>
-      </Modal>
-      <Modal
+
+          <Table columns={columns} dataSource={filteredAgendamentos} rowKey="id" />
+
+          <Modal
+            title="Detalhes do Agendamento"
+            visible={isModalVisible}
+            onCancel={handleCancel}
+            footer={null}
+          >
+            <p>Nome do Paciente: {selectedRecord?.paciente.nome}</p>
+            <p>Tipo de Consulta: {selectedRecord?.tipoConsulta.descricao}</p>
+            <p>Data da Consulta: {formatDate(selectedRecord?.dataConsulta || '')}</p>
+            <Button type="primary" onClick={() => handleAction(selectedRecord!.id, 'CONFIRMADO')}>
+              Confirmar
+            </Button>
+            <Button
+              type="default"
+              onClick={() => handleAction(selectedRecord!.id, 'CANCELADO')}
+              style={{ marginLeft: 8 }}
+            >
+              Cancelar
+            </Button>
+          </Modal>
+
+          <Modal
         title="Visualizar PDF"
         visible={!!pdfUrl}
         onCancel={handleCancel}
@@ -240,8 +280,15 @@ const DashboardConfirmadas: FC = () => {
           />
         )}
       </Modal>
+
+          <Button type="primary" onClick={showPdfModal} className="botao-exportar-pdf" style={{ marginLeft: 8 }}>
+            Exportar para PDF
+          </Button>
+
+        </Content>
+      </Layout>
     </Layout>
   );
 };
 
-export default DashboardConfirmadas;
+export default Dashboard;

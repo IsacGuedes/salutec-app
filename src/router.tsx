@@ -16,6 +16,7 @@ import Contato from './pages/contato';
 import NotFound from './pages/NotFound/NotFound';
 import PrivateRoute from './components/PrivateRoute';
 import ConfirmacaoPaciente from './pages/confirmarConsulta';
+import Finalizado from './pages/confirmarConsulta/finalizado';
 
 const AppRouter: React.FC = () => {
 
@@ -27,6 +28,7 @@ const AppRouter: React.FC = () => {
       <Route path="/agendar-consulta" element={<AgendarConsulta />} />
       <Route path="/paciente" element={<Paciente />} />
       <Route path="/agendamento-concluido" element={<EnvioEmail />} />
+      <Route path='/finalizado' element={<Finalizado/>}/>
       <Route path='/confirmacao-consulta' element={<ConfirmacaoPaciente/>}/>
       <Route path="/login" element={<Login />} />
 

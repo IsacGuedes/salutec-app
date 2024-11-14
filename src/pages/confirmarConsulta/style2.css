@@ -1,0 +1,39 @@
+.container-email {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 800px;
+    width: auto;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  .titulo {
+    font-size: 24px;
+    font-family: 'Inria Sans', sans-serif;
+    margin-bottom: 20px;
+  }
+  
+  .mensagem {
+    font-size: 16px;
+    font-family: 'Inria Sans', sans-serif;
+    margin-bottom: 40px;
+    max-width: 600px;
+  }
+  
+  .botao {
+    background-color: black;
+    color: white;
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .botao:hover {
+    background-color: black;
+  }
+  

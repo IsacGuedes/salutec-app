@@ -4,6 +4,7 @@ import { apiPost, STATUS_CODE } from '../../api/RestClient';
 import { aplicarMascaraDocumentocns, aplicarMascaraDocumentocpf, formatarTelefone, removerCaracteresNaoNumericos, validarCpf } from '../../components/formatos';
 import { useNavigate } from 'react-router-dom';
 import { InfoCircleOutlined } from '@ant-design/icons';
+import { CircularProgress } from '@mui/material';
 import './styles.css';
 
 const Paciente: FC = () => {
@@ -15,12 +16,20 @@ const Paciente: FC = () => {
   const [email, setEmail] = useState<string>('');
   const [selectedDocType, setSelectedDocType] = useState<string>('cpf'); // Estado para controlar o tipo de documento
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState<boolean>(false); // Estado para o loader
 
   const salvarPaciente = async () => {
     if (!nome || (!documentocpf && !documentocns) || !telefone || !dataNascimento || !email) {
       alert("Preencha todos os campos obrigatórios.");
       return;
     }
+
+    {isLoading && (
+      <div className="loader-container">
+        <CircularProgress />
+      </div>
+    )}
+    
   
     if (selectedDocType === 'cpf' && !validarCpf(documentocpf)) {
       alert("CPF inválido. Por favor, verifique o número informado.");
@@ -37,38 +46,45 @@ const Paciente: FC = () => {
     };
   
     try {
+      setIsLoading(true); // Ativa o loader
       const response = await apiPost("http://localhost:8090/pacientes/criarPaciente", data);
       if (response.status === STATUS_CODE.CREATED) {
         const pacienteId = response.data.id;
-  
-        // Recupera os dados da consulta do sessionStorage
+
         const consultaData = JSON.parse(sessionStorage.getItem('consultaData') || '{}');
         consultaData.pacienteId = pacienteId;
-  
-        // Verifica se os dados da consulta estão completos
+
         if (!consultaData.dataConsulta || !consultaData.tipoConsulta || !consultaData.horario) {
           alert("Dados da consulta estão incompletos.");
+          setIsLoading(false); // Desativa o loader em caso de erro
           return;
         }
-  
-        // Faz a requisição para criar a consulta
+
         const consultaResponse = await apiPost("http://localhost:8090/agendar-consulta/criarConsulta", consultaData);
         if (consultaResponse.status === STATUS_CODE.CREATED) {
           navigate('/agendamento-concluido');
         } else {
           alert(`Erro ao cadastrar consulta: ${consultaResponse.statusText}`);
+          setIsLoading(false); // Desativa o loader em caso de erro
         }
       } else {
         alert(`Erro ao cadastrar paciente: ${response.statusText}`);
+        setIsLoading(false); // Desativa o loader em caso de erro
       }
     } catch (error) {
       console.error(error);
       alert("Erro ao conectar com o servidor.");
+      setIsLoading(false); // Desativa o loader em caso de erro
     }
-  };  
+  };
   
   return (
     <div className="paciente">
+      {isLoading && (
+        <div className="loader-container">
+          <CircularProgress />
+        </div>
+      )}
       <div className="lembrete">
         <Typography variant="h6">
           <InfoCircleOutlined /> Lembre-se de levar um documento de identificação com foto no dia da consulta.

@@ -3,6 +3,11 @@
   background: #fff;
 }
 
+/* Remover a lupa especificamente no Ant Design Input.Search */
+.ant-input-search .ant-input-search-icon {
+  display: none !important;
+}
+
 .conteudo-dashboard {
   max-width: 1200px;
   margin: 0 auto;
