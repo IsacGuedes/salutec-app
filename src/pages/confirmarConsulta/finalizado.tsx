@@ -2,6 +2,10 @@ import React, { FC } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './style2.css';
 
+interface Consulta {
+  statusConsulta: string; // Altere para corresponder à resposta da API
+}
+
 const Finalizado: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -15,7 +19,7 @@ const Finalizado: FC = () => {
     <div className="container-email">
       {consulta ? (
         <>
-          <h1 className="titulo">AGENDAMENTO {consulta.status} COM SUCESSO!</h1>
+          <h1 className="titulo">AGENDAMENTO <strong>{consulta?.statusConsulta}</strong> COM SUCESSO!</h1>
           <p className="mensagem">
             Lembre-se de levar um documento de identificação com foto no dia da consulta.
           </p>

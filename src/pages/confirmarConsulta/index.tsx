@@ -80,14 +80,13 @@ const ConfirmacaoPaciente: React.FC = () => {
   return (
     <div className="modal-backdrop">
       <div className="confirmacao-consulta">
-        {consulta && consulta.statusConsulta === 'AGUARDANDO CONFIRMACAO' ? (
+        {consulta && consulta.statusConsulta === 'AGUARDANDO_CONFIRMACAO' ? (
           <>
             <h2>Confirmação de Agendamento</h2>
             <p>
-              Olá <strong>{consulta.paciente.nome}</strong>, por gentileza, confirme ou cancele o seu
-              agendamento no dia <strong>{consulta.dataConsulta}</strong> horário <strong>{consulta.horario}</strong> para a consulta <strong>{consulta.tipoConsulta.descricao === 'MEDICO' ? 'MÉDICA' : consulta.tipoConsulta.descricao.toUpperCase()}</strong>.
-            </p>
-
+            Olá <strong>{consulta.paciente.nome}</strong>, por gentileza, confirme ou cancele o seu
+            agendamento no dia <strong>{consulta.dataConsulta}</strong> horário <strong>{consulta.horario}</strong> para a consulta <strong>{consulta.tipoConsulta.descricao === 'MEDICO' ? 'MÉDICA' : consulta.tipoConsulta.descricao === 'DENTISTA' ? 'ODONTOLÓGICA' : consulta.tipoConsulta.descricao.toUpperCase()}</strong>.
+          </p>
             <div className="acoes">
               <button onClick={handleConfirmar} className="btn confirmar">Confirmar</button>
               <button onClick={handleCancelar} className="btn cancelar">Cancelar</button>

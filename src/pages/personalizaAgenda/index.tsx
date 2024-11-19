@@ -10,11 +10,7 @@ const AgendaPersonalizacao = () => {
   const [activeModal, setActiveModal] = useState<string | null>(null);
 
   const toggleModal = (modalName: string) => {
-    if (activeModal === modalName) {
-      setActiveModal(null); // Fecha a modal se já estiver aberta
-    } else {
-      setActiveModal(modalName); // Abre a nova modal
-    }
+    setActiveModal(prevModal => (prevModal === modalName ? null : modalName));
   };
 
   return (

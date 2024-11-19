@@ -9,18 +9,11 @@ interface ModalProps {
   onToggle: () => void;
 }
 
-const ModalMedico: React.FC<ModalProps> = ({ isOpen, onToggle }) => {
-  const [expand, setExpand] = useState(false);
+const ModalDentista: React.FC<ModalProps> = ({ isOpen, onToggle }) => {
   const [disponibilidade, setDisponibilidade] = useState<Disponibilidade | null>(null);
 
   const handleToggleExpand = () => {
-    if (!expand) {
-      setExpand(true);
-      onToggle(); // Fecha a outra modal se estiver aberta
-    } else {
-      setExpand(false);
-      onToggle(); // Fecha a modal atual
-    }
+    onToggle(); // Alterna o estado da modal através da prop passada
   };
 
   const handleDisponibilidadeChange = (novaDisponibilidade: Disponibilidade) => {
@@ -34,11 +27,11 @@ const ModalMedico: React.FC<ModalProps> = ({ isOpen, onToggle }) => {
     <div className="div-modal">
       <div className="form-container">
         <Button onClick={handleToggleExpand} variant="contained" color="primary">
-          {expand ? 'Ocultar Agenda Médica' : 'Personalizar Agenda Médica'}
+          {isOpen ? 'Ocultar Agenda Médica' : 'Personalizar Agenda Médica'}
         </Button>
       </div>
 
-      {isOpen && expand && ( // Renderiza a div expandida apenas se a modal estiver aberta e expandida
+      {isOpen && (
         <div className="expanded-container">
           <h2>Personalizar Agenda Médica</h2>
           <DisponibilidadeForm tipoConsultaId={tipoConsultaId} onDisponibilidadeChange={handleDisponibilidadeChange} />
@@ -48,4 +41,4 @@ const ModalMedico: React.FC<ModalProps> = ({ isOpen, onToggle }) => {
   );
 };
 
-export default ModalMedico;
+export default ModalDentista;

@@ -15,7 +15,6 @@ const Footer: React.FC = () => {
         <div className="footer-section links">
           <h4>Links Úteis</h4>
           <Link to="/faq">Perguntas Frequentes</Link>
-          <Link to="/contato">Contato</Link>
           <Link to="/sobre">Sobre Nós</Link>
         </div>
 

@@ -12,7 +12,6 @@ import DashboardPendente from './pages/dashboardPendente';
 import DisponibilidadeForm from './pages/personalizaAgenda';
 import FaqQuestions from './pages/faq/perguntas/perguntas';
 import SobreNos from './pages/sobre';
-import Contato from './pages/contato';
 import NotFound from './pages/NotFound/NotFound';
 import PrivateRoute from './components/PrivateRoute';
 import ConfirmacaoPaciente from './pages/confirmarConsulta';
@@ -65,7 +64,6 @@ const AppRouter: React.FC = () => {
       } />
 
       <Route path="/sobre" element={<SobreNos />} />
-      <Route path="/contato" element={<Contato />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
