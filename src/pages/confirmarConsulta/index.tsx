@@ -7,12 +7,18 @@ interface Paciente {
   nome: string;
 }
 
+interface TipoConsulta {
+  id: string;
+  descricao: string;
+}
+
 interface Consulta {
   id: string;
-  data: string;
-  hora: string;
+  dataConsulta: string; // Altere para corresponder à resposta da API
+  horario: string; // Altere para corresponder à resposta da API
   paciente: Paciente;
-  status: string; // Adicione esta linha para incluir o status
+  statusConsulta: string; // Altere para corresponder à resposta da API
+  tipoConsulta: TipoConsulta;
 }
 
 const ConfirmacaoPaciente: React.FC = () => {
@@ -35,36 +41,33 @@ const ConfirmacaoPaciente: React.FC = () => {
       });
   }, [consultaId]);
 
-  // Funções precisam estar definidas dentro do componente
   const handleConfirmar = () => {
-    if (consultaId && consulta) { // Verifique se consulta não é null
+    if (consultaId && consulta) {
       axios.post(`http://localhost:8090/agendar-consulta/atualizarStatus`, {
         id: consultaId,
         status: 'CONFIRMADO'
       }).then((response) => {
-        // Atualiza o status da consulta antes de passar para a página finalizada
-        consulta.status = 'CONFIRMADO'; // Agora podemos acessar com segurança
+        consulta.statusConsulta = 'CONFIRMADO';
         navigate('/finalizado', { state: { consulta } });
       }).catch(() => {
         alert('Erro ao confirmar a consulta.');
       });
     }
   };
-  
+
   const handleCancelar = () => {
-    if (consultaId && consulta) { // Verifique se consulta não é null
+    if (consultaId && consulta) {
       axios.post(`http://localhost:8090/agendar-consulta/atualizarStatus`, {
         id: consultaId,
         status: 'CANCELADO'
       }).then((response) => {
-        // Atualiza o status da consulta antes de passar para a página finalizada
-        consulta.status = 'CANCELADO'; // Agora podemos acessar com segurança
+        consulta.statusConsulta = 'CANCELADO';
         navigate('/finalizado', { state: { consulta } });
       }).catch(() => {
         alert('Erro ao cancelar a consulta.');
       });
     }
-  };  
+  };
 
   if (carregando) {
     return <div>Carregando...</div>;
@@ -75,20 +78,27 @@ const ConfirmacaoPaciente: React.FC = () => {
   }
 
   return (
-    <div className="confirmacao-consulta">
-      {consulta && (
-        <>
-          <h2>Confirmação de Agendamento</h2>
+    <div className="modal-backdrop">
+      <div className="confirmacao-consulta">
+        {consulta && consulta.statusConsulta === 'AGUARDANDO CONFIRMACAO' ? (
+          <>
+            <h2>Confirmação de Agendamento</h2>
+            <p>
+              Olá <strong>{consulta.paciente.nome}</strong>, por gentileza, confirme ou cancele o seu
+              agendamento no dia <strong>{consulta.dataConsulta}</strong> horário <strong>{consulta.horario}</strong> para a consulta <strong>{consulta.tipoConsulta.descricao === 'MEDICO' ? 'MÉDICA' : consulta.tipoConsulta.descricao.toUpperCase()}</strong>.
+            </p>
+
+            <div className="acoes">
+              <button onClick={handleConfirmar} className="btn confirmar">Confirmar</button>
+              <button onClick={handleCancelar} className="btn cancelar">Cancelar</button>
+            </div>
+          </>
+        ) : (
           <p>
-            Olá <strong>{consulta.paciente.nome}</strong>, por gentileza, confirme ou cancele o seu
-            agendamento no dia <strong>{consulta.data}</strong> horário <strong>{consulta.hora}</strong> para a consulta.
+            Seu agendamento já foi <strong>{consulta?.statusConsulta}</strong>. Caso necessário, entre em contato com a Unidade Básica de Saúde pelo telefone (48) 99995-8432.
           </p>
-          <div className="acoes">
-            <button onClick={handleConfirmar} className="btn confirmar">Confirmar</button>
-            <button onClick={handleCancelar} className="btn cancelar">Cancelar</button>
-          </div>
-        </>
-      )}
+        )}
+      </div>
     </div>
   );
 };

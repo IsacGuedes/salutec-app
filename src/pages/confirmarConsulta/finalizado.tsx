@@ -23,9 +23,6 @@ const Finalizado: FC = () => {
       ) : (
         <h1 className="titulo">AGENDAMENTO DESCONHECIDO</h1>
       )}
-      <button className="botao" onClick={handleButtonClick}>
-        VOLTAR PARA HOME
-      </button>
     </div>
   );
 };
