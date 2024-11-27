@@ -1,6 +1,7 @@
 import React, { FC, useState } from 'react';
 import { Modal, Input, Form, Button, message } from 'antd';
 import axios, { AxiosError } from 'axios';
+import { urlBackend } from '../../api/RestClient';
 
 interface EsqueciSenhaProps {
   modalVisible: boolean;
@@ -18,7 +19,7 @@ const EsqueciSenha: FC<EsqueciSenhaProps> = ({ modalVisible, closeModal }) => {
         setLoading(true);
 
         try {
-          const response = await axios.post('http://localhost:8090/api/enfermeiros/trocar-senha', null, {
+          const response = await axios.post(urlBackend + '/api/enfermeiros/trocar-senha', null, {
             params: {
               matricula,
               senhaAtual: senhaAntiga,

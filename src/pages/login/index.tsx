@@ -5,6 +5,7 @@ import axios from 'axios';
 import './styles.css';
 import { useNavigate } from 'react-router-dom';
 import EsqueciSenha from '../../components/modalNovaSenha';
+import { urlBackend } from '../../api/RestClient';
 
 const Login: React.FC = () => {
   const [matricula, setMatricula] = useState<string>('');
@@ -17,7 +18,7 @@ const Login: React.FC = () => {
     const { matricula, senha } = values;
 
     try {
-      const response = await axios.post('http://localhost:8090/api/enfermeiros/login', {
+      const response = await axios.post(urlBackend + '/api/enfermeiros/login', {
         matricula,
         senha,
       });
