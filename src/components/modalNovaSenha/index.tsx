@@ -49,7 +49,7 @@ const EsqueciSenha: FC<EsqueciSenhaProps> = ({ modalVisible, closeModal }) => {
 
   return (
     <Modal
-      title="Recuperar Senha"
+      title="Alterar senha"
       visible={modalVisible}
       onCancel={closeModal} // Fecha o modal ao clicar em "Cancelar"
       onOk={handleOk} // Envia o formulário ao clicar em "Alterar Senha"
@@ -59,7 +59,7 @@ const EsqueciSenha: FC<EsqueciSenhaProps> = ({ modalVisible, closeModal }) => {
     >
       <Form form={form} layout="vertical">
         <Form.Item
-          label="Número da Matrícula"
+          label="Matrícula"
           name="matricula"
           rules={[{ required: true, message: 'Por favor, insira o número da matrícula!' }]}
         >
