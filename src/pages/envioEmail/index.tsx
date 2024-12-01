@@ -16,7 +16,7 @@ const EnvioEmail: FC = () => {
         Aguarde o contato da Unidade de Saúde para confirmar ou cancelar seu agendamento!
       </p>
       <button className="botao" onClick={handleButtonClick}>
-        VOLTAR PARA HOME
+        VOLTAR PARA A TELA INICIAL
       </button>
     </div>
   );

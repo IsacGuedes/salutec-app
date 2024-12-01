@@ -8,7 +8,6 @@ import { aplicarMascaraDocumentocpf, aplicarMascaraDocumentocns, formatarTelefon
 import dayjs, { Dayjs } from 'dayjs';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
-import { urlBackend } from '../../api/RestClient';
 
 const { Content } = Layout;
 const { RangePicker } = DatePicker;
@@ -32,7 +31,7 @@ const Dashboard: FC = () => {
   useEffect(() => {
     const fetchAgendamentos = async () => {
       try {
-        const response = await fetch(urlBackend + '/agendar-consulta/listarConsultas');
+        const response = await fetch('http://localhost:8090/agendar-consulta/listarConsultas');
         const data = await response.json();
         setAgendamentos(data);
         setFilteredAgendamentos(data); // Inicialmente, os agendamentos filtrados são todos
@@ -75,7 +74,7 @@ const Dashboard: FC = () => {
 
   const handleAction = async (id: number, status: string) => {
     try {
-      const response = await fetch(urlBackend + `/agendar-consulta/atualizarStatus`, {
+      const response = await fetch(`http://localhost:8090/agendar-consulta/atualizarStatus`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -177,7 +176,7 @@ const Dashboard: FC = () => {
 
   const handleTodosClick = async () => {
     try {
-      const response = await fetch(urlBackend + '/agendar-consulta/listarConsultas');
+      const response = await fetch('http://localhost:8090/agendar-consulta/listarConsultas');
       const data = await response.json();
   
       console.log("Dados recebidos da API:", data);

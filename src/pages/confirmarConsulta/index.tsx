@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './style.css';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { urlBackend } from '../../api/RestClient';
 
 interface Paciente {
   nome: string;
@@ -31,7 +30,7 @@ const ConfirmacaoPaciente: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(urlBackend + `/agendar-consulta/listarConsultas/${consultaId}`)
+    axios.get(`http://localhost:8090/agendar-consulta/listarConsultas/${consultaId}`)
       .then((response) => {
         setConsulta(response.data);
         setCarregando(false);
@@ -44,7 +43,7 @@ const ConfirmacaoPaciente: React.FC = () => {
 
   const handleConfirmar = () => {
     if (consultaId && consulta) {
-      axios.post(urlBackend + `/agendar-consulta/atualizarStatus`, {
+      axios.post(`http://localhost:8090/agendar-consulta/atualizarStatus`, {
         id: consultaId,
         status: 'CONFIRMADO'
       }).then((response) => {
@@ -58,7 +57,7 @@ const ConfirmacaoPaciente: React.FC = () => {
 
   const handleCancelar = () => {
     if (consultaId && consulta) {
-      axios.post(urlBackend + `/agendar-consulta/atualizarStatus`, {
+      axios.post(`http://localhost:8090//agendar-consulta/atualizarStatus`, {
         id: consultaId,
         status: 'CANCELADO'
       }).then((response) => {

@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import { TextField, Button, Typography, Radio, FormControlLabel, Grid, Tooltip } from '@mui/material';
-import { apiPost, STATUS_CODE, urlBackend } from '../../api/RestClient';
+import { apiPost, STATUS_CODE } from '../../api/RestClient';
 import { aplicarMascaraDocumentocns, aplicarMascaraDocumentocpf, formatarTelefone, removerCaracteresNaoNumericos, validarCpf } from '../../components/formatos';
 import { useNavigate } from 'react-router-dom';
 import { InfoCircleOutlined } from '@ant-design/icons';
@@ -47,7 +47,7 @@ const Paciente: FC = () => {
   
     try {
       setIsLoading(true); // Ativa o loader
-      const response = await apiPost(urlBackend + "/pacientes/criarPaciente", data);
+      const response = await apiPost("http://localhost:8090/pacientes/criarPaciente", data);
       if (response.status === STATUS_CODE.CREATED) {
         const pacienteId = response.data.id;
 
@@ -60,7 +60,7 @@ const Paciente: FC = () => {
           return;
         }
 
-        const consultaResponse = await apiPost(urlBackend + "/agendar-consulta/criarConsulta", consultaData);
+        const consultaResponse = await apiPost("http://localhost:8090/agendar-consulta/criarConsulta", consultaData);
         if (consultaResponse.status === STATUS_CODE.CREATED) {
           navigate('/agendamento-concluido');
         } else {
@@ -184,7 +184,7 @@ const Paciente: FC = () => {
         </div>
         <div className="div-linha full-width">
           <Button variant="contained" onClick={salvarPaciente}>
-            Fazer solicitação
+            Confirmar solicitação
           </Button>
         </div>
       </div>

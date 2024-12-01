@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './styles.css';
-import { apiPost, STATUS_CODE, urlBackend } from '../../api/RestClient';
+import { apiPost, STATUS_CODE } from '../../api/RestClient';
 import { Snackbar, Alert, AlertColor } from '@mui/material';
 
 type Disponibilidade = {
@@ -85,7 +85,7 @@ const DisponibilidadeForm: React.FC<DisponibilidadeFormProps> = ({ tipoConsultaI
     setLoading(true);
 
     try {
-      const disponibilidadeResponse = await apiPost(urlBackend + `/personaliza/criaDisponibilidade/${tipoConsultaId}`, disponibilidade);
+      const disponibilidadeResponse = await apiPost(`http://localhost:8090/personaliza/criaDisponibilidade/${tipoConsultaId}`, disponibilidade);
       if (disponibilidadeResponse.status === STATUS_CODE.CREATED) {
         showAlert('Disponibilidade salva com sucesso!', 'success');
       }

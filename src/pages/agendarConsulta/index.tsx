@@ -6,7 +6,6 @@ import axios from 'axios';
 import { CalendarOutlined, FormOutlined, ClockCircleOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import BasicDateCalendar from "../../components/calendario";
 import "./styles.css";
-import { urlBackend } from "../../api/RestClient";
 
 type Disponibilidade = {
   diasDaSemana: string[];
@@ -27,7 +26,7 @@ const AgendarConsulta: FC = () => {
   const buscarHorariosDisponiveis = (data: string) => {
     if (!tipoConsulta || !data) return;
   
-    axios.get(urlBackend + `agendar-consulta/horarios-disponiveis`, {
+    axios.get(`http://localhost:8090/agendar-consulta/horarios-disponiveis`, {
         params: { tipoConsultaId: tipoConsulta === "Medico" ? 1 : 2, data }
       })
       .then((response) => {
@@ -45,7 +44,7 @@ const AgendarConsulta: FC = () => {
 
   useEffect(() => {
     if (tipoConsulta !== "") {
-      axios.get(urlBackend + `/agendar-consulta/dias-disponiveis`, {
+      axios.get(`http://localhost:8090/agendar-consulta/dias-disponiveis`, {
           params: { tipoConsultaId: tipoConsulta === "Medico" ? 1 : 2 },
         })
         .then((response) => {

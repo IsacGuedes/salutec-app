@@ -8,7 +8,6 @@ import dayjs from "dayjs";
 import axios from "axios"; 
 import "./styles.css";
 import "dayjs/locale/pt-br"; 
-import { urlBackend } from "../../api/RestClient";
 
 // Configurando o Day.js para usar o locale em português
 dayjs.locale('pt-br');
@@ -49,7 +48,7 @@ const BasicDateCalendar: React.FC<BasicDateCalendarProps> = ({
     const fetchDisponibilidade = async () => {
       try {
         const response = await axios.get(
-          urlBackend + `agendar-consulta/dias-disponiveis?tipoConsultaId=${tipo === 'Medico' ? 1 : 2}`
+          `http://localhost:8090/agendar-consulta/dias-disponiveis?tipoConsultaId=${tipo === 'Medico' ? 1 : 2}`
         );
         setDisponibilidade({ diasDaSemana: response.data, horariosDisponiveis: [] });
       } catch (error) {
