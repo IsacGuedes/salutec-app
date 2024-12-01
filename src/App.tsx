@@ -6,6 +6,7 @@ import Logo from './assets/logo.png';
 import { Link } from 'react-router-dom';
 import { Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import Footer from './components/footer';
 
 function App() {
   const location = useLocation();
@@ -25,10 +26,10 @@ function App() {
         <>
           <header className="menu-bar">
             <div className="logo">
-                <img src={Logo} alt="Logo" className='logo-imagem' />
+              <img src={Logo} alt="Logo" className="logo-imagem" />
             </div>
-            <div className='enfermeiro-info'>
-                <Button type="link" onClick={handleLogout}>Sair</Button> {/* Botão de logout no topo */}
+            <div className="enfermeiro-info">
+              <Button type="link" onClick={handleLogout}>Sair</Button> {/* Botão de logout no topo */}
             </div>
           </header>
           <AppRouter />
@@ -38,11 +39,12 @@ function App() {
           <header className="menu-bar">
             <div className="logo">
               <Link to="/home">
-                <img src={Logo} alt="Logo" className='logo-imagem' />
+                <img src={Logo} alt="Logo" className="logo-imagem" />
               </Link>
             </div>
           </header>
           <AppRouter />
+          <Footer /> {/* Inclui o Footer no final */}
         </>
       )}
     </div>
