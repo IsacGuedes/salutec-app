@@ -143,7 +143,6 @@ const Dashboard: FC = () => {
   };
 
   const columns = [
-    { title: 'Consulta', dataIndex: 'id', key: 'id' },
     { title: 'Nome', dataIndex: ['paciente', 'nome'], key: 'nome' },
     { title: 'CPF', dataIndex: ['paciente', 'documentocpf'], key: 'cpf', render: (cpf: string) => aplicarMascaraDocumentocpf(cpf) },
     { title: 'CNS', dataIndex: ['paciente', 'documentocns'], key: 'cns', render: (cns: string) => aplicarMascaraDocumentocns(cns) },
